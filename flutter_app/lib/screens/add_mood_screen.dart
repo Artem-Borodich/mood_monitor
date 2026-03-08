@@ -18,6 +18,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
   final TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   bool _submitting = false;
+  bool _pressedSave = false;
 
   @override
   void dispose() {
@@ -40,6 +41,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
   }
 
   Future<void> _submit() async {
+    FocusScope.of(context).unfocus();
     setState(() {
       _submitting = true;
     });
@@ -57,6 +59,9 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Mood entry saved')),
       );
+      setState(() {
+        _pressedSave = false;
+      });
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -76,49 +81,107 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
     final dateString =
         '${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}';
 
+    final theme = Theme.of(context);
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'How do you feel today?',
-            style: Theme.of(context).textTheme.titleLarge,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Track your mood, stress and energy to see your wellbeing trends.',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: 24),
-          _buildSlider(
+          _buildSliderCard(
+            context: context,
             label: 'Mood',
+            description: 'How positive and calm you feel overall.',
+            icon: Icons.emoji_emotions_rounded,
             value: _mood,
-            color: Colors.blue,
+            colorForValue: _moodColor,
             onChanged: (v) => setState(() => _mood = v),
           ),
           const SizedBox(height: 16),
-          _buildSlider(
+          _buildSliderCard(
+            context: context,
             label: 'Stress',
+            description: 'How tense, worried or overloaded you feel.',
+            icon: Icons.local_fire_department_rounded,
             value: _stress,
-            color: Colors.red,
+            colorForValue: _stressColor,
             onChanged: (v) => setState(() => _stress = v),
           ),
           const SizedBox(height: 16),
-          _buildSlider(
+          _buildSliderCard(
+            context: context,
             label: 'Energy',
+            description: 'How awake, motivated and physically active you feel.',
+            icon: Icons.bolt_rounded,
             value: _energy,
-            color: Colors.green,
+            colorForValue: _energyColor,
             onChanged: (v) => setState(() => _energy = v),
           ),
           const SizedBox(height: 24),
+          Text(
+            'Optional note',
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
           TextField(
             controller: _noteController,
             maxLines: 3,
-            decoration: const InputDecoration(
-              labelText: 'Optional note',
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              hintText: 'Add a short note about your day…',
+              filled: true,
+              fillColor: theme.colorScheme.surface,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(
+                  color: theme.colorScheme.outlineVariant,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(
+                  color: theme.colorScheme.outlineVariant,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(
+                  color: theme.colorScheme.primary,
+                  width: 1.5,
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 16),
           Row(
             children: [
-              Text('Date: $dateString'),
+              Icon(
+                Icons.calendar_today_rounded,
+                size: 18,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                dateString,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
               const SizedBox(width: 8),
               TextButton(
                 onPressed: _pickDate,
@@ -127,17 +190,31 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
             ],
           ),
           const SizedBox(height: 24),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _submitting ? null : _submit,
-              child: _submitting
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Text('Save'),
+          Center(
+            child: AnimatedScale(
+              scale: _pressedSave ? 0.97 : 1.0,
+              duration: const Duration(milliseconds: 120),
+              curve: Curves.easeOut,
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _submitting
+                      ? null
+                      : () {
+                          setState(() {
+                            _pressedSave = true;
+                          });
+                          _submit();
+                        },
+                  child: _submitting
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Save'),
+                ),
+              ),
             ),
           ),
         ],
@@ -145,33 +222,118 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
     );
   }
 
-  Widget _buildSlider({
+  Widget _buildSliderCard({
+    required BuildContext context,
     required String label,
+    required String description,
+    required IconData icon,
     required double value,
-    required Color color,
+    required Color Function(double) colorForValue,
     required ValueChanged<double> onChanged,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final theme = Theme.of(context);
+    final color = colorForValue(value);
+
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label),
-            Text(value.round().toString()),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: color,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      description,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    value.round().toString(),
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: color,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                thumbShape:
+                    const RoundSliderThumbShape(enabledThumbRadius: 10),
+                overlayShape:
+                    const RoundSliderOverlayShape(overlayRadius: 18),
+                activeTrackColor: color,
+                inactiveTrackColor: theme.colorScheme.surfaceVariant,
+                thumbColor: color,
+                overlayColor: color.withOpacity(0.2),
+              ),
+              child: Slider(
+                min: 1,
+                max: 10,
+                divisions: 9,
+                value: value,
+                label: value.round().toString(),
+                onChanged: onChanged,
+              ),
+            ),
           ],
         ),
-        Slider(
-          min: 1,
-          max: 10,
-          divisions: 9,
-          activeColor: color,
-          value: value,
-          label: value.round().toString(),
-          onChanged: onChanged,
-        ),
-      ],
+      ),
     );
+  }
+
+  Color _moodColor(double value) {
+    // 1 (red) -> 10 (green)
+    final t = (value - 1) / 9;
+    return Color.lerp(Colors.red, Colors.green, t.clamp(0.0, 1.0))!;
+  }
+
+  Color _stressColor(double value) {
+    // 1 (green, low) -> 10 (red, high)
+    final t = (value - 1) / 9;
+    return Color.lerp(Colors.green, Colors.red, t.clamp(0.0, 1.0))!;
+  }
+
+  Color _energyColor(double value) {
+    // 1 (grey) -> 10 (amber)
+    final t = (value - 1) / 9;
+    return Color.lerp(Colors.grey, Colors.amber, t.clamp(0.0, 1.0))!;
   }
 }
 
