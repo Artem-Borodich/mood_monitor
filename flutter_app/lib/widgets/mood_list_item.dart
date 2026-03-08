@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/mood_entry.dart';
 
 class MoodListItem extends StatelessWidget {
@@ -13,6 +14,7 @@ class MoodListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context);
     final dateString =
         '${entry.createdAt.year}-${entry.createdAt.month.toString().padLeft(2, '0')}-${entry.createdAt.day.toString().padLeft(2, '0')}';
 
@@ -62,7 +64,7 @@ class MoodListItem extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Mood history entry',
+                      loc.historyEntrySubtitle,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -78,21 +80,21 @@ class MoodListItem extends StatelessWidget {
                 _pill(
                   context: context,
                   icon: '😊',
-                  label: 'Mood',
+                  label: loc.moodLabel,
                   value: entry.mood,
                   color: theme.colorScheme.primary,
                 ),
                 _pill(
                   context: context,
                   icon: '🔥',
-                  label: 'Stress',
+                  label: loc.stressLabel,
                   value: entry.stress,
                   color: theme.colorScheme.error,
                 ),
                 _pill(
                   context: context,
                   icon: '⚡',
-                  label: 'Energy',
+                  label: loc.energyLabel,
                   value: entry.energy,
                   color: theme.colorScheme.tertiary,
                 ),

@@ -9,6 +9,12 @@ class MoodEntryCreate(BaseModel):
     stress: int = Field(..., ge=1, le=10)
     energy: int = Field(..., ge=1, le=10)
     note: Optional[str] = None
+    # Optional category/tag for the entry (e.g. "work", "relationships", "health").
+    category: Optional[str] = Field(default=None, max_length=50)
+    # Optional number of hours of sleep (0–24).
+    sleep_hours: Optional[float] = Field(default=None, ge=0, le=24)
+    # Optional number of minutes of physical activity (0–1440).
+    activity_minutes: Optional[int] = Field(default=None, ge=0, le=1440)
     created_at: Optional[datetime] = None
 
 
@@ -18,10 +24,13 @@ class MoodEntryRead(BaseModel):
     stress: int
     energy: int
     note: Optional[str]
+    category: Optional[str]
+    sleep_hours: Optional[float]
+    activity_minutes: Optional[int]
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class WellbeingResponse(BaseModel):

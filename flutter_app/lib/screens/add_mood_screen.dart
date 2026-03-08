@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../services/api_service.dart';
 
 class AddMoodScreen extends StatefulWidget {
@@ -15,6 +16,10 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
   double _mood = 5;
   double _stress = 5;
   double _energy = 5;
+   // Optional extra fields
+  String _category = 'none';
+  double _sleepHours = 7;
+  double _activityMinutes = 0;
   final TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   bool _submitting = false;
@@ -54,6 +59,9 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
             ? null
             : _noteController.text.trim(),
         date: _selectedDate,
+        category: _category == 'none' ? null : _category,
+        sleepHours: _sleepHours,
+        activityMinutes: _activityMinutes.round(),
       );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -82,6 +90,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
         '${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}';
 
     final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
@@ -89,23 +98,27 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'How do you feel today?',
+            loc.addTitle,
             style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w700,
             ),
           ),
           const SizedBox(height: 12),
           Text(
-            'Track your mood, stress and energy to see your wellbeing trends.',
+            loc.addSubtitle,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 24),
+          _buildCategoryChips(theme, loc),
+          const SizedBox(height: 16),
+          _buildSleepAndActivity(theme, loc),
+          const SizedBox(height: 24),
           _buildSliderCard(
             context: context,
-            label: 'Mood',
-            description: 'How positive and calm you feel overall.',
+            label: loc.addMoodLabel,
+            description: loc.addMoodDesc,
             icon: Icons.emoji_emotions_rounded,
             value: _mood,
             colorForValue: _moodColor,
@@ -114,8 +127,8 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
           const SizedBox(height: 16),
           _buildSliderCard(
             context: context,
-            label: 'Stress',
-            description: 'How tense, worried or overloaded you feel.',
+            label: loc.addStressLabel,
+            description: loc.addStressDesc,
             icon: Icons.local_fire_department_rounded,
             value: _stress,
             colorForValue: _stressColor,
@@ -124,8 +137,8 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
           const SizedBox(height: 16),
           _buildSliderCard(
             context: context,
-            label: 'Energy',
-            description: 'How awake, motivated and physically active you feel.',
+            label: loc.addEnergyLabel,
+            description: loc.addEnergyDesc,
             icon: Icons.bolt_rounded,
             value: _energy,
             colorForValue: _energyColor,
@@ -133,7 +146,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
           ),
           const SizedBox(height: 24),
           Text(
-            'Optional note',
+            loc.addOptionalNote,
             style: theme.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -143,7 +156,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
             controller: _noteController,
             maxLines: 3,
             decoration: InputDecoration(
-              hintText: 'Add a short note about your day…',
+              hintText: loc.addOptionalNoteHint,
               filled: true,
               fillColor: theme.colorScheme.surface,
               border: OutlineInputBorder(
@@ -185,7 +198,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
               const SizedBox(width: 8),
               TextButton(
                 onPressed: _pickDate,
-                child: const Text('Change'),
+                child: Text(loc.addChangeDate),
               ),
             ],
           ),
@@ -212,13 +225,132 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Text('Save'),
+                      : Text(loc.addSave),
                 ),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildCategoryChips(ThemeData theme, AppLocalizations loc) {
+    final labels = <String, String>{
+      'none': loc.addCategoryNone,
+      'work': loc.addCategoryWork,
+      'relationships': loc.addCategoryRelationships,
+      'health': loc.addCategoryHealth,
+    };
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          loc.addCategoryTitle,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: labels.entries.map((entry) {
+            final selected = _category == entry.key;
+            return ChoiceChip(
+              label: Text(entry.value),
+              selected: selected,
+              onSelected: (_) {
+                setState(() {
+                  _category = entry.key;
+                });
+              },
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSleepAndActivity(ThemeData theme, AppLocalizations loc) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          loc.addSleepActivityTitle,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Card(
+          elevation: 3,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.nights_stay_rounded, size: 18),
+                        const SizedBox(width: 6),
+                        Text(
+                          loc.addSleepLabel,
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                    Text(
+                      _sleepHours.toStringAsFixed(1),
+                      style: theme.textTheme.labelLarge,
+                    ),
+                  ],
+                ),
+                Slider(
+                  min: 0,
+                  max: 12,
+                  divisions: 24,
+                  value: _sleepHours,
+                  label: _sleepHours.toStringAsFixed(1),
+                  onChanged: (v) => setState(() => _sleepHours = v),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.directions_walk_rounded, size: 18),
+                        const SizedBox(width: 6),
+                        Text(
+                          loc.addActivityLabel,
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                    Text(
+                      _activityMinutes.round().toString(),
+                      style: theme.textTheme.labelLarge,
+                    ),
+                  ],
+                ),
+                Slider(
+                  min: 0,
+                  max: 300,
+                  divisions: 30,
+                  value: _activityMinutes,
+                  label: _activityMinutes.round().toString(),
+                  onChanged: (v) => setState(() => _activityMinutes = v),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 

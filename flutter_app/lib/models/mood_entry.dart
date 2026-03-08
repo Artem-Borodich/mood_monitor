@@ -4,6 +4,9 @@ class MoodEntry {
   final int stress;
   final int energy;
   final String? note;
+  final String? category;
+  final double? sleepHours;
+  final int? activityMinutes;
   final DateTime createdAt;
 
   MoodEntry({
@@ -13,6 +16,9 @@ class MoodEntry {
     required this.energy,
     required this.createdAt,
     this.note,
+    this.category,
+    this.sleepHours,
+    this.activityMinutes,
   });
 
   factory MoodEntry.fromJson(Map<String, dynamic> json) {
@@ -22,6 +28,9 @@ class MoodEntry {
       stress: json['stress'] as int,
       energy: json['energy'] as int,
       note: json['note'] as String?,
+      category: json['category'] as String?,
+      sleepHours: (json['sleep_hours'] as num?)?.toDouble(),
+      activityMinutes: json['activity_minutes'] as int?,
       createdAt: DateTime.parse(json['created_at'] as String),
     );
   }

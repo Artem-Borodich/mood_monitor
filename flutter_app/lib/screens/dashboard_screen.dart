@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/mood_entry.dart';
 import '../services/api_service.dart';
 import '../widgets/stat_card.dart';
@@ -19,6 +20,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   double? _wellbeingIndex;
   bool _loading = true;
   String? _error;
+  int _streakDays = 0;
+  bool _weeklyStressBelowTarget = true;
 
   @override
   void initState() {
@@ -37,6 +40,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       setState(() {
         _entries = entries.reversed.toList();
         _wellbeingIndex = wellbeing;
+        _recalculateGoals();
         _loading = false;
       });
     } catch (e) {
@@ -47,9 +51,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+  void _recalculateGoals() {
+    if (_entries.isEmpty) {
+      _streakDays = 0;
+      _weeklyStressBelowTarget = true;
+      return;
+    }
+
+    // Streak: consecutive days with at least one entry, going backwards from today.
+    final dates = _entries
+        .map((e) => DateTime(e.createdAt.year, e.createdAt.month, e.createdAt.day))
+        .toSet();
+    var current = DateTime.now();
+    var streak = 0;
+    while (dates.contains(DateTime(current.year, current.month, current.day))) {
+      streak += 1;
+      current = current.subtract(const Duration(days: 1));
+    }
+    _streakDays = streak;
+
+    // Weekly stress goal: average stress of last 7 days below threshold.
+    final oneWeekAgo = DateTime.now().subtract(const Duration(days: 7));
+    final recent = _entries.where((e) => e.createdAt.isAfter(oneWeekAgo)).toList();
+    if (recent.isEmpty) {
+      _weeklyStressBelowTarget = true;
+    } else {
+      final avgStress =
+          recent.map((e) => e.stress).reduce((a, b) => a + b) / recent.length;
+      _weeklyStressBelowTarget = avgStress < 6;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context);
 
     if (_loading) {
       return const Center(child: CircularProgressIndicator());
@@ -101,7 +137,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Wellbeing Index',
+                        loc.dashboardWellbeingTitle,
                         style: theme.textTheme.titleMedium?.copyWith(
                           color: theme.colorScheme.onPrimaryContainer,
                           fontWeight: FontWeight.w600,
@@ -110,8 +146,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       const SizedBox(height: 8),
                       Text(
                         _entries.isEmpty
-                            ? 'No data yet. Add your first mood entry.'
-                            : 'Based on your latest mood, stress and energy.',
+                            ? loc.dashboardWellbeingSubtitleEmpty
+                            : loc.dashboardWellbeingSubtitle,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onPrimaryContainer
                               .withOpacity(0.8),
@@ -126,6 +162,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           const SizedBox(height: 24),
           _buildChartCard(context),
           const SizedBox(height: 24),
+          _buildGoalsCard(context),
+          const SizedBox(height: 24),
           if (latest != null) _buildLatestEntryCard(context, latest),
         ],
       ),
@@ -134,14 +172,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildChartCard(BuildContext context) {
     if (_entries.length < 2) {
-      return const StatCard(
-        title: 'Mood Over Time',
-        value: 'Not enough data',
-        subtitle: 'At least two entries are needed to show the chart.',
+      final loc = AppLocalizations.of(context);
+      return StatCard(
+        title: loc.dashboardMoodOverTime,
+        value: loc.dashboardMoodNotEnough,
+        subtitle: loc.dashboardMoodNotEnoughSubtitle,
       );
     }
 
     final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context);
     final spots = <FlSpot>[];
     for (var i = 0; i < _entries.length; i++) {
       spots.add(FlSpot(i.toDouble(), _entries[i].mood.toDouble()));
@@ -162,7 +202,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Mood Over Time',
+                  loc.dashboardMoodOverTime,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -413,6 +453,92 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildGoalsCard(BuildContext context) {
+    final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context);
+
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.flag_rounded,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  loc.goalsTitle,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.calendar_today_rounded,
+                        size: 16,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        '${loc.goalsStreak}: $_streakDays ${loc.goalsStreakDays}',
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  _weeklyStressBelowTarget
+                      ? Icons.check_circle_rounded
+                      : Icons.error_outline_rounded,
+                  size: 18,
+                  color: _weeklyStressBelowTarget
+                      ? Colors.green
+                      : theme.colorScheme.error,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    _weeklyStressBelowTarget
+                        ? loc.goalsStressWeekOk
+                        : loc.goalsStressWeekHigh,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

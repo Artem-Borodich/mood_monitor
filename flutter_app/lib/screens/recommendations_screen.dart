@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../services/api_service.dart';
 
 class RecommendationsScreen extends StatefulWidget {
@@ -16,18 +17,25 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
   @override
   void initState() {
     super.initState();
-    _future = _api.fetchRecommendations();
+    _future = _fetch();
   }
 
   Future<void> _refresh() async {
     setState(() {
-      _future = _api.fetchRecommendations();
+      _future = _fetch();
     });
+  }
+
+  Future<Map<String, dynamic>> _fetch() {
+    final locale = WidgetsBinding.instance.platformDispatcher.locale;
+    final lang = (locale.languageCode == 'ru') ? 'ru' : 'en';
+    return _api.fetchRecommendations(lang: lang);
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context);
 
     return RefreshIndicator(
       onRefresh: _refresh,
@@ -42,7 +50,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(20),
-                  child: Text('Error: ${snapshot.error}'),
+                  child: Text('${loc.errorPrefix}${snapshot.error}'),
                 ),
               ],
             );
@@ -56,14 +64,14 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
             padding: const EdgeInsets.all(20),
             children: [
               Text(
-                'Today\'s guidance',
+                loc.tipsTodayTitle,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                'Short tips based on your wellbeing to help you feel better.',
+                loc.tipsTodaySubtitle,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),

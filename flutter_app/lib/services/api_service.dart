@@ -33,12 +33,18 @@ class ApiService {
     required int energy,
     String? note,
     DateTime? date,
+    String? category,
+    double? sleepHours,
+    int? activityMinutes,
   }) async {
     final body = <String, dynamic>{
       'mood': mood,
       'stress': stress,
       'energy': energy,
       'note': note,
+      'category': category,
+      'sleep_hours': sleepHours,
+      'activity_minutes': activityMinutes,
       if (date != null) 'created_at': date.toUtc().toIso8601String(),
     };
 
@@ -70,8 +76,9 @@ class ApiService {
     return (data['wellbeing_index'] as num).toDouble();
   }
 
-  Future<Map<String, dynamic>> fetchRecommendations() async {
-    final response = await _client.get(_uri('/recommendations'));
+  Future<Map<String, dynamic>> fetchRecommendations({String lang = 'en'}) async {
+    final response =
+        await _client.get(_uri('/recommendations?lang=$lang'));
     if (response.statusCode != 200) {
       throw Exception('Failed to load recommendations');
     }
