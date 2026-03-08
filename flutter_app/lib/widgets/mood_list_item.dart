@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/mood_entry.dart';
+import '../services/api_service.dart';
 
 class MoodListItem extends StatelessWidget {
   const MoodListItem({
     super.key,
     required this.entry,
+    this.onEdit,
+    this.onDelete,
   });
 
   final MoodEntry entry;
+  final void Function(MoodEntry entry)? onEdit;
+  final void Function(MoodEntry entry)? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,7 @@ class MoodListItem extends StatelessWidget {
     final dateString =
         '${entry.createdAt.year}-${entry.createdAt.month.toString().padLeft(2, '0')}-${entry.createdAt.day.toString().padLeft(2, '0')}';
 
-    return Card(
+    Widget card = Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -119,6 +124,75 @@ class MoodListItem extends StatelessWidget {
         ),
       ),
     );
+
+    if (onEdit != null || onDelete != null) {
+      return GestureDetector(
+        onLongPress: () => _showActions(context, loc),
+        child: card,
+      );
+    }
+    return card;
+  }
+
+  void _showActions(BuildContext context, AppLocalizations loc) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (onEdit != null)
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: Text(loc.editEntry),
+                onTap: () {
+                  Navigator.pop(context);
+                  onEdit!(entry);
+                },
+              ),
+            if (onDelete != null)
+              ListTile(
+                leading: const Icon(Icons.delete, color: Colors.red),
+                title: Text(loc.deleteEntry),
+                onTap: () {
+                  Navigator.pop(context);
+                  _confirmDelete(context, loc);
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _confirmDelete(BuildContext context, AppLocalizations loc) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(loc.deleteEntry),
+        content: Text(loc.deleteConfirmMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(loc.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(loc.deleteEntry),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !context.mounted) return;
+    try {
+      await ApiService().deleteMoodEntry(entry.id);
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(loc.entryDeleted)));
+      onDelete!(entry);
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${loc.errorPrefix}$e')));
+    }
   }
 
   Widget _pill({

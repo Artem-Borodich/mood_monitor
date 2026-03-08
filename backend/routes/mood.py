@@ -52,6 +52,53 @@ def list_mood_entries(
     return entries
 
 
+@router.get("/mood/{entry_id}", response_model=schemas.MoodEntryRead)
+def get_mood_entry(
+    entry_id: int,
+    db: Session = Depends(get_db),
+):
+    entry = db.query(models.MoodEntry).filter(models.MoodEntry.id == entry_id).first()
+    if entry is None:
+        raise HTTPException(status_code=404, detail="Entry not found")
+    return entry
+
+
+@router.put("/mood/{entry_id}", response_model=schemas.MoodEntryRead)
+def update_mood_entry(
+    entry_id: int,
+    payload: schemas.MoodEntryCreate,
+    db: Session = Depends(get_db),
+):
+    entry = db.query(models.MoodEntry).filter(models.MoodEntry.id == entry_id).first()
+    if entry is None:
+        raise HTTPException(status_code=404, detail="Entry not found")
+    entry.mood = payload.mood
+    entry.stress = payload.stress
+    entry.energy = payload.energy
+    entry.note = payload.note
+    entry.category = payload.category
+    entry.sleep_hours = payload.sleep_hours
+    entry.activity_minutes = payload.activity_minutes
+    if payload.created_at is not None:
+        entry.created_at = payload.created_at
+    db.commit()
+    db.refresh(entry)
+    return entry
+
+
+@router.delete("/mood/{entry_id}", status_code=204)
+def delete_mood_entry(
+    entry_id: int,
+    db: Session = Depends(get_db),
+):
+    entry = db.query(models.MoodEntry).filter(models.MoodEntry.id == entry_id).first()
+    if entry is None:
+        raise HTTPException(status_code=404, detail="Entry not found")
+    db.delete(entry)
+    db.commit()
+    return None
+
+
 @router.get("/wellbeing", response_model=schemas.WellbeingResponse)
 def get_current_wellbeing(db: Session = Depends(get_db)):
     last_entry = (

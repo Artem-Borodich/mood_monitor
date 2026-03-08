@@ -50,6 +50,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
     setState(() {
       _submitting = true;
     });
+    final loc = AppLocalizations.of(context);
     try {
       await _api.createMoodEntry(
         mood: _mood.round(),
@@ -65,7 +66,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
       );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Mood entry saved')),
+        SnackBar(content: Text(loc.entrySaved)),
       );
       setState(() {
         _pressedSave = false;
@@ -73,7 +74,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(content: Text('${loc.errorPrefix}$e')),
       );
     } finally {
       if (mounted) {

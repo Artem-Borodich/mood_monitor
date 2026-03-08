@@ -13,22 +13,22 @@ class RecommendationsScreen extends StatefulWidget {
 class _RecommendationsScreenState extends State<RecommendationsScreen> {
   final ApiService _api = ApiService();
   late Future<Map<String, dynamic>> _future;
+  String? _lastLang;
 
   @override
   void initState() {
     super.initState();
-    _future = _fetch();
+    _future = Future.value(<String, dynamic>{}); // will be replaced in build
   }
 
   Future<void> _refresh() async {
+    final lang = _lastLang ?? 'en';
     setState(() {
-      _future = _fetch();
+      _future = _fetch(lang);
     });
   }
 
-  Future<Map<String, dynamic>> _fetch() {
-    final locale = WidgetsBinding.instance.platformDispatcher.locale;
-    final lang = (locale.languageCode == 'ru') ? 'ru' : 'en';
+  Future<Map<String, dynamic>> _fetch(String lang) {
     return _api.fetchRecommendations(lang: lang);
   }
 
@@ -36,6 +36,12 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context);
+    final locale = Localizations.localeOf(context);
+    final lang = locale.languageCode == 'ru' ? 'ru' : 'en';
+    if (_lastLang != lang) {
+      _lastLang = lang;
+      _future = _fetch(lang);
+    }
 
     return RefreshIndicator(
       onRefresh: _refresh,

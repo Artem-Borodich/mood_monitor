@@ -5,6 +5,7 @@ import '../l10n/app_localizations.dart';
 import '../models/mood_entry.dart';
 import '../services/api_service.dart';
 import '../widgets/mood_list_item.dart';
+import 'edit_mood_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -32,6 +33,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Future<void> _refresh() async {
     setState(() {
       _future = _api.fetchMoodEntries();
+    });
+  }
+
+  void _openEdit(MoodEntry entry) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => EditMoodScreen(entry: entry),
+      ),
+    ).then((updated) {
+      if (updated == true) _refresh();
     });
   }
 
@@ -129,7 +141,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ),
                   );
                 },
-                child: MoodListItem(entry: item),
+                child: MoodListItem(
+                  entry: item,
+                  onEdit: _openEdit,
+                  onDelete: (_) => _refresh(),
+                ),
               );
             },
           );

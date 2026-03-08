@@ -7,13 +7,35 @@ import 'screens/add_mood_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/history_screen.dart';
 import 'screens/recommendations_screen.dart';
+import 'screens/settings_screen.dart';
+import 'locale_store.dart';
 
 void main() {
   runApp(const MoodApp());
 }
 
-class MoodApp extends StatelessWidget {
+class MoodApp extends StatefulWidget {
   const MoodApp({super.key});
+
+  @override
+  State<MoodApp> createState() => _MoodAppState();
+}
+
+class _MoodAppState extends State<MoodApp> {
+  Locale? _locale;
+
+  @override
+  void initState() {
+    super.initState();
+    getStoredLocale().then((l) {
+      if (mounted) setState(() => _locale = l);
+    });
+  }
+
+  void _setLocale(Locale locale) {
+    setState(() => _locale = locale);
+    setStoredLocale(locale);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +49,18 @@ class MoodApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const MainScaffold(),
+      locale: _locale,
+      home: MainScaffold(
+        onOpenSettings: (ctx) => Navigator.push(
+          ctx,
+          MaterialPageRoute(
+            builder: (_) => SettingsScreen(
+              currentLocale: _locale,
+              onLocaleChanged: _setLocale,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -80,7 +113,9 @@ class MoodApp extends StatelessWidget {
 }
 
 class MainScaffold extends StatefulWidget {
-  const MainScaffold({super.key});
+  const MainScaffold({super.key, this.onOpenSettings});
+
+  final void Function(BuildContext context)? onOpenSettings;
 
   @override
   State<MainScaffold> createState() => _MainScaffoldState();
@@ -103,6 +138,13 @@ class _MainScaffoldState extends State<MainScaffold> {
     return Scaffold(
       appBar: AppBar(
         title: Text(loc.appTitle),
+        actions: [
+          if (widget.onOpenSettings != null)
+            IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: () => widget.onOpenSettings!(context),
+            ),
+        ],
       ),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 350),

@@ -63,6 +63,65 @@ class ApiService {
     return MoodEntry.fromJson(data);
   }
 
+  Future<MoodEntry?> fetchLastMoodEntry() async {
+    final list = await fetchMoodEntries();
+    return list.isNotEmpty ? list.first : null;
+  }
+
+  Future<MoodEntry> fetchMoodEntry(int id) async {
+    final response = await _client.get(_uri('/mood/$id'));
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load mood entry');
+    }
+    final Map<String, dynamic> data =
+        jsonDecode(response.body) as Map<String, dynamic>;
+    return MoodEntry.fromJson(data);
+  }
+
+  Future<MoodEntry> updateMoodEntry(
+    int id, {
+    required int mood,
+    required int stress,
+    required int energy,
+    String? note,
+    DateTime? date,
+    String? category,
+    double? sleepHours,
+    int? activityMinutes,
+  }) async {
+    final body = <String, dynamic>{
+      'mood': mood,
+      'stress': stress,
+      'energy': energy,
+      'note': note,
+      'category': category,
+      'sleep_hours': sleepHours,
+      'activity_minutes': activityMinutes,
+      if (date != null) 'created_at': date.toUtc().toIso8601String(),
+    };
+
+    final response = await _client.put(
+      _uri('/mood/$id'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update mood entry');
+    }
+
+    final Map<String, dynamic> data =
+        jsonDecode(response.body) as Map<String, dynamic>;
+    return MoodEntry.fromJson(data);
+  }
+
+  Future<void> deleteMoodEntry(int id) async {
+    final response = await _client.delete(_uri('/mood/$id'));
+    if (response.statusCode != 204) {
+      throw Exception('Failed to delete mood entry');
+    }
+  }
+
   Future<double?> fetchWellbeingIndex() async {
     final response = await _client.get(_uri('/wellbeing'));
     if (response.statusCode != 200) {

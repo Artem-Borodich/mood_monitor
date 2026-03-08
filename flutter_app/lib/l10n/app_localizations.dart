@@ -92,6 +92,23 @@ class AppLocalizations {
       'energyLabel': 'Energy',
       'historyEntrySubtitle': 'Mood history entry',
       'errorPrefix': 'Error: ',
+      'settingsTitle': 'Settings',
+      'settingsLanguage': 'Language',
+      'languageEnglish': 'English',
+      'languageRussian': 'Русский',
+      'editEntry': 'Edit',
+      'deleteEntry': 'Delete',
+      'entryDeleted': 'Entry deleted',
+      'entryUpdated': 'Entry updated',
+      'entrySaved': 'Mood entry saved',
+      'quickAddTitle': 'Quick add',
+      'quickAddSubtitle': 'Same as last time',
+      'compareTitle': 'This week vs last week',
+      'thisWeek': 'This week',
+      'lastWeek': 'Last week',
+      'deleteConfirmTitle': 'Delete entry?',
+      'deleteConfirmMessage': 'This action cannot be undone.',
+      'cancel': 'Cancel',
     },
     'ru': {
       'appTitle': 'Монитор благополучия',
@@ -168,6 +185,23 @@ class AppLocalizations {
       'energyLabel': 'Энергия',
       'historyEntrySubtitle': 'Запись истории настроения',
       'errorPrefix': 'Ошибка: ',
+      'settingsTitle': 'Настройки',
+      'settingsLanguage': 'Язык',
+      'languageEnglish': 'English',
+      'languageRussian': 'Русский',
+      'editEntry': 'Изменить',
+      'deleteEntry': 'Удалить',
+      'entryDeleted': 'Запись удалена',
+      'entryUpdated': 'Запись обновлена',
+      'entrySaved': 'Запись о настроении сохранена',
+      'quickAddTitle': 'Быстрая запись',
+      'quickAddSubtitle': 'Как в прошлый раз',
+      'compareTitle': 'Эта неделя и прошлая',
+      'thisWeek': 'Эта неделя',
+      'lastWeek': 'Прошлая неделя',
+      'deleteConfirmTitle': 'Удалить запись?',
+      'deleteConfirmMessage': 'Действие нельзя отменить.',
+      'cancel': 'Отмена',
     },
   };
 
@@ -253,6 +287,24 @@ class AppLocalizations {
   String get energyLabel => _text('energyLabel');
   String get historyEntrySubtitle => _text('historyEntrySubtitle');
   String get errorPrefix => _text('errorPrefix');
+
+  String get settingsTitle => _text('settingsTitle');
+  String get settingsLanguage => _text('settingsLanguage');
+  String get languageEnglish => _text('languageEnglish');
+  String get languageRussian => _text('languageRussian');
+  String get editEntry => _text('editEntry');
+  String get deleteEntry => _text('deleteEntry');
+  String get entryDeleted => _text('entryDeleted');
+  String get entryUpdated => _text('entryUpdated');
+  String get entrySaved => _text('entrySaved');
+  String get quickAddTitle => _text('quickAddTitle');
+  String get quickAddSubtitle => _text('quickAddSubtitle');
+  String get compareTitle => _text('compareTitle');
+  String get thisWeek => _text('thisWeek');
+  String get lastWeek => _text('lastWeek');
+  String get deleteConfirmTitle => _text('deleteConfirmTitle');
+  String get deleteConfirmMessage => _text('deleteConfirmMessage');
+  String get cancel => _text('cancel');
 }
 
 class _AppLocalizationsDelegate

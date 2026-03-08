@@ -107,6 +107,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: ListView(
         padding: const EdgeInsets.all(20),
         children: [
+          if (latest != null) _buildQuickAddCard(context, latest, loc),
+          if (latest != null) const SizedBox(height: 24),
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -163,6 +165,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _buildChartCard(context),
           const SizedBox(height: 24),
           _buildGoalsCard(context),
+          const SizedBox(height: 24),
+          _buildWeekComparisonCard(context),
           const SizedBox(height: 24),
           if (latest != null) _buildLatestEntryCard(context, latest),
         ],
@@ -300,6 +304,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildLatestEntryCard(BuildContext context, MoodEntry entry) {
     final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context);
     final dateString =
         '${entry.createdAt.year}-${entry.createdAt.month.toString().padLeft(2, '0')}-${entry.createdAt.day.toString().padLeft(2, '0')}';
 
@@ -342,7 +347,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Latest Entry',
+                    loc.dashboardLatestEntry,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: theme.colorScheme.onPrimaryContainer,
@@ -367,21 +372,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
               _metricChip(
                 context: context,
                 icon: '😊',
-                label: 'Mood',
+                label: loc.moodLabel,
                 value: entry.mood,
                 color: theme.colorScheme.primary,
               ),
               _metricChip(
                 context: context,
                 icon: '🔥',
-                label: 'Stress',
+                label: loc.stressLabel,
                 value: entry.stress,
                 color: theme.colorScheme.error,
               ),
               _metricChip(
                 context: context,
                 icon: '⚡',
-                label: 'Energy',
+                label: loc.energyLabel,
                 value: entry.energy,
                 color: theme.colorScheme.tertiary,
               ),
@@ -453,6 +458,132 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildQuickAddCard(BuildContext context, MoodEntry last, AppLocalizations loc) {
+    final theme = Theme.of(context);
+    return Card(
+      elevation: 4,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: () async {
+          await _api.createMoodEntry(
+            mood: last.mood,
+            stress: last.stress,
+            energy: last.energy,
+            note: last.note,
+            date: DateTime.now(),
+            category: last.category,
+            sleepHours: last.sleepHours,
+            activityMinutes: last.activityMinutes,
+          );
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(loc.entrySaved)),
+          );
+          _loadData();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Icon(Icons.add_circle_rounded, color: theme.colorScheme.primary, size: 28),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      loc.quickAddTitle,
+                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      loc.quickAddSubtitle,
+                      style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWeekComparisonCard(BuildContext context) {
+    final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context);
+    final now = DateTime.now();
+    final thisWeekStart = now.subtract(const Duration(days: 7));
+    final lastWeekStart = now.subtract(const Duration(days: 14));
+    final thisWeekEntries = _entries.where((e) => e.createdAt.isAfter(thisWeekStart)).toList();
+    final lastWeekEntries = _entries.where((e) => e.createdAt.isAfter(lastWeekStart) && !e.createdAt.isAfter(thisWeekStart)).toList();
+
+    if (thisWeekEntries.isEmpty && lastWeekEntries.isEmpty) return const SizedBox.shrink();
+
+    double avgMood(List<MoodEntry> list) => list.isEmpty ? 0 : list.map((e) => e.mood).reduce((a, b) => a + b) / list.length;
+    double avgStress(List<MoodEntry> list) => list.isEmpty ? 0 : list.map((e) => e.stress).reduce((a, b) => a + b) / list.length;
+    double avgEnergy(List<MoodEntry> list) => list.isEmpty ? 0 : list.map((e) => e.energy).reduce((a, b) => a + b) / list.length;
+
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.compare_arrows_rounded, color: theme.colorScheme.primary),
+                const SizedBox(width: 8),
+                Text(
+                  loc.compareTitle,
+                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      Text(loc.thisWeek, style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 8),
+                      Text('${loc.moodLabel}: ${avgMood(thisWeekEntries).toStringAsFixed(1)}', style: theme.textTheme.bodySmall),
+                      Text('${loc.stressLabel}: ${avgStress(thisWeekEntries).toStringAsFixed(1)}', style: theme.textTheme.bodySmall),
+                      Text('${loc.energyLabel}: ${avgEnergy(thisWeekEntries).toStringAsFixed(1)}', style: theme.textTheme.bodySmall),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      Text(loc.lastWeek, style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 8),
+                      Text('${loc.moodLabel}: ${avgMood(lastWeekEntries).toStringAsFixed(1)}', style: theme.textTheme.bodySmall),
+                      Text('${loc.stressLabel}: ${avgStress(lastWeekEntries).toStringAsFixed(1)}', style: theme.textTheme.bodySmall),
+                      Text('${loc.energyLabel}: ${avgEnergy(lastWeekEntries).toStringAsFixed(1)}', style: theme.textTheme.bodySmall),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
