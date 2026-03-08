@@ -5,7 +5,7 @@ import 'screens/add_mood_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/history_screen.dart';
 import 'screens/recommendations_screen.dart';
-
+import 'theme/colors.dart';
 void main() {
   runApp(const MoodApp());
 }
@@ -25,7 +25,8 @@ class MoodApp extends StatelessWidget {
   ThemeData _buildTheme() {
     final base = ThemeData(
       colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.deepPurple,
+        seedColor: AppColors.primary,
+
         brightness: Brightness.light,
       ),
       useMaterial3: true,
@@ -46,26 +47,31 @@ class MoodApp extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        elevation: 4,
-        margin: EdgeInsets.zero,
+        elevation: 6,
+  shadowColor: AppColors.shadow,
+  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       ),
       bottomNavigationBarTheme: base.bottomNavigationBarTheme.copyWith(
-        selectedItemColor: base.colorScheme.primary,
-        unselectedItemColor: base.colorScheme.onSurfaceVariant,
-        showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-        elevation: 8,
-      ),
+  selectedItemColor: AppColors.primary,
+  unselectedItemColor: AppColors.textSecondary,
+  showUnselectedLabels: true,
+  type: BottomNavigationBarType.fixed,
+  elevation: 8,
+  selectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
+  unselectedLabelStyle: GoogleFonts.inter(),
+),
       elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          elevation: 4,
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        ),
-      ),
-      scaffoldBackgroundColor: const Color(0xFFF5F3FF),
+  style: ElevatedButton.styleFrom(
+    backgroundColor: AppColors.primary,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(16),
+    ),
+    elevation: 6,
+    shadowColor: AppColors.shadow,
+    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+  ),
+),
+      scaffoldBackgroundColor: AppColors.background,
     );
   }
 }
