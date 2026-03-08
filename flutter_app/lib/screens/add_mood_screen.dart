@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../services/api_service.dart';
+import '../theme/app_spacing.dart';
 
 class AddMoodScreen extends StatefulWidget {
   const AddMoodScreen({super.key});
@@ -94,7 +95,12 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
     final loc = AppLocalizations.of(context);
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.screenHorizontal,
+        AppSpacing.screenTop,
+        AppSpacing.screenHorizontal,
+        AppSpacing.screenBottom,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -104,18 +110,34 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
               fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.titleToContent),
           Text(
             loc.addSubtitle,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.section),
+          Text(
+            loc.addCategoryTitle,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.titleToContent),
           _buildCategoryChips(theme, loc),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.betweenSections),
+          Text(
+            loc.addSleepActivityTitle,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.titleToContent),
           _buildSleepAndActivity(theme, loc),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.betweenSections),
           _buildSliderCard(
             context: context,
             label: loc.addMoodLabel,
@@ -125,7 +147,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
             colorForValue: _moodColor,
             onChanged: (v) => setState(() => _mood = v),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.betweenCards),
           _buildSliderCard(
             context: context,
             label: loc.addStressLabel,
@@ -135,7 +157,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
             colorForValue: _stressColor,
             onChanged: (v) => setState(() => _stress = v),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.betweenCards),
           _buildSliderCard(
             context: context,
             label: loc.addEnergyLabel,
@@ -145,14 +167,15 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
             colorForValue: _energyColor,
             onChanged: (v) => setState(() => _energy = v),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.betweenSections),
           Text(
             loc.addOptionalNote,
-            style: theme.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w600,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: theme.colorScheme.onSurface,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.titleToContent),
           TextField(
             controller: _noteController,
             maxLines: 3,
@@ -181,7 +204,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.betweenCards),
           Row(
             children: [
               Icon(
@@ -203,7 +226,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.section),
           Center(
             child: AnimatedScale(
               scale: _pressedSave ? 0.97 : 1.0,
@@ -244,19 +267,9 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
       'health': loc.addCategoryHealth,
     };
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          loc.addCategoryTitle,
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
+    return Wrap(
+      spacing: AppSpacing.sm,
+      runSpacing: AppSpacing.sm,
           children: labels.entries.map((entry) {
             final selected = _category == entry.key;
             return ChoiceChip(
@@ -269,26 +282,14 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
               },
             );
           }).toList(),
-        ),
-      ],
     );
   }
 
   Widget _buildSleepAndActivity(ThemeData theme, AppLocalizations loc) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          loc.addSleepActivityTitle,
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Card(
-          elevation: 3,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
+    return Card(
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.cardPadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -350,9 +351,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
               ],
             ),
           ),
-        ),
-      ],
-    );
+        );
   }
 
   Widget _buildSliderCard({
@@ -370,16 +369,16 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
     return Card(
       elevation: 4,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(AppSpacing.sm),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.15),
+                    color: color.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(
@@ -411,7 +410,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.15),
+                    color: color.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -432,9 +431,9 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
                 overlayShape:
                     const RoundSliderOverlayShape(overlayRadius: 18),
                 activeTrackColor: color,
-                inactiveTrackColor: theme.colorScheme.surfaceVariant,
+                inactiveTrackColor: theme.colorScheme.surfaceContainerHighest,
                 thumbColor: color,
-                overlayColor: color.withOpacity(0.2),
+                overlayColor: color.withValues(alpha: 0.2),
               ),
               child: Slider(
                 min: 1,

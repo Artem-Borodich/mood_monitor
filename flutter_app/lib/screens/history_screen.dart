@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../models/mood_entry.dart';
 import '../services/api_service.dart';
+import '../theme/app_spacing.dart';
 import '../widgets/mood_list_item.dart';
 import 'edit_mood_screen.dart';
 
@@ -64,7 +65,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             return ListView(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
                   child: Text('${loc.errorPrefix}${snapshot.error}'),
                 ),
               ],
@@ -75,7 +76,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             return ListView(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -102,10 +103,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
           if (filtered.isEmpty) {
             return ListView(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.screenTop, AppSpacing.screenHorizontal, AppSpacing.screenBottom),
               children: [
                 _buildFiltersCard(theme, loc),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.betweenSections),
                 Text(
                   loc.historyNoResults,
                   style: theme.textTheme.bodyMedium?.copyWith(
@@ -117,9 +118,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
           }
 
           return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.screenTop, AppSpacing.screenHorizontal, AppSpacing.screenBottom),
             itemCount: filtered.length + 2,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.betweenListItems),
             itemBuilder: (context, index) {
               if (index == 0) {
                 return _buildFiltersCard(theme, loc);
@@ -197,24 +198,24 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Card(
       elevation: 4,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               loc.historyFiltersTitle,
               style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.titleToContent),
             Text(
               loc.historyFiltersDate,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
             Row(
               children: [
                 Expanded(
@@ -232,16 +233,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.betweenCards),
+            Divider(height: 1, color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
+            const SizedBox(height: AppSpacing.betweenCards),
             Text(
               loc.historyFiltersCategory,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
             Wrap(
-              spacing: 8,
+              spacing: AppSpacing.sm,
               children: [
                 _buildCategoryChip(loc.historyFiltersAny, 'any'),
                 _buildCategoryChip(loc.addCategoryWork, 'work'),
@@ -250,21 +253,23 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 _buildCategoryChip(loc.addCategoryHealth, 'health'),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.betweenCards),
+            Divider(height: 1, color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
+            const SizedBox(height: AppSpacing.betweenCards),
             _buildRangeSlider(
               theme: theme,
               label: loc.historyFiltersMoods,
               range: _moodRange,
               onChanged: (v) => setState(() => _moodRange = v),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
             _buildRangeSlider(
               theme: theme,
               label: loc.historyFiltersStress,
               range: _stressRange,
               onChanged: (v) => setState(() => _stressRange = v),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
             _buildRangeSlider(
               theme: theme,
               label: loc.historyFiltersEnergy,
@@ -361,14 +366,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
         Text(
           loc.analyticsTitle,
           style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.titleToContent),
         _buildMoodStressChart(theme, entries),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.betweenListItems),
         _buildMoodSleepChart(theme, entries),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.betweenListItems),
         _buildWeeklyBarChart(theme, entries),
       ],
     );
@@ -388,7 +393,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Card(
       elevation: 4,
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(AppSpacing.cardPaddingCompact),
         child: SizedBox(
           height: 180,
           child: LineChart(
@@ -437,7 +442,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Card(
       elevation: 4,
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(AppSpacing.cardPaddingCompact),
         child: SizedBox(
           height: 180,
           child: LineChart(
@@ -512,7 +517,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Card(
       elevation: 4,
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(AppSpacing.cardPaddingCompact),
         child: SizedBox(
           height: 180,
           child: BarChart(

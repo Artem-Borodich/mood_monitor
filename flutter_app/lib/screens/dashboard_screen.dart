@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../models/mood_entry.dart';
 import '../services/api_service.dart';
+import '../theme/app_spacing.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/wellbeing_ring.dart';
 
@@ -105,10 +106,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return RefreshIndicator(
       onRefresh: _loadData,
       child: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.screenHorizontal,
+          AppSpacing.screenTop,
+          AppSpacing.screenHorizontal,
+          AppSpacing.screenBottom,
+        ),
         children: [
           if (latest != null) _buildQuickAddCard(context, latest, loc),
-          if (latest != null) const SizedBox(height: 24),
+          if (latest != null) const SizedBox(height: AppSpacing.betweenSections),
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -119,16 +125,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.circular(28),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusCard + 8),
               boxShadow: [
                 BoxShadow(
-                  color: theme.colorScheme.primary.withOpacity(0.18),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.18),
                   blurRadius: 20,
                   offset: const Offset(0, 12),
                 ),
               ],
             ),
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(AppSpacing.cardPadding),
             child: Row(
               children: [
                 const SizedBox(width: 4),
@@ -152,7 +158,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             : loc.dashboardWellbeingSubtitle,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onPrimaryContainer
-                              .withOpacity(0.8),
+                              .withValues(alpha: 0.8),
                         ),
                       ),
                     ],
@@ -161,15 +167,35 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.section),
           _buildChartCard(context),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.betweenSections),
+          _sectionTitle(context, loc.goalsTitle),
+          const SizedBox(height: AppSpacing.titleToContent),
           _buildGoalsCard(context),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.betweenSections),
+          _sectionTitle(context, loc.compareTitle),
+          const SizedBox(height: AppSpacing.titleToContent),
           _buildWeekComparisonCard(context),
-          const SizedBox(height: 24),
-          if (latest != null) _buildLatestEntryCard(context, latest),
+          const SizedBox(height: AppSpacing.betweenSections),
+          if (latest != null) ...[
+            _sectionTitle(context, loc.dashboardLatestEntry),
+            const SizedBox(height: AppSpacing.titleToContent),
+            _buildLatestEntryCard(context, latest),
+          ],
         ],
+      ),
+    );
+  }
+
+  Widget _sectionTitle(BuildContext context, String text) {
+    final theme = Theme.of(context);
+    return Text(
+      text,
+      style: theme.textTheme.titleMedium?.copyWith(
+        fontWeight: FontWeight.w700,
+        color: theme.colorScheme.onSurface,
+        letterSpacing: -0.2,
       ),
     );
   }
@@ -194,7 +220,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Card(
       elevation: 6,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSpacing.cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -204,7 +230,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Icons.show_chart_rounded,
                   color: theme.colorScheme.primary,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.sm),
                 Text(
                   loc.dashboardMoodOverTime,
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -213,7 +239,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             SizedBox(
               height: 220,
               child: LineChart(
@@ -223,13 +249,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   // Use default touch behavior to keep compatibility
                   // with a broad range of fl_chart versions.
                   backgroundColor:
-                      theme.colorScheme.surfaceVariant.withOpacity(0.4),
+                      theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
                   gridData: FlGridData(
                     show: true,
                     drawVerticalLine: false,
                     horizontalInterval: 1,
                     getDrawingHorizontalLine: (value) => FlLine(
-                      color: theme.colorScheme.outlineVariant.withOpacity(0.4),
+                      color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
                       strokeWidth: 0.6,
                     ),
                   ),
@@ -284,8 +310,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         show: true,
                         gradient: LinearGradient(
                           colors: [
-                            theme.colorScheme.primary.withOpacity(0.2),
-                            theme.colorScheme.primary.withOpacity(0.02),
+                        theme.colorScheme.primary.withValues(alpha: 0.2),
+                        theme.colorScheme.primary.withValues(alpha: 0.02),
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -321,13 +347,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.primary.withOpacity(0.18),
+            color: theme.colorScheme.primary.withValues(alpha: 0.18),
             blurRadius: 18,
             offset: const Offset(0, 10),
           ),
         ],
       ),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(AppSpacing.cardPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -337,7 +363,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withOpacity(0.15),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.wb_sunny_rounded),
@@ -358,7 +384,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     dateString,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onPrimaryContainer
-                          .withOpacity(0.8),
+                          .withValues(alpha: 0.8),
                     ),
                   ),
                 ],
@@ -398,7 +424,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surface.withOpacity(0.85),
+                color: theme.colorScheme.surface.withValues(alpha: 0.85),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
@@ -429,7 +455,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surface.withOpacity(0.9),
+            color: theme.colorScheme.surface.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
@@ -466,7 +492,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Card(
       elevation: 4,
       child: InkWell(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
         onTap: () async {
           await _api.createMoodEntry(
             mood: last.mood,
@@ -485,13 +511,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _loadData();
         },
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(AppSpacing.cardPadding),
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(AppSpacing.md),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withOpacity(0.12),
+                  color: theme.colorScheme.primary.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Icon(Icons.add_circle_rounded, color: theme.colorScheme.primary, size: 28),
@@ -539,7 +565,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Card(
       elevation: 4,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSpacing.cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -594,7 +620,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Card(
       elevation: 4,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSpacing.cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -620,7 +646,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withOpacity(0.1),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(

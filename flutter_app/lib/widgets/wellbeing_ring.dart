@@ -27,7 +27,7 @@ class WellbeingRing extends StatelessWidget {
           painter: _RingPainter(
             progress: animated,
             color: theme.colorScheme.primary,
-            backgroundColor: theme.colorScheme.primaryContainer.withOpacity(0.25),
+            backgroundColor: theme.colorScheme.primaryContainer.withValues(alpha: 0.25),
           ),
           child: SizedBox(
             width: 140,
@@ -87,7 +87,7 @@ class _RingPainter extends CustomPainter {
       startAngle: startAngle,
       endAngle: startAngle + 2 * pi,
       colors: [
-        color.withOpacity(0.2),
+        color.withValues(alpha: 0.2),
         color,
       ],
     );

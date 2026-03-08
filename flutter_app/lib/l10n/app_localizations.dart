@@ -109,6 +109,30 @@ class AppLocalizations {
       'deleteConfirmTitle': 'Delete entry?',
       'deleteConfirmMessage': 'This action cannot be undone.',
       'cancel': 'Cancel',
+      'tipsForYou': 'For you',
+      'tipsCategoryAll': 'All',
+      'tipsCategoryBreathing': 'Breathing',
+      'tipsCategoryMovement': 'Movement',
+      'tipsCategorySleep': 'Sleep',
+      'tipsCategoryMindset': 'Mindset',
+      'tipsCategoryQuickBreaks': 'Quick breaks',
+      'tipsSaved': 'Saved',
+      'tipsWhyHelp': 'Why it helps',
+      'tipsHowToDo': 'How to do it',
+      'tipsSave': 'Save',
+      'tipsSavedLabel': 'Saved',
+      'tipsStartBreathing': 'Start 2 min breathing',
+      'tipsLogWalk': 'Log a walk',
+      'tipsBreathTitle': '4-7-8 breathing',
+      'tipsBreathSubtitle': 'Follow the phases. About 2 minutes, 4 cycles.',
+      'tipsBreathStart': 'Start',
+      'tipsBreathInhale': 'Inhale',
+      'tipsBreathHold': 'Hold',
+      'tipsBreathExhale': 'Exhale',
+      'tipsBreathCycle': 'Cycle',
+      'tipsMyTips': 'My tips',
+      'tipsLogWalkConfirm': 'Add a 15 min walk to today?',
+      'tipsLogWalkDone': 'Walk logged',
     },
     'ru': {
       'appTitle': 'Монитор благополучия',
@@ -202,6 +226,30 @@ class AppLocalizations {
       'deleteConfirmTitle': 'Удалить запись?',
       'deleteConfirmMessage': 'Действие нельзя отменить.',
       'cancel': 'Отмена',
+      'tipsForYou': 'Для вас',
+      'tipsCategoryAll': 'Все',
+      'tipsCategoryBreathing': 'Дыхание',
+      'tipsCategoryMovement': 'Движение',
+      'tipsCategorySleep': 'Сон',
+      'tipsCategoryMindset': 'Настрой',
+      'tipsCategoryQuickBreaks': 'Быстрые перерывы',
+      'tipsSaved': 'Избранное',
+      'tipsWhyHelp': 'Почему это помогает',
+      'tipsHowToDo': 'Как делать',
+      'tipsSave': 'Сохранить',
+      'tipsSavedLabel': 'Сохранено',
+      'tipsStartBreathing': 'Запустить дыхание 2 мин',
+      'tipsLogWalk': 'Записать прогулку',
+      'tipsBreathTitle': 'Дыхание 4-7-8',
+      'tipsBreathSubtitle': 'Следуйте фазам. Около 2 минут, 4 цикла.',
+      'tipsBreathStart': 'Старт',
+      'tipsBreathInhale': 'Вдох',
+      'tipsBreathHold': 'Задержка',
+      'tipsBreathExhale': 'Выдох',
+      'tipsBreathCycle': 'Цикл',
+      'tipsMyTips': 'Мои советы',
+      'tipsLogWalkConfirm': 'Добавить прогулку 15 мин на сегодня?',
+      'tipsLogWalkDone': 'Прогулка добавлена',
     },
   };
 
@@ -305,6 +353,31 @@ class AppLocalizations {
   String get deleteConfirmTitle => _text('deleteConfirmTitle');
   String get deleteConfirmMessage => _text('deleteConfirmMessage');
   String get cancel => _text('cancel');
+
+  String get tipsForYou => _text('tipsForYou');
+  String get tipsCategoryAll => _text('tipsCategoryAll');
+  String get tipsCategoryBreathing => _text('tipsCategoryBreathing');
+  String get tipsCategoryMovement => _text('tipsCategoryMovement');
+  String get tipsCategorySleep => _text('tipsCategorySleep');
+  String get tipsCategoryMindset => _text('tipsCategoryMindset');
+  String get tipsCategoryQuickBreaks => _text('tipsCategoryQuickBreaks');
+  String get tipsSaved => _text('tipsSaved');
+  String get tipsWhyHelp => _text('tipsWhyHelp');
+  String get tipsHowToDo => _text('tipsHowToDo');
+  String get tipsSave => _text('tipsSave');
+  String get tipsSavedLabel => _text('tipsSavedLabel');
+  String get tipsStartBreathing => _text('tipsStartBreathing');
+  String get tipsLogWalk => _text('tipsLogWalk');
+  String get tipsBreathTitle => _text('tipsBreathTitle');
+  String get tipsBreathSubtitle => _text('tipsBreathSubtitle');
+  String get tipsBreathStart => _text('tipsBreathStart');
+  String get tipsBreathInhale => _text('tipsBreathInhale');
+  String get tipsBreathHold => _text('tipsBreathHold');
+  String get tipsBreathExhale => _text('tipsBreathExhale');
+  String get tipsBreathCycle => _text('tipsBreathCycle');
+  String get tipsMyTips => _text('tipsMyTips');
+  String get tipsLogWalkConfirm => _text('tipsLogWalkConfirm');
+  String get tipsLogWalkDone => _text('tipsLogWalkDone');
 }
 
 class _AppLocalizationsDelegate

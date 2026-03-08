@@ -83,13 +83,15 @@ class _MoodAppState extends State<MoodApp> {
           fontWeight: FontWeight.w600,
           color: base.colorScheme.onSurface,
         ),
+        scrolledUnderElevation: 2,
       ),
-      cardTheme: base.cardTheme.copyWith(
+      cardTheme: CardThemeData(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
         elevation: 4,
         margin: EdgeInsets.zero,
+        clipBehavior: Clip.antiAlias,
       ),
       bottomNavigationBarTheme: base.bottomNavigationBarTheme.copyWith(
         selectedItemColor: base.colorScheme.primary,
@@ -106,6 +108,38 @@ class _MoodAppState extends State<MoodApp> {
           elevation: 4,
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
         ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: base.colorScheme.outlineVariant),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: base.colorScheme.primary, width: 1.5),
+        ),
+      ),
+      listTileTheme: base.listTileTheme.copyWith(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       ),
       scaffoldBackgroundColor: const Color(0xFFF5F3FF),
     );

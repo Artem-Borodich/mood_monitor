@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../models/mood_entry.dart';
 import '../services/api_service.dart';
+import '../theme/app_spacing.dart';
 
 class EditMoodScreen extends StatefulWidget {
   const EditMoodScreen({super.key, required this.entry});
@@ -86,21 +87,21 @@ class _EditMoodScreenState extends State<EditMoodScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(loc.editEntry)),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.screenTop, AppSpacing.screenHorizontal, AppSpacing.screenBottom),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSliderCard(theme, loc.addMoodLabel, loc.addMoodDesc, Icons.emoji_emotions_rounded, _mood, (v) => setState(() => _mood = v), _moodColor),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.betweenCards),
             _buildSliderCard(theme, loc.addStressLabel, loc.addStressDesc, Icons.local_fire_department_rounded, _stress, (v) => setState(() => _stress = v), _stressColor),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.betweenCards),
             _buildSliderCard(theme, loc.addEnergyLabel, loc.addEnergyDesc, Icons.bolt_rounded, _energy, (v) => setState(() => _energy = v), _energyColor),
-            const SizedBox(height: 24),
-            Text(loc.addCategoryTitle, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600)),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.betweenSections),
+            Text(loc.addCategoryTitle, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+            const SizedBox(height: AppSpacing.titleToContent),
             Wrap(
-              spacing: 8,
-              runSpacing: 8,
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
               children: [
                 _chip(loc.addCategoryNone, 'none'),
                 _chip(loc.addCategoryWork, 'work'),
@@ -108,13 +109,13 @@ class _EditMoodScreenState extends State<EditMoodScreen> {
                 _chip(loc.addCategoryHealth, 'health'),
               ],
             ),
-            const SizedBox(height: 16),
-            Text(loc.addSleepActivityTitle, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600)),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.betweenSections),
+            Text(loc.addSleepActivityTitle, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+            const SizedBox(height: AppSpacing.titleToContent),
             Card(
               elevation: 3,
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSpacing.cardPadding),
                 child: Column(
                   children: [
                     Row(
@@ -137,9 +138,9 @@ class _EditMoodScreenState extends State<EditMoodScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 24),
-            Text(loc.addOptionalNote, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600)),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.betweenSections),
+            Text(loc.addOptionalNote, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+            const SizedBox(height: AppSpacing.titleToContent),
             TextField(
               controller: _noteController,
               maxLines: 3,
@@ -152,7 +153,7 @@ class _EditMoodScreenState extends State<EditMoodScreen> {
                 focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5)),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.betweenCards),
             Row(
               children: [
                 Icon(Icons.calendar_today_rounded, size: 18, color: theme.colorScheme.onSurfaceVariant),
@@ -168,7 +169,7 @@ class _EditMoodScreenState extends State<EditMoodScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.section),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -187,15 +188,15 @@ class _EditMoodScreenState extends State<EditMoodScreen> {
     return Card(
       elevation: 4,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(16)),
+                  padding: const EdgeInsets.all(AppSpacing.sm),
+                  decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(16)),
                   child: Icon(icon, color: color),
                 ),
                 const SizedBox(width: 12),
@@ -211,20 +212,20 @@ class _EditMoodScreenState extends State<EditMoodScreen> {
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(20)),
+                  decoration: BoxDecoration(color: color.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(20)),
                   child: Text(value.round().toString(), style: theme.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w700, color: color)),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             SliderTheme(
               data: SliderTheme.of(context).copyWith(
                 thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
                 overlayShape: const RoundSliderOverlayShape(overlayRadius: 18),
                 activeTrackColor: color,
-                inactiveTrackColor: theme.colorScheme.surfaceVariant,
+                inactiveTrackColor: theme.colorScheme.surfaceContainerHighest,
                 thumbColor: color,
-                overlayColor: color.withOpacity(0.2),
+                overlayColor: color.withValues(alpha: 0.2),
               ),
               child: Slider(min: 1, max: 10, divisions: 9, value: value, label: value.round().toString(), onChanged: onChanged),
             ),

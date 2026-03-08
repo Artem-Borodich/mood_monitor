@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_spacing.dart';
+
 class StatCard extends StatelessWidget {
   const StatCard({
     super.key,
@@ -21,15 +23,15 @@ class StatCard extends StatelessWidget {
       color: color ?? theme.colorScheme.surface,
       elevation: 4,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusCard + 4),
       ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(24),
-        splashColor: theme.colorScheme.primary.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusCard + 4),
+        splashColor: theme.colorScheme.primary.withValues(alpha: 0.1),
         highlightColor: Colors.transparent,
         onTap: () {},
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(AppSpacing.cardPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
