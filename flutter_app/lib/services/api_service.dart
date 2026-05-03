@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../core/app_config.dart';
 import '../models/mood_entry.dart';
 
 class ApiService {
@@ -9,7 +10,7 @@ class ApiService {
     http.Client? client,
     String? baseUrl,
   })  : _client = client ?? http.Client(),
-        _baseUrl = baseUrl ?? 'http://localhost:8000';
+        _baseUrl = baseUrl ?? AppConfig.apiBaseUrl;
 
   final http.Client _client;
   final String _baseUrl;
@@ -144,6 +145,17 @@ class ApiService {
     final Map<String, dynamic> data =
         jsonDecode(response.body) as Map<String, dynamic>;
     return data;
+  }
+
+  /// Quick connectivity check (backend must expose GET /health).
+  Future<bool> pingHealth() async {
+    try {
+      final response =
+          await _client.get(_uri('/health')).timeout(const Duration(seconds: 4));
+      return response.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
   }
 }
 

@@ -4,6 +4,7 @@ import '../l10n/app_localizations.dart';
 import '../models/mood_entry.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
+import '../utils/format_date.dart';
 
 class EditMoodScreen extends StatefulWidget {
   const EditMoodScreen({super.key, required this.entry});
@@ -81,8 +82,10 @@ class _EditMoodScreenState extends State<EditMoodScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context);
-    final dateString =
-        '${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}';
+    final dateString = formatMoodDate(
+      _selectedDate,
+      localeCode: Localizations.localeOf(context).languageCode,
+    );
 
     return Scaffold(
       appBar: AppBar(title: Text(loc.editEntry)),

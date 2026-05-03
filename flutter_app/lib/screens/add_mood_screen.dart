@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../l10n/app_localizations.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
+import '../utils/format_date.dart';
 
 class AddMoodScreen extends StatefulWidget {
   const AddMoodScreen({super.key});
@@ -66,6 +68,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
         activityMinutes: _activityMinutes.round(),
       );
       if (!mounted) return;
+      HapticFeedback.mediumImpact();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(loc.entrySaved)),
       );
@@ -88,8 +91,10 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final dateString =
-        '${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}';
+    final dateString = formatMoodDate(
+      _selectedDate,
+      localeCode: Localizations.localeOf(context).languageCode,
+    );
 
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context);

@@ -5,6 +5,7 @@ import '../l10n/app_localizations.dart';
 import '../models/mood_entry.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
+import '../widgets/loading_shimmer.dart';
 import '../widgets/mood_list_item.dart';
 import 'edit_mood_screen.dart';
 
@@ -59,7 +60,25 @@ class _HistoryScreenState extends State<HistoryScreen> {
         future: _future,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return ListView(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.screenHorizontal,
+                AppSpacing.screenTop,
+                AppSpacing.screenHorizontal,
+                AppSpacing.screenBottom,
+              ),
+              children: [
+                const LoadingShimmer(
+                  child: Column(
+                    children: [
+                      ListTileSkeleton(),
+                      ListTileSkeleton(),
+                      ListTileSkeleton(),
+                    ],
+                  ),
+                ),
+              ],
+            );
           }
           if (snapshot.hasError) {
             return ListView(

@@ -50,6 +50,7 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 The API will be available at `http://localhost:8000`.
 
 Main endpoints:
+- **GET** `/health` – simple `{ "status": "ok" }` connectivity check
 - **POST** `/mood` – create mood entry
 - **GET** `/mood` – list all entries
 - **GET** `/wellbeing` – current wellbeing index (from latest entry)
@@ -76,13 +77,21 @@ cd flutter_app
 flutter pub get
 ```
 
-Make sure the backend is running. For Android emulators, the API base URL in `ApiService` is:
+Make sure the backend is running.
 
-```dart
-http://10.0.2.2:8000
+**API base URL** is resolved automatically in `lib/core/app_config.dart`:
+
+- Android emulator → `http://10.0.2.2:8000`
+- iOS / Windows / macOS / Linux → `http://localhost:8000`
+- Web → `http://localhost:8000`
+
+Override for any platform (e.g. physical phone on Wi‑Fi):
+
+```bash
+flutter run --dart-define=API_BASE_URL=http://192.168.1.10:8000
 ```
 
-Adjust it if you run on a real device or iOS simulator (for example, your machine IP).
+The app uses **Google Fonts** (Inter + Plus Jakarta Sans, loaded at runtime), **shimmer** skeletons while data loads, **Material 3** `NavigationBar`, and **light/dark** theme (see Settings). Locale date formats use `intl` (initialized for `en` and `ru` in `main()`).
 
 ### Run app
 

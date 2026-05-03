@@ -4,6 +4,7 @@ import '../l10n/app_localizations.dart';
 import '../models/mood_entry.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
+import '../utils/format_date.dart';
 
 class MoodListItem extends StatelessWidget {
   const MoodListItem({
@@ -21,8 +22,9 @@ class MoodListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context);
+    final localeCode = Localizations.localeOf(context).languageCode;
     final dateString =
-        '${entry.createdAt.year}-${entry.createdAt.month.toString().padLeft(2, '0')}-${entry.createdAt.day.toString().padLeft(2, '0')}';
+        formatMoodDate(entry.createdAt, localeCode: localeCode);
 
     Widget card = Card(
       elevation: 4,

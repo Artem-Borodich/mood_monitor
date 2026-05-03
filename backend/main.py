@@ -23,3 +23,7 @@ app.add_middleware(
 
 app.include_router(mood_routes.router)
 
+
+@app.get("/health")
+def health():
+    return {"status": "ok", "service": "wellbeing-api"}

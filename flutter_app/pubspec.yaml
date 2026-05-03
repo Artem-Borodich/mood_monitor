@@ -17,6 +17,10 @@ dependencies:
   fl_chart: any
   google_fonts: any
   shared_preferences: ^2.2.2
+  intl: any
+  flutter_animate: ^4.5.0
+  shimmer: ^3.0.0
+  package_info_plus: ^8.0.0
 
 dev_dependencies:
   flutter_test:

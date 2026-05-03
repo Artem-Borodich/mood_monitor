@@ -1,10 +1,14 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/mood_entry.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
+import '../utils/format_date.dart';
+import '../widgets/loading_shimmer.dart';
 import '../widgets/stat_card.dart';
 import '../widgets/wellbeing_ring.dart';
 
@@ -89,7 +93,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final loc = AppLocalizations.of(context);
 
     if (_loading) {
-      return const Center(child: CircularProgressIndicator());
+      return ListView(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.screenHorizontal,
+          AppSpacing.screenTop,
+          AppSpacing.screenHorizontal,
+          AppSpacing.screenBottom,
+        ),
+        children: const [
+          LoadingShimmer(
+            padding: EdgeInsets.zero,
+            child: DashboardSkeleton(),
+          ),
+        ],
+      );
     }
 
     if (_error != null) {
@@ -166,7 +183,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ],
             ),
-          ),
+          )
+              .animate()
+              .fadeIn(duration: 500.ms, curve: Curves.easeOutCubic)
+              .slideY(
+                begin: 0.04,
+                end: 0,
+                duration: 500.ms,
+                curve: Curves.easeOutCubic,
+              ),
           const SizedBox(height: AppSpacing.section),
           _buildChartCard(context),
           const SizedBox(height: AppSpacing.betweenSections),
@@ -331,8 +356,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildLatestEntryCard(BuildContext context, MoodEntry entry) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context);
-    final dateString =
-        '${entry.createdAt.year}-${entry.createdAt.month.toString().padLeft(2, '0')}-${entry.createdAt.day.toString().padLeft(2, '0')}';
+    final localeCode = Localizations.localeOf(context).languageCode;
+    final dateString = formatMoodDateLong(entry.createdAt, localeCode: localeCode);
 
     return Container(
       decoration: BoxDecoration(
@@ -505,6 +530,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             activityMinutes: last.activityMinutes,
           );
           if (!mounted) return;
+          HapticFeedback.lightImpact();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(loc.entrySaved)),
           );

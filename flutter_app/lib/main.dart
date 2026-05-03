@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'l10n/app_localizations.dart';
+import 'locale_store.dart';
 import 'screens/add_mood_screen.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/history_screen.dart';
 import 'screens/recommendations_screen.dart';
 import 'screens/settings_screen.dart';
-import 'locale_store.dart';
+import 'theme/app_theme.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('en');
+  await initializeDateFormatting('ru');
   runApp(const MoodApp());
 }
 
@@ -23,12 +28,16 @@ class MoodApp extends StatefulWidget {
 
 class _MoodAppState extends State<MoodApp> {
   Locale? _locale;
+  ThemeMode _themeMode = ThemeMode.system;
 
   @override
   void initState() {
     super.initState();
     getStoredLocale().then((l) {
       if (mounted) setState(() => _locale = l);
+    });
+    getStoredThemeMode().then((m) {
+      if (mounted) setState(() => _themeMode = m);
     });
   }
 
@@ -37,11 +46,19 @@ class _MoodAppState extends State<MoodApp> {
     setStoredLocale(locale);
   }
 
+  void _setThemeMode(ThemeMode mode) {
+    setState(() => _themeMode = mode);
+    setStoredThemeMode(mode);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Wellbeing Monitor',
-      theme: _buildTheme(),
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme(null),
+      darkTheme: AppTheme.darkTheme(null),
+      themeMode: _themeMode,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -57,91 +74,12 @@ class _MoodAppState extends State<MoodApp> {
             builder: (_) => SettingsScreen(
               currentLocale: _locale,
               onLocaleChanged: _setLocale,
+              themeMode: _themeMode,
+              onThemeModeChanged: _setThemeMode,
             ),
           ),
         ),
       ),
-    );
-  }
-
-  ThemeData _buildTheme() {
-    final base = ThemeData(
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.deepPurple,
-        brightness: Brightness.light,
-      ),
-      useMaterial3: true,
-    );
-
-    return base.copyWith(
-      textTheme: GoogleFonts.interTextTheme(base.textTheme),
-      appBarTheme: base.appBarTheme.copyWith(
-        elevation: 0,
-        centerTitle: true,
-        titleTextStyle: GoogleFonts.inter(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: base.colorScheme.onSurface,
-        ),
-        scrolledUnderElevation: 2,
-      ),
-      cardTheme: CardThemeData(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        elevation: 4,
-        margin: EdgeInsets.zero,
-        clipBehavior: Clip.antiAlias,
-      ),
-      bottomNavigationBarTheme: base.bottomNavigationBarTheme.copyWith(
-        selectedItemColor: base.colorScheme.primary,
-        unselectedItemColor: base.colorScheme.onSurfaceVariant,
-        showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-        elevation: 8,
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          elevation: 4,
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        ),
-      ),
-      filledButtonTheme: FilledButtonThemeData(
-        style: FilledButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        ),
-      ),
-      outlinedButtonTheme: OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        ),
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: base.colorScheme.outlineVariant),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: base.colorScheme.primary, width: 1.5),
-        ),
-      ),
-      listTileTheme: base.listTileTheme.copyWith(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      ),
-      scaffoldBackgroundColor: const Color(0xFFF5F3FF),
     );
   }
 }
@@ -175,29 +113,24 @@ class _MainScaffoldState extends State<MainScaffold> {
         actions: [
           if (widget.onOpenSettings != null)
             IconButton(
-              icon: const Icon(Icons.settings),
+              tooltip: loc.settingsTitle,
+              icon: const Icon(Icons.settings_rounded),
               onPressed: () => widget.onOpenSettings!(context),
             ),
         ],
       ),
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 350),
+        duration: const Duration(milliseconds: 280),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
         transitionBuilder: (child, animation) {
-          final offsetAnimation = Tween<Offset>(
-            begin: const Offset(0.1, 0),
-            end: Offset.zero,
-          ).animate(CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeOutCubic,
-          ));
-          final fadeAnimation = CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeOut,
-          );
           return FadeTransition(
-            opacity: fadeAnimation,
+            opacity: animation,
             child: SlideTransition(
-              position: offsetAnimation,
+              position: Tween<Offset>(
+                begin: const Offset(0.03, 0),
+                end: Offset.zero,
+              ).animate(animation),
               child: child,
             ),
           );
@@ -207,29 +140,31 @@ class _MainScaffoldState extends State<MainScaffold> {
           child: _screens[_currentIndex],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (index) {
+          HapticFeedback.selectionClick();
+          setState(() => _currentIndex = index);
         },
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.dashboard),
+        destinations: [
+          NavigationDestination(
+            icon: const Icon(Icons.dashboard_outlined),
+            selectedIcon: const Icon(Icons.dashboard_rounded),
             label: loc.navDashboard,
           ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.add),
+          NavigationDestination(
+            icon: const Icon(Icons.add_circle_outline_rounded),
+            selectedIcon: const Icon(Icons.add_circle_rounded),
             label: loc.navAdd,
           ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.list),
+          NavigationDestination(
+            icon: const Icon(Icons.format_list_bulleted_outlined),
+            selectedIcon: const Icon(Icons.format_list_bulleted_rounded),
             label: loc.navHistory,
           ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.lightbulb),
+          NavigationDestination(
+            icon: const Icon(Icons.lightbulb_outline_rounded),
+            selectedIcon: const Icon(Icons.lightbulb_rounded),
             label: loc.navTips,
           ),
         ],
@@ -237,4 +172,3 @@ class _MainScaffoldState extends State<MainScaffold> {
     );
   }
 }
-

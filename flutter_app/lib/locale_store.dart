@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const _keyLocale = 'app_locale';
 const _keySavedTipIds = 'saved_tip_ids';
+const _keyThemeMode = 'app_theme_mode';
 
 Future<Locale?> getStoredLocale() async {
   final prefs = await SharedPreferences.getInstance();
@@ -35,4 +36,26 @@ Future<void> toggleSavedTipId(String id) async {
     current.add(id);
   }
   await setSavedTipIds(current);
+}
+
+Future<ThemeMode> getStoredThemeMode() async {
+  final prefs = await SharedPreferences.getInstance();
+  switch (prefs.getString(_keyThemeMode)) {
+    case 'light':
+      return ThemeMode.light;
+    case 'dark':
+      return ThemeMode.dark;
+    default:
+      return ThemeMode.system;
+  }
+}
+
+Future<void> setStoredThemeMode(ThemeMode mode) async {
+  final prefs = await SharedPreferences.getInstance();
+  final value = switch (mode) {
+    ThemeMode.light => 'light',
+    ThemeMode.dark => 'dark',
+    _ => 'system',
+  };
+  await prefs.setString(_keyThemeMode, value);
 }

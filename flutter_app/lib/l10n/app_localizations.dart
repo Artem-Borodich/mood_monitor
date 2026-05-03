@@ -94,6 +94,14 @@ class AppLocalizations {
       'errorPrefix': 'Error: ',
       'settingsTitle': 'Settings',
       'settingsLanguage': 'Language',
+      'settingsAppearance': 'Appearance',
+      'settingsThemeSystem': 'System',
+      'settingsThemeLight': 'Light',
+      'settingsThemeDark': 'Dark',
+      'settingsAbout': 'About',
+      'settingsAboutBody': 'Track mood, stress and energy. Data syncs with your own backend.',
+      'settingsApiHint': 'Backend URL is auto-selected per platform. Override with --dart-define=API_BASE_URL=…',
+      'settingsVersion': 'Version',
       'languageEnglish': 'English',
       'languageRussian': 'Русский',
       'editEntry': 'Edit',
@@ -211,6 +219,14 @@ class AppLocalizations {
       'errorPrefix': 'Ошибка: ',
       'settingsTitle': 'Настройки',
       'settingsLanguage': 'Язык',
+      'settingsAppearance': 'Оформление',
+      'settingsThemeSystem': 'Как в системе',
+      'settingsThemeLight': 'Светлая',
+      'settingsThemeDark': 'Тёмная',
+      'settingsAbout': 'О приложении',
+      'settingsAboutBody': 'Учёт настроения, стресса и энергии. Данные синхронизируются с вашим сервером.',
+      'settingsApiHint': 'Адрес API подбирается под платформу. Свой URL: --dart-define=API_BASE_URL=…',
+      'settingsVersion': 'Версия',
       'languageEnglish': 'English',
       'languageRussian': 'Русский',
       'editEntry': 'Изменить',
@@ -338,6 +354,14 @@ class AppLocalizations {
 
   String get settingsTitle => _text('settingsTitle');
   String get settingsLanguage => _text('settingsLanguage');
+  String get settingsAppearance => _text('settingsAppearance');
+  String get settingsThemeSystem => _text('settingsThemeSystem');
+  String get settingsThemeLight => _text('settingsThemeLight');
+  String get settingsThemeDark => _text('settingsThemeDark');
+  String get settingsAbout => _text('settingsAbout');
+  String get settingsAboutBody => _text('settingsAboutBody');
+  String get settingsApiHint => _text('settingsApiHint');
+  String get settingsVersion => _text('settingsVersion');
   String get languageEnglish => _text('languageEnglish');
   String get languageRussian => _text('languageRussian');
   String get editEntry => _text('editEntry');
