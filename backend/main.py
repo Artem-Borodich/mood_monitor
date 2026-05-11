@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from database import Base, engine
 import models  # noqa: F401
+from routes import diploma as diploma_routes
 from routes import mood as mood_routes
 
 
@@ -22,6 +23,7 @@ app.add_middleware(
 )
 
 app.include_router(mood_routes.router)
+app.include_router(diploma_routes.router)
 
 
 @app.get("/health")

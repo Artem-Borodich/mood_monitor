@@ -1,5 +1,6 @@
 class MoodEntry {
   final int id;
+  final int userId;
   final int mood;
   final int stress;
   final int energy;
@@ -11,6 +12,7 @@ class MoodEntry {
 
   MoodEntry({
     required this.id,
+    this.userId = 1,
     required this.mood,
     required this.stress,
     required this.energy,
@@ -24,6 +26,7 @@ class MoodEntry {
   factory MoodEntry.fromJson(Map<String, dynamic> json) {
     return MoodEntry(
       id: json['id'] as int,
+      userId: (json['user_id'] as int?) ?? 1,
       mood: json['mood'] as int,
       stress: json['stress'] as int,
       energy: json['energy'] as int,

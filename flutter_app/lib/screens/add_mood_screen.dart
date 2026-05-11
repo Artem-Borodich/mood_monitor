@@ -4,7 +4,8 @@ import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
-import '../utils/format_date.dart';
+import '../widgets/serenity_button.dart';
+import '../widgets/serenity_card.dart';
 
 class AddMoodScreen extends StatefulWidget {
   const AddMoodScreen({super.key});
@@ -16,17 +17,15 @@ class AddMoodScreen extends StatefulWidget {
 class _AddMoodScreenState extends State<AddMoodScreen> {
   final ApiService _api = ApiService();
 
-  double _mood = 5;
-  double _stress = 5;
-  double _energy = 5;
-   // Optional extra fields
+  double _mood = 7;
+  double _stress = 4;
+  double _energy = 6;
   String _category = 'none';
   double _sleepHours = 7;
-  double _activityMinutes = 0;
+  double _activityMinutes = 20;
   final TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   bool _submitting = false;
-  bool _pressedSave = false;
 
   @override
   void dispose() {
@@ -72,9 +71,6 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(loc.entrySaved)),
       );
-      setState(() {
-        _pressedSave = false;
-      });
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -91,176 +87,136 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final dateString = formatMoodDate(
-      _selectedDate,
-      localeCode: Localizations.localeOf(context).languageCode,
-    );
-
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context);
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.screenHorizontal,
-        AppSpacing.screenTop,
-        AppSpacing.screenHorizontal,
-        AppSpacing.screenBottom,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            loc.addTitle,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w700,
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.screenHorizontal,
+              AppSpacing.screenTop,
+              AppSpacing.screenHorizontal,
+              120,
             ),
-          ),
-          const SizedBox(height: AppSpacing.titleToContent),
-          Text(
-            loc.addSubtitle,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.section),
-          Text(
-            loc.addCategoryTitle,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-              color: theme.colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.titleToContent),
-          _buildCategoryChips(theme, loc),
-          const SizedBox(height: AppSpacing.betweenSections),
-          Text(
-            loc.addSleepActivityTitle,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-              color: theme.colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.titleToContent),
-          _buildSleepAndActivity(theme, loc),
-          const SizedBox(height: AppSpacing.betweenSections),
-          _buildSliderCard(
-            context: context,
-            label: loc.addMoodLabel,
-            description: loc.addMoodDesc,
-            icon: Icons.emoji_emotions_rounded,
-            value: _mood,
-            colorForValue: _moodColor,
-            onChanged: (v) => setState(() => _mood = v),
-          ),
-          const SizedBox(height: AppSpacing.betweenCards),
-          _buildSliderCard(
-            context: context,
-            label: loc.addStressLabel,
-            description: loc.addStressDesc,
-            icon: Icons.local_fire_department_rounded,
-            value: _stress,
-            colorForValue: _stressColor,
-            onChanged: (v) => setState(() => _stress = v),
-          ),
-          const SizedBox(height: AppSpacing.betweenCards),
-          _buildSliderCard(
-            context: context,
-            label: loc.addEnergyLabel,
-            description: loc.addEnergyDesc,
-            icon: Icons.bolt_rounded,
-            value: _energy,
-            colorForValue: _energyColor,
-            onChanged: (v) => setState(() => _energy = v),
-          ),
-          const SizedBox(height: AppSpacing.betweenSections),
-          Text(
-            loc.addOptionalNote,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-              color: theme.colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.titleToContent),
-          TextField(
-            controller: _noteController,
-            maxLines: 3,
-            decoration: InputDecoration(
-              hintText: loc.addOptionalNoteHint,
-              filled: true,
-              fillColor: theme.colorScheme.surface,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(
-                  color: theme.colorScheme.outlineVariant,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'How are you feeling?',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(
-                  color: theme.colorScheme.outlineVariant,
+                const SizedBox(height: AppSpacing.sm),
+                Text(
+                  'Your daily check-in helps us understand your patterns and provide better advice.',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(
-                  color: theme.colorScheme.primary,
-                  width: 1.5,
+                const SizedBox(height: AppSpacing.section),
+                _buildSliderCard(
+                  context: context,
+                  label: loc.addMoodLabel,
+                  description: loc.addMoodDesc,
+                  icon: Icons.emoji_emotions_rounded,
+                  value: _mood,
+                  colorForValue: _moodColor,
+                  onChanged: (v) => setState(() => _mood = v),
                 ),
-              ),
+                const SizedBox(height: AppSpacing.betweenCards),
+                _buildSliderCard(
+                  context: context,
+                  label: loc.addStressLabel,
+                  description: loc.addStressDesc,
+                  icon: Icons.psychology_alt_rounded,
+                  value: _stress,
+                  colorForValue: _stressColor,
+                  onChanged: (v) => setState(() => _stress = v),
+                ),
+                const SizedBox(height: AppSpacing.betweenCards),
+                _buildSliderCard(
+                  context: context,
+                  label: loc.addEnergyLabel,
+                  description: loc.addEnergyDesc,
+                  icon: Icons.bolt_rounded,
+                  value: _energy,
+                  colorForValue: _energyColor,
+                  onChanged: (v) => setState(() => _energy = v),
+                ),
+                const SizedBox(height: AppSpacing.betweenCards),
+                SerenityCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        loc.addSleepActivityTitle,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.titleToContent),
+                      _buildSleepAndActivity(theme, loc),
+                      const SizedBox(height: 8),
+                      _buildCategoryChips(theme, loc),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.betweenCards),
+                SerenityCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Journal / Notes',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _noteController,
+                        maxLines: 4,
+                        decoration: InputDecoration(
+                          hintText: loc.addOptionalNoteHint,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton.icon(
+                          onPressed: _pickDate,
+                          icon: const Icon(Icons.event_rounded),
+                          label: Text(loc.addChangeDate),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: AppSpacing.betweenCards),
-          Row(
-            children: [
-              Icon(
-                Icons.calendar_today_rounded,
-                size: 18,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                dateString,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(width: 8),
-              TextButton(
-                onPressed: _pickDate,
-                child: Text(loc.addChangeDate),
+        ),
+        Container(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 16,
+                color: theme.colorScheme.primary.withValues(alpha: 0.08),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.section),
-          Center(
-            child: AnimatedScale(
-              scale: _pressedSave ? 0.97 : 1.0,
-              duration: const Duration(milliseconds: 120),
-              curve: Curves.easeOut,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _submitting
-                      ? null
-                      : () {
-                          setState(() {
-                            _pressedSave = true;
-                          });
-                          _submit();
-                        },
-                  child: _submitting
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : Text(loc.addSave),
-                ),
-              ),
-            ),
+          child: SerenityButton(
+            label: _submitting ? 'Saving...' : loc.addSave,
+            icon: _submitting ? Icons.sync_rounded : Icons.check_circle_outline_rounded,
+            onPressed: _submitting ? null : _submit,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -291,72 +247,39 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
   }
 
   Widget _buildSleepAndActivity(ThemeData theme, AppLocalizations loc) {
-    return Card(
-      elevation: 3,
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.cardPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.nights_stay_rounded, size: 18),
-                        const SizedBox(width: 6),
-                        Text(
-                          loc.addSleepLabel,
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                    Text(
-                      _sleepHours.toStringAsFixed(1),
-                      style: theme.textTheme.labelLarge,
-                    ),
-                  ],
-                ),
-                Slider(
-                  min: 0,
-                  max: 12,
-                  divisions: 24,
-                  value: _sleepHours,
-                  label: _sleepHours.toStringAsFixed(1),
-                  onChanged: (v) => setState(() => _sleepHours = v),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.directions_walk_rounded, size: 18),
-                        const SizedBox(width: 6),
-                        Text(
-                          loc.addActivityLabel,
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                    Text(
-                      _activityMinutes.round().toString(),
-                      style: theme.textTheme.labelLarge,
-                    ),
-                  ],
-                ),
-                Slider(
-                  min: 0,
-                  max: 300,
-                  divisions: 30,
-                  value: _activityMinutes,
-                  label: _activityMinutes.round().toString(),
-                  onChanged: (v) => setState(() => _activityMinutes = v),
-                ),
-              ],
-            ),
-          ),
-        );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(loc.addSleepLabel, style: theme.textTheme.bodyMedium),
+            Text('${_sleepHours.toStringAsFixed(1)} h', style: theme.textTheme.labelLarge),
+          ],
+        ),
+        Slider(
+          min: 0,
+          max: 12,
+          divisions: 24,
+          value: _sleepHours,
+          onChanged: (v) => setState(() => _sleepHours = v),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(loc.addActivityLabel, style: theme.textTheme.bodyMedium),
+            Text('${_activityMinutes.round()} min', style: theme.textTheme.labelLarge),
+          ],
+        ),
+        Slider(
+          min: 0,
+          max: 300,
+          divisions: 30,
+          value: _activityMinutes,
+          onChanged: (v) => setState(() => _activityMinutes = v),
+        ),
+      ],
+    );
   }
 
   Widget _buildSliderCard({

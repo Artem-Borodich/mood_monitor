@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const primary = Color(0xFF7B5FFF);          // фиолетовый основной
-  static const background = Color(0xFFF5F3FF);       // светлый фон
-  static const card = Colors.white;                  // цвет карточек
-  static const textPrimary = Color(0xFF333333);      // основной текст
-  static const textSecondary = Color(0xFF666666);    // второстепенный текст
-  static const shadow = Color(0x33000000);           // мягкая тень
+  static const primary = Color(0xFF632CE5);
+  static const background = Color(0xFFFDF7FF);
+  static const error = Color(0xFFBA1A1A);
+  static const accent = Color(0xFF904500);
+  static const card = Colors.white;
+  static const textPrimary = Color(0xFF261F35);
+  static const textSecondary = Color(0xFF6C6678);
+  static const shadow = Color(0x1A632CE5);
 }

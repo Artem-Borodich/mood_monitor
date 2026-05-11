@@ -3,22 +3,25 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../core/app_config.dart';
+import '../models/forecast_payload.dart';
 import '../models/mood_entry.dart';
 
 class ApiService {
   ApiService({
     http.Client? client,
     String? baseUrl,
+    this.userId = 1,
   })  : _client = client ?? http.Client(),
         _baseUrl = baseUrl ?? AppConfig.apiBaseUrl;
 
   final http.Client _client;
   final String _baseUrl;
+  final int userId;
 
   Uri _uri(String path) => Uri.parse('$_baseUrl$path');
 
   Future<List<MoodEntry>> fetchMoodEntries() async {
-    final response = await _client.get(_uri('/mood'));
+    final response = await _client.get(_uri('/mood?user_id=$userId'));
     if (response.statusCode != 200) {
       throw Exception('Failed to load mood entries');
     }
@@ -37,8 +40,10 @@ class ApiService {
     String? category,
     double? sleepHours,
     int? activityMinutes,
+    int? forUserId,
   }) async {
     final body = <String, dynamic>{
+      'user_id': forUserId ?? userId,
       'mood': mood,
       'stress': stress,
       'energy': energy,
@@ -91,6 +96,7 @@ class ApiService {
     int? activityMinutes,
   }) async {
     final body = <String, dynamic>{
+      'user_id': userId,
       'mood': mood,
       'stress': stress,
       'energy': energy,
@@ -124,7 +130,7 @@ class ApiService {
   }
 
   Future<double?> fetchWellbeingIndex() async {
-    final response = await _client.get(_uri('/wellbeing'));
+    final response = await _client.get(_uri('/wellbeing?user_id=$userId'));
     if (response.statusCode != 200) {
       throw Exception('Failed to load wellbeing index');
     }
@@ -138,13 +144,43 @@ class ApiService {
 
   Future<Map<String, dynamic>> fetchRecommendations({String lang = 'en'}) async {
     final response =
-        await _client.get(_uri('/recommendations?lang=$lang'));
+        await _client.get(_uri('/recommendations?lang=$lang&user_id=$userId'));
     if (response.statusCode != 200) {
       throw Exception('Failed to load recommendations');
     }
     final Map<String, dynamic> data =
         jsonDecode(response.body) as Map<String, dynamic>;
     return data;
+  }
+
+  Future<ForecastPayload> fetchForecast({String lang = 'en'}) async {
+    final response =
+        await _client.get(_uri('/forecast?user_id=$userId&lang=$lang'));
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load forecast');
+    }
+    final Map<String, dynamic> data =
+        jsonDecode(response.body) as Map<String, dynamic>;
+    return ForecastPayload.fromJson(data);
+  }
+
+  Future<void> postAdviceFeedback({
+    required String adviceId,
+    required String feedback,
+    int? forUserId,
+  }) async {
+    final response = await _client.post(
+      _uri('/feedback'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(<String, dynamic>{
+        'user_id': forUserId ?? userId,
+        'advice_id': adviceId,
+        'feedback': feedback,
+      }),
+    );
+    if (response.statusCode != 201) {
+      throw Exception('Failed to send feedback');
+    }
   }
 
   /// Quick connectivity check (backend must expose GET /health).

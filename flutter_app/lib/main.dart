@@ -98,8 +98,8 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   final _screens = const [
     DashboardScreen(),
-    AddMoodScreen(),
     HistoryScreen(),
+    AddMoodScreen(),
     RecommendationsScreen(),
   ];
 
@@ -108,36 +108,58 @@ class _MainScaffoldState extends State<MainScaffold> {
     final loc = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(loc.appTitle),
-        actions: [
-          if (widget.onOpenSettings != null)
-            IconButton(
-              tooltip: loc.settingsTitle,
-              icon: const Icon(Icons.settings_rounded),
-              onPressed: () => widget.onOpenSettings!(context),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 15,
+                    child: Icon(Icons.person_rounded, size: 16),
+                  ),
+                  const Spacer(),
+                  Text(
+                    'Serenity',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    tooltip: loc.settingsTitle,
+                    icon: const Icon(Icons.notifications_none_rounded),
+                    onPressed: () => widget.onOpenSettings?.call(context),
+                  ),
+                ],
+              ),
             ),
-        ],
-      ),
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 280),
-        switchInCurve: Curves.easeOutCubic,
-        switchOutCurve: Curves.easeInCubic,
-        transitionBuilder: (child, animation) {
-          return FadeTransition(
-            opacity: animation,
-            child: SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0.03, 0),
-                end: Offset.zero,
-              ).animate(animation),
-              child: child,
+            Expanded(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 280),
+                switchInCurve: Curves.easeOutCubic,
+                switchOutCurve: Curves.easeInCubic,
+                transitionBuilder: (child, animation) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0.03, 0),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    ),
+                  );
+                },
+                child: KeyedSubtree(
+                  key: ValueKey(_currentIndex),
+                  child: _screens[_currentIndex],
+                ),
+              ),
             ),
-          );
-        },
-        child: KeyedSubtree(
-          key: ValueKey(_currentIndex),
-          child: _screens[_currentIndex],
+          ],
         ),
       ),
       bottomNavigationBar: NavigationBar(
@@ -153,14 +175,14 @@ class _MainScaffoldState extends State<MainScaffold> {
             label: loc.navDashboard,
           ),
           NavigationDestination(
+            icon: const Icon(Icons.history_rounded),
+            selectedIcon: const Icon(Icons.history_toggle_off_rounded),
+            label: loc.navHistory,
+          ),
+          NavigationDestination(
             icon: const Icon(Icons.add_circle_outline_rounded),
             selectedIcon: const Icon(Icons.add_circle_rounded),
             label: loc.navAdd,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.format_list_bulleted_outlined),
-            selectedIcon: const Icon(Icons.format_list_bulleted_rounded),
-            label: loc.navHistory,
           ),
           NavigationDestination(
             icon: const Icon(Icons.lightbulb_outline_rounded),

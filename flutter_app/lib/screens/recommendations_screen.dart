@@ -6,6 +6,7 @@ import '../locale_store.dart';
 import '../models/tip.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
+import '../widgets/serenity_section_header.dart';
 import 'breathing_timer_screen.dart';
 
 class RecommendationsScreen extends StatefulWidget {
@@ -128,12 +129,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
                 ),
               ),
               const SizedBox(height: AppSpacing.betweenSections),
-              Text(
-                loc.tipsForYou,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+              SerenitySectionHeader(title: loc.tipsForYou),
               const SizedBox(height: AppSpacing.titleToContent),
               if (snapshot.connectionState == ConnectionState.waiting)
                 const Padding(
@@ -346,6 +342,16 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
                   ),
                 ),
                 IconButton(
+                  tooltip: 'Like',
+                  icon: const Icon(Icons.thumb_up_outlined, size: 20),
+                  onPressed: () => _sendFeedback(context, tip.id, 'like'),
+                ),
+                IconButton(
+                  tooltip: 'Dislike',
+                  icon: const Icon(Icons.thumb_down_outlined, size: 20),
+                  onPressed: () => _sendFeedback(context, tip.id, 'dislike'),
+                ),
+                IconButton(
                   icon: Icon(
                     isSaved ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
                     color: isSaved
@@ -360,26 +366,14 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
               ],
             ),
             const SizedBox(height: AppSpacing.betweenListItems),
-            Text(
-              loc.tipsWhyHelp,
-              style: theme.textTheme.labelMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.primary,
-              ),
-            ),
+            SerenitySectionHeader(title: loc.tipsWhyHelp),
             const SizedBox(height: AppSpacing.xs),
             Text(
               tip.whyItHelps,
               style: theme.textTheme.bodySmall,
             ),
             const SizedBox(height: AppSpacing.lg),
-            Text(
-              loc.tipsHowToDo,
-              style: theme.textTheme.labelMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.primary,
-              ),
-            ),
+            SerenitySectionHeader(title: loc.tipsHowToDo),
             const SizedBox(height: 4),
             ...tip.howToDo.asMap().entries.map((e) => Padding(
                   padding: const EdgeInsets.only(bottom: 4),
@@ -467,6 +461,26 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
       );
     } catch (e) {
       if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${loc.errorPrefix}$e')),
+      );
+    }
+  }
+
+  Future<void> _sendFeedback(
+    BuildContext context,
+    String adviceId,
+    String feedback,
+  ) async {
+    final loc = AppLocalizations.of(context);
+    try {
+      await _api.postAdviceFeedback(adviceId: adviceId, feedback: feedback);
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Thanks for your feedback')),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('${loc.errorPrefix}$e')),
       );

@@ -7,6 +7,7 @@ import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
 import '../widgets/loading_shimmer.dart';
 import '../widgets/mood_list_item.dart';
+import '../widgets/serenity_section_header.dart';
 import 'edit_mood_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -25,6 +26,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   RangeValues _moodRange = const RangeValues(1, 10);
   RangeValues _stressRange = const RangeValues(1, 10);
   RangeValues _energyRange = const RangeValues(1, 10);
+  bool _analyticsMode = false;
 
   @override
   void initState() {
@@ -136,38 +138,65 @@ class _HistoryScreenState extends State<HistoryScreen> {
             );
           }
 
-          return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.screenTop, AppSpacing.screenHorizontal, AppSpacing.screenBottom),
-            itemCount: filtered.length + 2,
-            separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.betweenListItems),
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return _buildFiltersCard(theme, loc);
-              }
-              if (index == 1) {
-                return _buildAnalyticsSection(theme, loc, filtered);
-              }
-              final item = filtered[index - 2];
-              return TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0, end: 1),
-                duration: Duration(milliseconds: 250 + index * 40),
-                curve: Curves.easeOutCubic,
-                builder: (context, value, child) {
-                  return Opacity(
-                    opacity: value,
-                    child: Transform.translate(
-                      offset: Offset(0, 20 * (1 - value)),
-                      child: child,
-                    ),
-                  );
-                },
-                child: MoodListItem(
-                  entry: item,
-                  onEdit: _openEdit,
-                  onDelete: (_) => _refresh(),
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.screenHorizontal,
+              AppSpacing.screenTop,
+              AppSpacing.screenHorizontal,
+              AppSpacing.screenBottom,
+            ),
+            children: [
+              Text(
+                'Wellness Insights',
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
                 ),
-              );
-            },
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Reflect on your journey and track your mental progress.',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.betweenCards),
+              SegmentedButton<bool>(
+                segments: const [
+                  ButtonSegment<bool>(
+                    value: false,
+                    label: Text('List'),
+                  ),
+                  ButtonSegment<bool>(
+                    value: true,
+                    label: Text('Analytics'),
+                  ),
+                ],
+                selected: {_analyticsMode},
+                onSelectionChanged: (s) {
+                  setState(() => _analyticsMode = s.first);
+                },
+              ),
+              const SizedBox(height: AppSpacing.betweenCards),
+              _buildFiltersCard(theme, loc),
+              const SizedBox(height: AppSpacing.betweenSections),
+              if (_analyticsMode) ...[
+                _buildAnalyticsSection(theme, loc, filtered),
+              ] else ...[
+                const SerenitySectionHeader(
+                  title: 'Daily Entries',
+                  actionLabel: 'View all',
+                ),
+                const SizedBox(height: 6),
+                ...filtered.map((item) => Padding(
+                      padding: const EdgeInsets.only(bottom: AppSpacing.betweenListItems),
+                      child: MoodListItem(
+                        entry: item,
+                        onEdit: _openEdit,
+                        onDelete: (_) => _refresh(),
+                      ),
+                    )),
+              ],
+            ],
           );
         },
       ),
@@ -379,19 +408,52 @@ class _HistoryScreenState extends State<HistoryScreen> {
       return const SizedBox.shrink();
     }
 
+    final moodAvg = entries.isEmpty
+        ? 0.0
+        : entries.map((e) => e.mood).reduce((a, b) => a + b) / entries.length;
+    final dominant = moodAvg >= 7
+        ? 'Calm'
+        : moodAvg >= 5
+            ? 'Balanced'
+            : 'Anxious';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          loc.analyticsTitle,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w700,
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            gradient: const LinearGradient(
+              colors: [Color(0xFF7B48FF), Color(0xFF5C2EE0)],
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Weekly Summary',
+                style: theme.textTheme.labelLarge?.copyWith(color: Colors.white),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                dominant,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              Text(
+                'is your dominant mood',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: Colors.white.withValues(alpha: 0.9),
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: AppSpacing.titleToContent),
-        _buildMoodStressChart(theme, entries),
         const SizedBox(height: AppSpacing.betweenListItems),
-        _buildMoodSleepChart(theme, entries),
+        _buildMoodStressChart(theme, entries),
         const SizedBox(height: AppSpacing.betweenListItems),
         _buildWeeklyBarChart(theme, entries),
       ],
@@ -434,55 +496,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   spots: stressSpots,
                   isCurved: true,
                   color: theme.colorScheme.error,
-                  barWidth: 2,
-                  dotData: const FlDotData(show: false),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMoodSleepChart(
-    ThemeData theme,
-    List<MoodEntry> entries,
-  ) {
-    final moodSpots = <FlSpot>[];
-    final sleepSpots = <FlSpot>[];
-    for (var i = 0; i < entries.length; i++) {
-      final e = entries[i];
-      moodSpots.add(FlSpot(i.toDouble(), e.mood.toDouble()));
-      final sleep = (e.sleepHours ?? 0).clamp(0, 12).toDouble();
-      sleepSpots.add(FlSpot(i.toDouble(), sleep));
-    }
-
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.cardPaddingCompact),
-        child: SizedBox(
-          height: 180,
-          child: LineChart(
-            LineChartData(
-              minY: 0,
-              maxY: 12,
-              gridData: const FlGridData(show: false),
-              titlesData: const FlTitlesData(show: false),
-              borderData: FlBorderData(show: false),
-              lineBarsData: [
-                LineChartBarData(
-                  spots: moodSpots,
-                  isCurved: true,
-                  color: theme.colorScheme.primary,
-                  barWidth: 2,
-                  dotData: const FlDotData(show: false),
-                ),
-                LineChartBarData(
-                  spots: sleepSpots,
-                  isCurved: true,
-                  color: theme.colorScheme.tertiary,
                   barWidth: 2,
                   dotData: const FlDotData(show: false),
                 ),

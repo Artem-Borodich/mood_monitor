@@ -3,8 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'colors.dart';
 
-/// Material 3 themes with **Plus Jakarta Sans** (headlines, titles) + **Inter** (body).
-/// Fonts load via `google_fonts` at runtime (cached).
+/// Serenity design system with Manrope typography.
 class AppTheme {
   AppTheme._();
 
@@ -24,18 +23,13 @@ class AppTheme {
       brightness: Brightness.light,
     );
 
-    final inter = GoogleFonts.interTextTheme(base.textTheme);
-    final jakarta = GoogleFonts.plusJakartaSansTextTheme(base.textTheme);
-
-    final textTheme = inter.copyWith(
-      displayLarge: jakarta.displayLarge,
-      displayMedium: jakarta.displayMedium,
-      displaySmall: jakarta.displaySmall,
-      headlineLarge: jakarta.headlineLarge?.copyWith(fontWeight: FontWeight.w600),
-      headlineMedium: jakarta.headlineMedium?.copyWith(fontWeight: FontWeight.w600),
-      headlineSmall: jakarta.headlineSmall?.copyWith(fontWeight: FontWeight.w600),
-      titleLarge: jakarta.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-      titleMedium: jakarta.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+    final manrope = GoogleFonts.manropeTextTheme(base.textTheme);
+    final textTheme = manrope.copyWith(
+      headlineLarge: manrope.headlineLarge?.copyWith(fontWeight: FontWeight.w700),
+      headlineMedium: manrope.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
+      headlineSmall: manrope.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
+      titleLarge: manrope.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+      titleMedium: manrope.titleMedium?.copyWith(fontWeight: FontWeight.w600),
     );
 
     return _components(base.copyWith(textTheme: textTheme), cs);
@@ -54,18 +48,13 @@ class AppTheme {
       brightness: Brightness.dark,
     );
 
-    final inter = GoogleFonts.interTextTheme(base.textTheme);
-    final jakarta = GoogleFonts.plusJakartaSansTextTheme(base.textTheme);
-
-    final textTheme = inter.copyWith(
-      displayLarge: jakarta.displayLarge,
-      displayMedium: jakarta.displayMedium,
-      displaySmall: jakarta.displaySmall,
-      headlineLarge: jakarta.headlineLarge?.copyWith(fontWeight: FontWeight.w600),
-      headlineMedium: jakarta.headlineMedium?.copyWith(fontWeight: FontWeight.w600),
-      headlineSmall: jakarta.headlineSmall?.copyWith(fontWeight: FontWeight.w600),
-      titleLarge: jakarta.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-      titleMedium: jakarta.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+    final manrope = GoogleFonts.manropeTextTheme(base.textTheme);
+    final textTheme = manrope.copyWith(
+      headlineLarge: manrope.headlineLarge?.copyWith(fontWeight: FontWeight.w700),
+      headlineMedium: manrope.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
+      headlineSmall: manrope.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
+      titleLarge: manrope.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+      titleMedium: manrope.titleMedium?.copyWith(fontWeight: FontWeight.w600),
     );
 
     return _components(base.copyWith(textTheme: textTheme), cs);
@@ -80,18 +69,18 @@ class AppTheme {
         centerTitle: true,
         backgroundColor: cs.surface,
         foregroundColor: cs.onSurface,
-        titleTextStyle: GoogleFonts.plusJakartaSans(
+        titleTextStyle: GoogleFonts.manrope(
           fontSize: 20,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           color: cs.onSurface,
         ),
       ),
       cardTheme: CardThemeData(
         color: cs.surface,
         surfaceTintColor: cs.surfaceTint,
-        shadowColor: Colors.black.withValues(alpha: 0.08),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        elevation: 2,
+        shadowColor: AppColors.shadow,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        elevation: 4,
         margin: EdgeInsets.zero,
         clipBehavior: Clip.antiAlias,
       ),
@@ -101,7 +90,7 @@ class AppTheme {
         elevation: 8,
       ),
       navigationBarTheme: NavigationBarThemeData(
-        height: 72,
+        height: 76,
         indicatorColor: cs.primaryContainer,
         backgroundColor: cs.surface,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
@@ -110,23 +99,23 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           elevation: 2,
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 22),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 22),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 22),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
         ),
       ),
       chipTheme: base.chipTheme.copyWith(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -134,13 +123,13 @@ class AppTheme {
         fillColor: cs.surfaceContainerHighest.withValues(alpha: 0.5),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide(color: cs.outlineVariant),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(24),
           borderSide: BorderSide(color: cs.primary, width: 1.5),
         ),
       ),
