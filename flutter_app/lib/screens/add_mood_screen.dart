@@ -4,9 +4,9 @@ import 'package:flutter/services.dart';
 import '../design_system/aura_card.dart';
 import '../design_system/design_tokens.dart';
 import '../l10n/app_localizations.dart';
-import '../services/api_exception.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
+import '../utils/api_message_localizer.dart';
 import '../widgets/serenity_button.dart';
 import '../widgets/serenity_messenger.dart';
 
@@ -87,7 +87,7 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
       }
     } catch (e) {
       if (!mounted) return;
-      final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
+      final msg = localizedApiErrorMessage(e, loc);
       SerenityMessenger.show(context, msg, kind: SerenitySnackKind.error);
     } finally {
       if (mounted) {

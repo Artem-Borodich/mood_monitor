@@ -7,6 +7,7 @@ import '../services/api_exception.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
 import '../design_system/aura_card.dart';
+import '../utils/api_message_localizer.dart';
 import '../widgets/serenity_messenger.dart';
 import 'breathing_timer_screen.dart';
 
@@ -61,42 +62,30 @@ class _RecommendationDetailsScreenState
   }
 
   String _estimatedDuration(AppLocalizations loc) {
-    // Tip model doesn't carry duration fields, so we derive a calm, UX-friendly estimate.
     switch (widget.tip.category) {
       case 'breathing':
-        return loc.locale.languageCode == 'ru' ? '2 мин' : '2 min';
+        return loc.recDurBreathing;
       case 'movement':
+        return loc.recDurMovement;
       case 'quick_breaks':
-        if (widget.tip.category == 'movement') {
-          return loc.locale.languageCode == 'ru' ? '10–15 мин' : '10–15 min';
-        }
-        return loc.locale.languageCode == 'ru' ? '1–2 мин' : '1–2 min';
+        return loc.recDurQuickBreak;
       case 'sleep':
-        return loc.locale.languageCode == 'ru' ? '10–15 мин' : '10–15 min';
+        return loc.recDurSleep;
       case 'mindset':
-        return loc.locale.languageCode == 'ru' ? '1 мин' : '1 min';
+        return loc.recDurMindset;
       default:
-        return loc.locale.languageCode == 'ru' ? 'Пара минут' : 'A few minutes';
+        return loc.recDurDefault;
     }
   }
 
   String _expectedBenefit(AppLocalizations loc) {
-    final lang = loc.locale.languageCode;
     if (widget.tip.action == TipAction.breathingTimer) {
-      return lang == 'ru'
-          ? 'Меньше напряжения и более спокойное состояние за ~2 минуты.'
-          : 'Feel calmer and settle your body in about 2 minutes.';
+      return loc.recBenefitBreathing;
     }
     if (widget.tip.action == TipAction.logWalk) {
-      return lang == 'ru'
-          ? 'Мягкий подъём энергии и снижение напряжения после прогулки.'
-          : 'A gentle energy lift and less tension after a short walk.';
+      return loc.recBenefitWalk;
     }
-
-    if (lang == 'ru') {
-      return 'Небольшой шаг, который помогает вашему состоянию выровняться.';
-    }
-    return 'A small step that helps your state feel more aligned.';
+    return loc.recBenefitGeneric;
   }
 
   IconData _badgeIcon() {
@@ -130,11 +119,18 @@ class _RecommendationDetailsScreenState
       }
     } on ApiException catch (e) {
       if (!mounted) return;
-      SerenityMessenger.show(context, e.userMessage, kind: SerenitySnackKind.error);
+      SerenityMessenger.show(
+        context,
+        localizedApiErrorMessage(e, loc),
+        kind: SerenitySnackKind.error,
+      );
     } catch (e) {
       if (!mounted) return;
-      final msg = '${loc.errorPrefix}$e';
-      SerenityMessenger.show(context, msg, kind: SerenitySnackKind.error);
+      SerenityMessenger.show(
+        context,
+        localizedApiErrorMessage(e, loc),
+        kind: SerenitySnackKind.error,
+      );
     } finally {
       if (!mounted) return;
       setState(() => _loading = false);
@@ -195,7 +191,7 @@ class _RecommendationDetailsScreenState
       );
     } catch (e) {
       if (!mounted) return;
-      final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
+      final msg = localizedApiErrorMessage(e, loc);
       SerenityMessenger.show(context, msg, kind: SerenitySnackKind.error);
     }
   }

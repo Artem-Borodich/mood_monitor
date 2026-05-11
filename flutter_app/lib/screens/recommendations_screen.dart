@@ -6,12 +6,12 @@ import '../design_system/aura_card.dart';
 import '../l10n/app_localizations.dart';
 import '../locale_store.dart';
 import '../models/tip.dart';
-import '../services/api_exception.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
 import '../utils/wellbeing_math.dart';
 import '../widgets/app_error_view.dart';
 import '../widgets/loading_shimmer.dart';
+import '../utils/api_message_localizer.dart';
 import '../widgets/serenity_messenger.dart';
 import '../widgets/serenity_section_header.dart';
 import 'breathing_timer_screen.dart';
@@ -711,7 +711,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
       SerenityMessenger.show(context, loc.tipsLogWalkDone);
     } catch (e) {
       if (!mounted) return;
-      final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
+      final msg = localizedApiErrorMessage(e, loc);
       SerenityMessenger.show(context, msg, kind: SerenitySnackKind.error);
     }
   }
@@ -745,7 +745,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
       );
     } catch (e) {
       if (!context.mounted) return;
-      final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
+      final msg = localizedApiErrorMessage(e, loc);
       SerenityMessenger.show(context, msg, kind: SerenitySnackKind.error);
     }
   }

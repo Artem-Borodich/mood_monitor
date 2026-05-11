@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/mood_entry.dart';
-import '../services/api_exception.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
+import '../utils/api_message_localizer.dart';
 import '../widgets/serenity_messenger.dart';
 import '../utils/format_date.dart';
 
@@ -74,7 +74,7 @@ class _EditMoodScreenState extends State<EditMoodScreen> {
     } catch (e) {
       if (!mounted) return;
       final loc = AppLocalizations.of(context);
-      final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
+      final msg = localizedApiErrorMessage(e, loc);
       SerenityMessenger.show(context, msg, kind: SerenitySnackKind.error);
     } finally {
       if (mounted) setState(() => _submitting = false);

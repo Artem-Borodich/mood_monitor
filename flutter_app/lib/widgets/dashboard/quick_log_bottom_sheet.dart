@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/mood_entry.dart';
-import '../../services/api_exception.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_decoration.dart';
 import '../../theme/app_spacing.dart';
+import '../../utils/api_message_localizer.dart';
 import '../serenity_messenger.dart';
 
 /// Opens a bottom sheet to adjust mood / stress / energy (and optional fields)
@@ -107,7 +107,7 @@ class _QuickLogSheetState extends State<_QuickLogSheet> {
       Navigator.of(context).pop(true);
     } catch (e) {
       if (!mounted) return;
-      final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
+      final msg = localizedApiErrorMessage(e, loc);
       SerenityMessenger.show(context, msg, kind: SerenitySnackKind.error);
     } finally {
       if (mounted) setState(() => _saving = false);

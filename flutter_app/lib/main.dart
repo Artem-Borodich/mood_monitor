@@ -56,7 +56,7 @@ class _MoodAppState extends State<MoodApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Wellbeing Monitor',
+      onGenerateTitle: (ctx) => AppLocalizations.of(ctx).appTitle,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme(null),
       darkTheme: AppTheme.darkTheme(null),

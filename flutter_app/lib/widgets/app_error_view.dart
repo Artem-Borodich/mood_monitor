@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../services/api_exception.dart';
+import '../utils/api_message_localizer.dart';
 import '../theme/app_spacing.dart';
 
 /// Full-width error state with optional retry (network / server errors).
@@ -28,7 +29,8 @@ class AppErrorView extends StatelessWidget {
     final theme = Theme.of(context);
     final api = error is ApiException ? error as ApiException : null;
     final headline = title ?? loc.errorStateTitle;
-    final message = api?.userMessage ?? error.toString();
+    final message =
+        api != null ? localizedApiErrorMessage(api, loc) : error.toString();
     final hint = api?.kind == ApiErrorKind.network
         ? loc.errorNetworkHint
         : (api?.kind == ApiErrorKind.server ? loc.errorServerHint : null);

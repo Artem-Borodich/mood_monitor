@@ -108,6 +108,14 @@ class SettingsScreen extends StatelessWidget {
                               height: 1.45,
                             ),
                       ),
+                      const SizedBox(height: AppSpacing.titleToContent),
+                      Text(
+                        loc.settingsAboutSerenity,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              height: 1.45,
+                            ),
+                      ),
                       const SizedBox(height: AppSpacing.betweenCards),
                       SelectableText(
                         '${loc.settingsVersion}: $verLabel',

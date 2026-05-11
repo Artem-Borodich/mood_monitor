@@ -35,3 +35,12 @@ WellbeingTier wellbeingTierFromIndex(double index) {
   if (index < 6) return WellbeingTier.medium;
   return WellbeingTier.high;
 }
+
+/// Human-friendly percent for the ring (avoids confusing bare `0` when value is tiny).
+String formatWellbeingPercentDisplay(double percent01to100, bool hasData) {
+  if (!hasData) return '—';
+  final p = percent01to100.clamp(0.0, 100.0);
+  if (p <= 0) return '0';
+  if (p < 1) return '<1';
+  return '${p.round()}';
+}

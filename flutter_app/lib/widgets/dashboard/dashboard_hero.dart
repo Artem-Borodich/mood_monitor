@@ -45,70 +45,89 @@ class DashboardHero extends StatelessWidget {
         stops: const [0.0, 0.45, 1.0],
       ),
       padding: const EdgeInsets.fromLTRB(22, 22, 22, 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _greeting(),
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w800,
-                        height: 1.15,
-                        letterSpacing: -0.4,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      dateLine,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
+          Positioned(
+            right: -12,
+            bottom: 0,
+            child: IgnorePointer(
+              child: Opacity(
+                opacity: 0.1,
+                child: Icon(
+                  Icons.spa_rounded,
+                  size: 112,
+                  color: theme.colorScheme.primary,
                 ),
               ),
-              if (lastMood != null && hasEntries)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.14),
-                    borderRadius: BorderRadius.circular(DsRadii.pill),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.sentiment_satisfied_rounded,
-                        size: 18,
-                        color: theme.colorScheme.primary,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        '${loc.moodLabel} $lastMood',
-                        style: theme.textTheme.labelLarge?.copyWith(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Text(
-            loc.dashboardHeroSub,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.78),
-              height: 1.4,
             ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _greeting(),
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            height: 1.15,
+                            letterSpacing: -0.4,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          dateLine,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (lastMood != null && hasEntries)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.14),
+                        borderRadius: BorderRadius.circular(DsRadii.pill),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.sentiment_satisfied_rounded,
+                            size: 18,
+                            color: theme.colorScheme.primary,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            '${loc.moodLabel} $lastMood',
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              color: theme.colorScheme.primary,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 14),
+              Text(
+                loc.dashboardHeroSub,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.78),
+                  height: 1.4,
+                ),
+              ),
+            ],
           ),
         ],
       ),

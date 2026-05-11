@@ -94,6 +94,12 @@ class AppLocalizations {
       'energyLabel': 'Energy',
       'historyEntrySubtitle': 'Mood history entry',
       'errorPrefix': 'Error: ',
+      'apiErrorNoInternet': 'No internet connection. Check Wi‑Fi or mobile data.',
+      'apiErrorTimeout': 'The server took too long to respond. Try again shortly.',
+      'apiErrorNetwork': 'Could not reach the server. Check the address in Settings.',
+      'apiErrorServer': 'The server returned an error. Try again in a moment.',
+      'apiErrorClient': 'The request could not be completed.',
+      'apiErrorUnknown': 'Something went wrong. Try again.',
       'errorStateTitle': 'Something went wrong',
       'errorNetworkHint':
           'Check your connection and that the API server is running (see Settings).',
@@ -155,6 +161,56 @@ class AppLocalizations {
       'todayCompletedActions': 'You completed ',
       'todayCompletedActionsSuffix': ' wellness actions today',
       'todayStreakSuffix': ' day streak',
+      'dashboardPracticesTitle': 'Today’s care',
+      'dashboardPracticesTracking': 'Check-in and quick practices you finish today',
+      'dashboardPracticesProgress': '{done} of {total}',
+      'dashboardPracticesStreak': '{n}-day streak',
+      'dashboardPracticesStreakSingle': '1-day streak',
+      'dashboardPracticesEncourage':
+          'Tap a check-in or a quick practice below — each step fills this row.',
+      'dashboardPracticeCheckin': 'Check-in',
+      'dashboardWellbeingEmptyHeadline': 'No snapshot yet',
+      'dashboardWellbeingRingLabel': 'balance (0–100)',
+      'dashboardWellbeingScaleTitle': 'How to read the ring',
+      'dashboardWellbeingZoneLowShort': '0–33 heavier load',
+      'dashboardWellbeingZoneMidShort': '34–66 usual day',
+      'dashboardWellbeingZoneHighShort': '67–100 more ease',
+      'dashboardWellbeingScaleFootnote':
+          'The number mixes your last mood, stress and energy (same as the server). Very low values can happen on hard days — they are a guide, not a diagnosis.',
+      'quickActionStretchDetail':
+          'A few gentle moves for your neck and shoulders.',
+      'quickActionWaterDetail':
+          'Drink a glass slowly and reset your posture.',
+      'recBenefitBreathing': 'Less tension and a calmer body in about two minutes.',
+      'recBenefitWalk': 'A gentle lift in energy and less tension after a short walk.',
+      'recBenefitGeneric': 'A small step that helps your state feel more aligned.',
+      'recDurBreathing': '2 min',
+      'recDurMovement': '10–15 min',
+      'recDurQuickBreak': '1–2 min',
+      'recDurSleep': '10–15 min',
+      'recDurMindset': '1 min',
+      'recDurDefault': 'A few minutes',
+      'breathUiClose': 'Close',
+      'breathUiReadyTitle': '4‑7‑8 breathing',
+      'breathUiReadySubtitle':
+          'Inhale 4s, hold 7s, exhale 8s — four cycles, about two minutes. Sit comfortably, shoulders relaxed.',
+      'breathUiStep1': 'Inhale through the nose for 4 seconds.',
+      'breathUiStep2': 'Hold the breath for 7 seconds.',
+      'breathUiStep3': 'Exhale slowly through the mouth for 8 seconds.',
+      'breathUiSec': 'sec',
+      'breathUiCycles': 'Cycles',
+      'breathUiStart': 'Begin session',
+      'breathUiStop': 'Stop',
+      'breathUiDone': 'Session complete',
+      'breathUiRunningFooter': 'Follow the ring — it fills as the current phase completes.',
+      'wellbeingStateHigh': 'Feeling steady',
+      'wellbeingStateMedium': 'Room to recharge',
+      'wellbeingStateLow': 'Go gently today',
+      'wellbeingHintHigh': 'Your latest check-in looks solid — keep what already helps.',
+      'wellbeingHintMedium':
+          'Small pauses, sleep and movement usually nudge this number up.',
+      'wellbeingHintLow':
+          'One short walk, water or breathing can soften the day — pick what feels easiest.',
       'recDetailsExpectedBenefit': 'Expected benefit',
       'recDetailsEstimatedDuration': 'Estimated duration',
       'recDetailsActionSteps': 'Action steps',
@@ -216,6 +272,8 @@ class AppLocalizations {
       'settingsThemeDark': 'Dark',
       'settingsAbout': 'About',
       'settingsAboutBody': 'Track mood, stress and energy. Data syncs with your own backend.',
+      'settingsAboutSerenity':
+          'Why Serenity? The name stands for a calm, clear state of mind — like a quiet moment after a deep breath. The app is built to help you notice how you feel without judgment, one small step at a time.',
       'settingsApiHint': 'Backend URL is auto-selected per platform. Override with --dart-define=API_BASE_URL=…',
       'settingsVersion': 'Version',
       'languageEnglish': 'English',
@@ -335,6 +393,12 @@ class AppLocalizations {
       'energyLabel': 'Энергия',
       'historyEntrySubtitle': 'Запись истории настроения',
       'errorPrefix': 'Ошибка: ',
+      'apiErrorNoInternet': 'Нет подключения к интернету. Проверьте Wi‑Fi или мобильные данные.',
+      'apiErrorTimeout': 'Сервер слишком долго не отвечает. Попробуйте чуть позже.',
+      'apiErrorNetwork': 'Не удалось связаться с сервером. Проверьте адрес в настройках.',
+      'apiErrorServer': 'Сервер вернул ошибку. Попробуйте ещё раз через минуту.',
+      'apiErrorClient': 'Запрос не выполнен.',
+      'apiErrorUnknown': 'Что-то пошло не так. Попробуйте снова.',
       'errorStateTitle': 'Что-то пошло не так',
       'errorNetworkHint':
           'Проверьте интернет и что сервер API запущен (см. Настройки).',
@@ -395,6 +459,57 @@ class AppLocalizations {
       'todayCompletedActions': 'Вы завершили ',
       'todayCompletedActionsSuffix': ' практики сегодня',
       'todayStreakSuffix': ' дневную цепочку',
+      'dashboardPracticesTitle': 'Забота о себе сегодня',
+      'dashboardPracticesTracking': 'Чек-ин и быстрые практики, которые вы завершили',
+      'dashboardPracticesProgress': '{done} из {total}',
+      'dashboardPracticesStreak': '{n} дн. подряд',
+      'dashboardPracticesStreakSingle': '1 день подряд',
+      'dashboardPracticesEncourage':
+          'Нажмите чек-ин или практику ниже — каждый шаг заполняет эту строку.',
+      'dashboardPracticeCheckin': 'Чек-ин',
+      'dashboardWellbeingEmptyHeadline': 'Пока нет снимка',
+      'dashboardWellbeingRingLabel': 'баланс (0–100)',
+      'dashboardWellbeingScaleTitle': 'Как читать кольцо',
+      'dashboardWellbeingZoneLowShort': '0–33 тяжелее',
+      'dashboardWellbeingZoneMidShort': '34–66 обычный день',
+      'dashboardWellbeingZoneHighShort': '67–100 больше лёгкости',
+      'dashboardWellbeingScaleFootnote':
+          'Число собирается из последнего настроения, стресса и энергии (как на сервере). Очень низкие значения бывают в трудные дни — это ориентир, не диагноз.',
+      'quickActionStretchDetail':
+          'Несколько мягких движений для шеи и плеч.',
+      'quickActionWaterDetail':
+          'Выпейте стакан воды неторопливо и выпрямите спину.',
+      'recBenefitBreathing': 'Меньше напряжения и спокойнее тело примерно за две минуты.',
+      'recBenefitWalk': 'Мягкий подъём энергии и меньше напряжения после короткой прогулки.',
+      'recBenefitGeneric': 'Небольшой шаг, который помогает состоянию выровняться.',
+      'recDurBreathing': '2 мин',
+      'recDurMovement': '10–15 мин',
+      'recDurQuickBreak': '1–2 мин',
+      'recDurSleep': '10–15 мин',
+      'recDurMindset': '1 мин',
+      'recDurDefault': 'Пара минут',
+      'breathUiClose': 'Закрыть',
+      'breathUiReadyTitle': 'Дыхание 4‑7‑8',
+      'breathUiReadySubtitle':
+          'Вдох 4 с, задержка 7 с, выдох 8 с — четыре цикла, около двух минут. Сядьте удобно, плечи опущены.',
+      'breathUiStep1': 'Вдох через нос 4 секунды.',
+      'breathUiStep2': 'Задержка дыхания 7 секунд.',
+      'breathUiStep3': 'Медленный выдох через рот 8 секунд.',
+      'breathUiSec': 'с',
+      'breathUiCycles': 'Циклы',
+      'breathUiStart': 'Начать',
+      'breathUiStop': 'Стоп',
+      'breathUiDone': 'Сессия завершена',
+      'breathUiRunningFooter':
+          'Следите за кольцом — оно заполняется по мере завершения текущей фазы.',
+      'wellbeingStateHigh': 'Сейчас стабильнее',
+      'wellbeingStateMedium': 'Есть запас на заботу',
+      'wellbeingStateLow': 'День мягче — это нормально',
+      'wellbeingHintHigh': 'Последняя запись выглядит ровно — продолжайте то, что помогает.',
+      'wellbeingHintMedium':
+          'Короткие паузы, сон и движение чаще всего поднимают этот показатель.',
+      'wellbeingHintLow':
+          'Прогулка, вода или дыхание на пару минут могут смягчить день — выберите самое простое.',
       'recDetailsExpectedBenefit': 'Ожидаемая польза',
       'recDetailsEstimatedDuration': 'Примерная длительность',
       'recDetailsActionSteps': 'Шаги',
@@ -455,6 +570,8 @@ class AppLocalizations {
       'settingsThemeDark': 'Тёмная',
       'settingsAbout': 'О приложении',
       'settingsAboutBody': 'Учёт настроения, стресса и энергии. Данные синхронизируются с вашим сервером.',
+      'settingsAboutSerenity':
+          'Почему Serenity / «Серенити»? Название отсылает к спокойному, ясному состоянию — как тишина после глубокого вдоха. Приложение помогает замечать свои чувства без оценки, маленькими шагами.',
       'settingsApiHint': 'Адрес API подбирается под платформу. Свой URL: --dart-define=API_BASE_URL=…',
       'settingsVersion': 'Версия',
       'languageEnglish': 'English',
@@ -643,6 +760,65 @@ class AppLocalizations {
   String get todayCompletedActionsSuffix =>
       _text('todayCompletedActionsSuffix');
   String get todayStreakSuffix => _text('todayStreakSuffix');
+
+  String get dashboardPracticesTitle => _text('dashboardPracticesTitle');
+  String get dashboardPracticesTracking => _text('dashboardPracticesTracking');
+  String get dashboardPracticesEncourage => _text('dashboardPracticesEncourage');
+  String get dashboardPracticeCheckin => _text('dashboardPracticeCheckin');
+  String get dashboardWellbeingEmptyHeadline =>
+      _text('dashboardWellbeingEmptyHeadline');
+  String get dashboardWellbeingRingLabel => _text('dashboardWellbeingRingLabel');
+  String get dashboardWellbeingScaleTitle => _text('dashboardWellbeingScaleTitle');
+  String get dashboardWellbeingZoneLowShort => _text('dashboardWellbeingZoneLowShort');
+  String get dashboardWellbeingZoneMidShort => _text('dashboardWellbeingZoneMidShort');
+  String get dashboardWellbeingZoneHighShort => _text('dashboardWellbeingZoneHighShort');
+  String get dashboardWellbeingScaleFootnote => _text('dashboardWellbeingScaleFootnote');
+  String get quickActionStretchDetail => _text('quickActionStretchDetail');
+  String get quickActionWaterDetail => _text('quickActionWaterDetail');
+  String get recBenefitBreathing => _text('recBenefitBreathing');
+  String get recBenefitWalk => _text('recBenefitWalk');
+  String get recBenefitGeneric => _text('recBenefitGeneric');
+  String get recDurBreathing => _text('recDurBreathing');
+  String get recDurMovement => _text('recDurMovement');
+  String get recDurQuickBreak => _text('recDurQuickBreak');
+  String get recDurSleep => _text('recDurSleep');
+  String get recDurMindset => _text('recDurMindset');
+  String get recDurDefault => _text('recDurDefault');
+  String get breathUiClose => _text('breathUiClose');
+  String get breathUiReadyTitle => _text('breathUiReadyTitle');
+  String get breathUiReadySubtitle => _text('breathUiReadySubtitle');
+  String get breathUiStep1 => _text('breathUiStep1');
+  String get breathUiStep2 => _text('breathUiStep2');
+  String get breathUiStep3 => _text('breathUiStep3');
+  String get breathUiSec => _text('breathUiSec');
+  String get breathUiCycles => _text('breathUiCycles');
+  String get breathUiStart => _text('breathUiStart');
+  String get breathUiStop => _text('breathUiStop');
+  String get breathUiDone => _text('breathUiDone');
+  String get breathUiRunningFooter => _text('breathUiRunningFooter');
+  String get settingsAboutSerenity => _text('settingsAboutSerenity');
+  String get apiErrorNoInternet => _text('apiErrorNoInternet');
+  String get apiErrorTimeout => _text('apiErrorTimeout');
+  String get apiErrorNetwork => _text('apiErrorNetwork');
+  String get apiErrorServer => _text('apiErrorServer');
+  String get apiErrorClient => _text('apiErrorClient');
+  String get apiErrorUnknown => _text('apiErrorUnknown');
+  String get wellbeingStateHigh => _text('wellbeingStateHigh');
+  String get wellbeingStateMedium => _text('wellbeingStateMedium');
+  String get wellbeingStateLow => _text('wellbeingStateLow');
+  String get wellbeingHintHigh => _text('wellbeingHintHigh');
+  String get wellbeingHintMedium => _text('wellbeingHintMedium');
+  String get wellbeingHintLow => _text('wellbeingHintLow');
+
+  String dashboardPracticesProgress(int done, int total) =>
+      _text('dashboardPracticesProgress')
+          .replaceAll('{done}', '$done')
+          .replaceAll('{total}', '$total');
+
+  String dashboardPracticesStreak(int days) => days <= 1
+      ? _text('dashboardPracticesStreakSingle')
+      : _text('dashboardPracticesStreak').replaceAll('{n}', '$days');
+
   String get recDetailsExpectedBenefit =>
       _text('recDetailsExpectedBenefit');
   String get recDetailsEstimatedDuration =>

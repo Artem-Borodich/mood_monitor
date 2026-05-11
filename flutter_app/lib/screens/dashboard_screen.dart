@@ -13,17 +13,17 @@ import '../widgets/dashboard/dashboard_quick_log_card.dart';
 import '../widgets/dashboard/dashboard_risk_card.dart';
 import '../widgets/dashboard/dashboard_tips_scroller.dart';
 import '../widgets/dashboard/dashboard_trend_chart.dart';
+import '../widgets/dashboard/dashboard_practices_summary.dart';
 import '../widgets/dashboard/dashboard_wellbeing_card.dart';
 import '../widgets/dashboard/quick_log_bottom_sheet.dart';
 import '../widgets/loading_shimmer.dart';
 import '../widgets/serenity_section_header.dart';
 import '../widgets/dashboard/dashboard_daily_check_in.dart';
 import '../widgets/dashboard/dashboard_quick_wellness_scroller.dart';
-import '../widgets/serenity_card.dart';
 import '../widgets/serenity_messenger.dart';
 import '../locale_store.dart';
 import '../screens/breathing_timer_screen.dart';
-import '../services/api_exception.dart';
+import '../utils/api_message_localizer.dart';
 import '../utils/wellbeing_math.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -44,7 +44,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool _loading = true;
   Object? _error;
 
-  int _todayCompletedActions = 0;
   int _streakDays = 0;
   Set<String> _completedActionKeysToday = {};
 
@@ -88,7 +87,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _forecast = fc;
         _loading = false;
         _completedActionKeysToday = completedKeys;
-        _todayCompletedActions = completedKeys.length;
         _streakDays = streak;
       });
     } catch (e) {
@@ -102,12 +100,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List<Widget> _bodyChildren(AppLocalizations loc, MoodEntry? latest) {
     final wellbeing = _wellbeingIndex ?? latest?.wellbeingIndex;
-    final wellbeingScore = wellbeing != null
+    final hasWellbeing = wellbeing != null;
+    final wellbeingScore = hasWellbeing
         ? wellbeingIndexToDisplayPercent(wellbeing)
         : 0.0;
-    final wellbeingSubtitle = latest == null
-        ? loc.dashboardWellbeingSubtitleEmpty
-        : loc.dashboardWellbeingSubtitle;
 
     final prev = _entries.length > 1 ? _entries[1] : null;
     String? insight;
@@ -142,18 +138,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         SizedBox(height: AppSpacing.betweenSections),
       ],
-      if (_todayCompletedActions > 0)
-        SerenityCard(
-          borderRadius: 28,
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-          child: Text(
-            '${loc.todayCompletedActions}$_todayCompletedActions${loc.todayCompletedActionsSuffix} • $_streakDays${loc.todayStreakSuffix}',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
-          ),
-        ),
-      if (_todayCompletedActions > 0) SizedBox(height: AppSpacing.betweenSections),
+      DashboardPracticesSummary(
+        completedKeysToday: _completedActionKeysToday,
+        streakDays: _streakDays,
+        loc: loc,
+      ),
+      SizedBox(height: AppSpacing.betweenSections),
       DashboardDailyCheckIn(
         busy: _checkInBusy,
         onSelected: (mood) => _submitDailyCheckIn(mood),
@@ -181,8 +171,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       DashboardWellbeingCard(
         title: loc.dashboardWellbeingTitle,
         score: wellbeingScore,
-        subtitle: wellbeingSubtitle,
-        rawWellbeingIndex: wellbeing,
+        hasWellbeingData: hasWellbeing,
+        wellbeingIndex: wellbeing,
       ),
       SizedBox(height: AppSpacing.betweenSections),
       DashboardRiskCard(
@@ -306,7 +296,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       await _loadData();
     } catch (e) {
       if (!mounted) return;
-      final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
+      final msg = localizedApiErrorMessage(e, loc);
       SerenityMessenger.show(context, msg, kind: SerenitySnackKind.error);
     } finally {
       if (!mounted) return;
@@ -457,8 +447,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 const SizedBox(height: 10),
                 Text(
                   action == QuickWellnessAction.stretch
-                      ? 'A few gentle moves for your neck and shoulders.'
-                      : 'Drink a glass slowly and reset your posture.',
+                      ? loc.quickActionStretchDetail
+                      : loc.quickActionWaterDetail,
                   style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(ctx).colorScheme.onSurfaceVariant,
                       ),
@@ -485,7 +475,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
     } catch (e) {
       if (!mounted) return;
-      final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
+      final msg = localizedApiErrorMessage(e, loc);
       SerenityMessenger.show(context, msg, kind: SerenitySnackKind.error);
     } finally {
       if (!mounted) return;
