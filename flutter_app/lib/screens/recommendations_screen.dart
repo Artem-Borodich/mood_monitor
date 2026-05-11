@@ -4,6 +4,7 @@ import '../data/tips_data.dart';
 import '../l10n/app_localizations.dart';
 import '../locale_store.dart';
 import '../models/tip.dart';
+import '../services/api_exception.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
 import '../widgets/serenity_section_header.dart';
@@ -461,8 +462,9 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
       );
     } catch (e) {
       if (!mounted) return;
+      final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${loc.errorPrefix}$e')),
+        SnackBar(content: Text(msg)),
       );
     }
   }
@@ -481,8 +483,9 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
       );
     } catch (e) {
       if (!context.mounted) return;
+      final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${loc.errorPrefix}$e')),
+        SnackBar(content: Text(msg)),
       );
     }
   }

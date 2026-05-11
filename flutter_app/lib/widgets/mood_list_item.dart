@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/mood_entry.dart';
+import '../services/api_exception.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
 import '../utils/format_date.dart';
@@ -194,7 +195,8 @@ class MoodListItem extends StatelessWidget {
       onDelete!(entry);
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${loc.errorPrefix}$e')));
+      final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
     }
   }
 

@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class MoodEntryCreate(BaseModel):
@@ -42,4 +42,27 @@ class RecommendationResponse(BaseModel):
     wellbeing_index: Optional[float]
     level: str
     message: str
+
+
+class ForecastFactorRead(BaseModel):
+    name: str
+    impact: str
+
+
+class ForecastRead(BaseModel):
+    status: str
+    risk: Optional[float] = None
+    label: Optional[str] = None
+    threshold: float = 0.5
+    factors: Optional[List[ForecastFactorRead]] = None
+    explanation: Optional[str] = None
+    target_date: Optional[str] = None
+
+    model_config = ConfigDict(populate_by_name=True)
+
+
+class FeedbackCreate(BaseModel):
+    user_id: int = Field(..., ge=1)
+    advice_id: str = Field(..., min_length=1, max_length=128)
+    feedback: str = Field(..., min_length=1, max_length=2000)
 

@@ -10,6 +10,7 @@ import 'screens/dashboard_screen.dart';
 import 'screens/history_screen.dart';
 import 'screens/recommendations_screen.dart';
 import 'screens/settings_screen.dart';
+import 'theme/app_decoration.dart';
 import 'theme/app_theme.dart';
 
 Future<void> main() async {
@@ -95,49 +96,81 @@ class MainScaffold extends StatefulWidget {
 
 class _MainScaffoldState extends State<MainScaffold> {
   int _currentIndex = 0;
+  late final List<Widget> _screens;
 
-  final _screens = const [
-    DashboardScreen(),
-    HistoryScreen(),
-    AddMoodScreen(),
-    RecommendationsScreen(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      DashboardScreen(
+        onAddMoodTap: () => setState(() => _currentIndex = 2),
+      ),
+      const HistoryScreen(),
+      const AddMoodScreen(),
+      const RecommendationsScreen(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context);
 
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
-              child: Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 15,
-                    child: Icon(Icons.person_rounded, size: 16),
-                  ),
-                  const Spacer(),
-                  Text(
-                    'Serenity',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.w700,
+      extendBody: true,
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: AppDecorations.scaffoldGradient(context),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+                child: Material(
+                  elevation: 6,
+                  shadowColor: cs.primary.withValues(alpha: 0.18),
+                  borderRadius: BorderRadius.circular(22),
+                  color: cs.surface.withValues(alpha: 0.92),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 18,
+                          backgroundColor: cs.primaryContainer,
+                          child: Icon(Icons.person_rounded, size: 18, color: cs.onPrimaryContainer),
                         ),
+                        const Spacer(),
+                        ShaderMask(
+                          shaderCallback: (bounds) => AppDecorations.primaryHeroGradient().createShader(bounds),
+                          child: Text(
+                            'Serenity',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -0.3,
+                            ),
+                          ),
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          tooltip: loc.settingsTitle,
+                          style: IconButton.styleFrom(
+                            backgroundColor: cs.surfaceContainerHighest.withValues(alpha: 0.8),
+                          ),
+                          onPressed: () => widget.onOpenSettings?.call(context),
+                          icon: Icon(Icons.tune_rounded, color: cs.primary),
+                        ),
+                      ],
+                    ),
                   ),
-                  const Spacer(),
-                  IconButton(
-                    tooltip: loc.settingsTitle,
-                    icon: const Icon(Icons.notifications_none_rounded),
-                    onPressed: () => widget.onOpenSettings?.call(context),
-                  ),
-                ],
+                ),
               ),
-            ),
-            Expanded(
-              child: AnimatedSwitcher(
+              Expanded(
+                child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 280),
                 switchInCurve: Curves.easeOutCubic,
                 switchOutCurve: Curves.easeInCubic,
@@ -161,35 +194,53 @@ class _MainScaffoldState extends State<MainScaffold> {
             ),
           ],
         ),
+        ),
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (index) {
-          HapticFeedback.selectionClick();
-          setState(() => _currentIndex = index);
-        },
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.dashboard_outlined),
-            selectedIcon: const Icon(Icons.dashboard_rounded),
-            label: loc.navDashboard,
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
+        child: Material(
+          elevation: 22,
+          shadowColor: Colors.black.withValues(alpha: 0.2),
+          borderRadius: BorderRadius.circular(28),
+          color: cs.surface.withValues(alpha: 0.98),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(28),
+            child: NavigationBar(
+            height: 72,
+            backgroundColor: Colors.transparent,
+            indicatorColor: cs.primaryContainer,
+            surfaceTintColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            selectedIndex: _currentIndex,
+            onDestinationSelected: (index) {
+              HapticFeedback.selectionClick();
+              setState(() => _currentIndex = index);
+            },
+            destinations: [
+              NavigationDestination(
+                icon: const Icon(Icons.dashboard_outlined),
+                selectedIcon: const Icon(Icons.dashboard_rounded),
+                label: loc.navDashboard,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.history_rounded),
+                selectedIcon: const Icon(Icons.history_toggle_off_rounded),
+                label: loc.navHistory,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.add_circle_outline_rounded),
+                selectedIcon: const Icon(Icons.add_circle_rounded),
+                label: loc.navAdd,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.lightbulb_outline_rounded),
+                selectedIcon: const Icon(Icons.lightbulb_rounded),
+                label: loc.navTips,
+              ),
+            ],
+            ),
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.history_rounded),
-            selectedIcon: const Icon(Icons.history_toggle_off_rounded),
-            label: loc.navHistory,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.add_circle_outline_rounded),
-            selectedIcon: const Icon(Icons.add_circle_rounded),
-            label: loc.navAdd,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.lightbulb_outline_rounded),
-            selectedIcon: const Icon(Icons.lightbulb_rounded),
-            label: loc.navTips,
-          ),
-        ],
+        ),
       ),
     );
   }

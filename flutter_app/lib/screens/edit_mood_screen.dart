@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/mood_entry.dart';
+import '../services/api_exception.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
 import '../utils/format_date.dart';
@@ -72,7 +73,8 @@ class _EditMoodScreenState extends State<EditMoodScreen> {
     } catch (e) {
       if (!mounted) return;
       final loc = AppLocalizations.of(context);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${loc.errorPrefix}$e')));
+      final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
     } finally {
       if (mounted) setState(() => _submitting = false);
     }

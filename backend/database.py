@@ -1,15 +1,10 @@
-import os
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
+from config.settings import get_settings
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql+psycopg2://postgres:postgres@localhost:5432/mood_db",
-)
-
-engine = create_engine(DATABASE_URL, future=True)
+_settings = get_settings()
+engine = create_engine(_settings.database_url, future=True)
 
 SessionLocal = sessionmaker(
     autocommit=False,

@@ -92,6 +92,26 @@ class AppLocalizations {
       'energyLabel': 'Energy',
       'historyEntrySubtitle': 'Mood history entry',
       'errorPrefix': 'Error: ',
+      'errorStateTitle': 'Something went wrong',
+      'errorNetworkHint':
+          'Check your connection and that the API server is running (see Settings).',
+      'errorServerHint': 'The server had a problem. Try again in a moment.',
+      'errorRetry': 'Try again',
+      'dashboardEmptyTitle': 'No mood data yet',
+      'dashboardEmptySubtitle':
+          'Add your first entry to see wellbeing, trends and risk on this screen.',
+      'dashboardEmptyCta': 'Add mood entry',
+      'quickLogTitle': 'Quick mood log',
+      'quickLogSubtitle':
+          'Prefilled from your last entry — adjust sliders, then save.',
+      'quickLogPrimaryCta': 'Customize & save',
+      'quickLogSheetSave': 'Save entry',
+      'quickLogSheetCancel': 'Cancel',
+      'quickLogSheetReset': 'Reset to last entry',
+      'quickLogSheetNote': 'Note (optional)',
+      'quickLogSheetAdvanced': 'Sleep, activity & category',
+      'quickLogSheetSaving': 'Saving…',
+      'tipsChipWeek': 'Last 7 days',
       'settingsTitle': 'Settings',
       'settingsLanguage': 'Language',
       'settingsAppearance': 'Appearance',
@@ -217,6 +237,26 @@ class AppLocalizations {
       'energyLabel': 'Энергия',
       'historyEntrySubtitle': 'Запись истории настроения',
       'errorPrefix': 'Ошибка: ',
+      'errorStateTitle': 'Что-то пошло не так',
+      'errorNetworkHint':
+          'Проверьте интернет и что сервер API запущен (см. Настройки).',
+      'errorServerHint': 'На сервере ошибка. Попробуйте чуть позже.',
+      'errorRetry': 'Повторить',
+      'dashboardEmptyTitle': 'Пока нет данных о настроении',
+      'dashboardEmptySubtitle':
+          'Добавьте первую запись, чтобы здесь появились индекс, графики и риск.',
+      'dashboardEmptyCta': 'Добавить запись',
+      'quickLogTitle': 'Быстрая запись настроения',
+      'quickLogSubtitle':
+          'Подставлены значения из последней записи — измените при необходимости и сохраните.',
+      'quickLogPrimaryCta': 'Настроить и сохранить',
+      'quickLogSheetSave': 'Сохранить запись',
+      'quickLogSheetCancel': 'Отмена',
+      'quickLogSheetReset': 'Как в последней записи',
+      'quickLogSheetNote': 'Заметка (необязательно)',
+      'quickLogSheetAdvanced': 'Сон, активность и категория',
+      'quickLogSheetSaving': 'Сохранение…',
+      'tipsChipWeek': '7 дней',
       'settingsTitle': 'Настройки',
       'settingsLanguage': 'Язык',
       'settingsAppearance': 'Оформление',
@@ -351,6 +391,23 @@ class AppLocalizations {
   String get energyLabel => _text('energyLabel');
   String get historyEntrySubtitle => _text('historyEntrySubtitle');
   String get errorPrefix => _text('errorPrefix');
+  String get errorStateTitle => _text('errorStateTitle');
+  String get errorNetworkHint => _text('errorNetworkHint');
+  String get errorServerHint => _text('errorServerHint');
+  String get errorRetry => _text('errorRetry');
+  String get dashboardEmptyTitle => _text('dashboardEmptyTitle');
+  String get dashboardEmptySubtitle => _text('dashboardEmptySubtitle');
+  String get dashboardEmptyCta => _text('dashboardEmptyCta');
+  String get quickLogTitle => _text('quickLogTitle');
+  String get quickLogSubtitle => _text('quickLogSubtitle');
+  String get quickLogPrimaryCta => _text('quickLogPrimaryCta');
+  String get quickLogSheetSave => _text('quickLogSheetSave');
+  String get quickLogSheetCancel => _text('quickLogSheetCancel');
+  String get quickLogSheetReset => _text('quickLogSheetReset');
+  String get quickLogSheetNote => _text('quickLogSheetNote');
+  String get quickLogSheetAdvanced => _text('quickLogSheetAdvanced');
+  String get quickLogSheetSaving => _text('quickLogSheetSaving');
+  String get tipsChipWeek => _text('tipsChipWeek');
 
   String get settingsTitle => _text('settingsTitle');
   String get settingsLanguage => _text('settingsLanguage');

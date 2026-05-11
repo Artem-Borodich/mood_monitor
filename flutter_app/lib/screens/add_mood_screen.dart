@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../l10n/app_localizations.dart';
+import '../services/api_exception.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
 import '../widgets/serenity_button.dart';
@@ -73,8 +74,9 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
       );
     } catch (e) {
       if (!mounted) return;
+      final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${loc.errorPrefix}$e')),
+        SnackBar(content: Text(msg)),
       );
     } finally {
       if (mounted) {

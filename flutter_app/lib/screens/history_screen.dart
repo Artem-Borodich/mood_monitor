@@ -5,6 +5,7 @@ import '../l10n/app_localizations.dart';
 import '../models/mood_entry.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
+import '../widgets/app_error_view.dart';
 import '../widgets/loading_shimmer.dart';
 import '../widgets/mood_list_item.dart';
 import '../widgets/serenity_section_header.dart';
@@ -83,13 +84,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
             );
           }
           if (snapshot.hasError) {
-            return ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
-                  child: Text('${loc.errorPrefix}${snapshot.error}'),
-                ),
-              ],
+            return AppErrorView(
+              error: snapshot.error!,
+              onRetry: _refresh,
             );
           }
           final entries = snapshot.data ?? [];
