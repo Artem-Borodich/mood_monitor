@@ -20,6 +20,7 @@ class AppLocalizations {
   static final Map<String, Map<String, String>> _localizedValues = {
     'en': {
       'appTitle': 'Wellbeing Monitor',
+      'brandName': 'Serenity',
       'navDashboard': 'Dashboard',
       'navAdd': 'Add',
       'navHistory': 'History',
@@ -123,7 +124,30 @@ class AppLocalizations {
       'historyTabList': 'Entries',
       'historyTabAnalytics': 'Trends',
       'historyDailyEntries': 'Your entries',
+      'historyWeeklySummary': 'Weekly summary',
+      'historyDominantMoodCalm': 'Calm',
+      'historyDominantMoodBalanced': 'Balanced',
+      'historyDominantMoodAnxious': 'Anxious',
+      'historyDominantMoodSubtitle':
+          'is your dominant mood across the week',
       'addJournalTitle': 'Journal',
+      'dashboardRiskTitle': 'Tomorrow readiness',
+      'dashboardRiskLevelHigh': 'Higher load',
+      'dashboardRiskLevelModerate': 'Balanced',
+      'dashboardRiskSuggestionHigh':
+          'A short wind‑down tonight can deepen sleep and soften tomorrow.',
+      'dashboardRiskSuggestionLow':
+          'Your buffer looks healthy — keep the day gentle and consistent.',
+      'dashboardRiskExtraForecast': 'Based on your recent patterns.',
+      'dashboardRiskExtraHeuristic': 'From sleep and stress in your latest logs.',
+      'tipsDashboardSun': 'Morning light for 10 minutes',
+      'tipsDashboardCalm': 'Two minutes of slow breathing',
+      'tipsDashboardSleep': 'Ease caffeine after 2 pm',
+      'tipsPersonalizeHint':
+          'Add a mood entry on the home screen to get a personal tip here.',
+      'tipsFeedbackThanks': 'Thanks for your feedback',
+      'tipsLikeTooltip': 'Helpful',
+      'tipsDislikeTooltip': 'Not for me',
       'settingsTitle': 'Settings',
       'settingsLanguage': 'Language',
       'settingsAppearance': 'Appearance',
@@ -176,6 +200,7 @@ class AppLocalizations {
     },
     'ru': {
       'appTitle': 'Монитор благополучия',
+      'brandName': 'Серенити',
       'navDashboard': 'Главная',
       'navAdd': 'Запись',
       'navHistory': 'История',
@@ -280,7 +305,30 @@ class AppLocalizations {
       'historyTabList': 'Записи',
       'historyTabAnalytics': 'Тренды',
       'historyDailyEntries': 'Ваши записи',
+      'historyWeeklySummary': 'Еженедельный обзор',
+      'historyDominantMoodCalm': 'Спокойствие',
+      'historyDominantMoodBalanced': 'В балансе',
+      'historyDominantMoodAnxious': 'Тревожность',
+      'historyDominantMoodSubtitle':
+          'это ваше доминирующее настроение за неделю',
       'addJournalTitle': 'Дневник',
+      'dashboardRiskTitle': 'Готовность к завтра',
+      'dashboardRiskLevelHigh': 'Выше нагрузка',
+      'dashboardRiskLevelModerate': 'В балансе',
+      'dashboardRiskSuggestionHigh':
+          'Короткий вечерний отдых поможет глубже выспаться и смягчить завтрашний день.',
+      'dashboardRiskSuggestionLow':
+          'Запас устойчивости выглядит здоровым — сохраняйте спокойный ритм.',
+      'dashboardRiskExtraForecast': 'По вашим последним паттернам.',
+      'dashboardRiskExtraHeuristic': 'По сну и стрессу из последних записей.',
+      'tipsDashboardSun': 'Утренний свет 10 минут',
+      'tipsDashboardCalm': 'Две минуты медленного дыхания',
+      'tipsDashboardSleep': 'Меньше кофеина после 14:00',
+      'tipsPersonalizeHint':
+          'Добавьте запись на главной — здесь появится персональный совет.',
+      'tipsFeedbackThanks': 'Спасибо за отзыв',
+      'tipsLikeTooltip': 'Полезно',
+      'tipsDislikeTooltip': 'Не подходит',
       'settingsTitle': 'Настройки',
       'settingsLanguage': 'Язык',
       'settingsAppearance': 'Оформление',
@@ -341,6 +389,7 @@ class AppLocalizations {
   }
 
   String get appTitle => _text('appTitle');
+  String get brandName => _text('brandName');
   String get navDashboard => _text('navDashboard');
   String get navAdd => _text('navAdd');
   String get navHistory => _text('navHistory');
@@ -390,6 +439,12 @@ class AppLocalizations {
   String get historyFiltersTo => _text('historyFiltersTo');
   String get historyFiltersAny => _text('historyFiltersAny');
   String get historyNoResults => _text('historyNoResults');
+  String get historyWeeklySummary => _text('historyWeeklySummary');
+  String get historyDominantMoodCalm => _text('historyDominantMoodCalm');
+  String get historyDominantMoodBalanced => _text('historyDominantMoodBalanced');
+  String get historyDominantMoodAnxious => _text('historyDominantMoodAnxious');
+  String get historyDominantMoodSubtitle =>
+      _text('historyDominantMoodSubtitle');
 
   String get analyticsTitle => _text('analyticsTitle');
   String get analyticsMoodStress => _text('analyticsMoodStress');
@@ -442,6 +497,20 @@ class AppLocalizations {
   String get historyTabAnalytics => _text('historyTabAnalytics');
   String get historyDailyEntries => _text('historyDailyEntries');
   String get addJournalTitle => _text('addJournalTitle');
+  String get dashboardRiskTitle => _text('dashboardRiskTitle');
+  String get dashboardRiskLevelHigh => _text('dashboardRiskLevelHigh');
+  String get dashboardRiskLevelModerate => _text('dashboardRiskLevelModerate');
+  String get dashboardRiskSuggestionHigh => _text('dashboardRiskSuggestionHigh');
+  String get dashboardRiskSuggestionLow => _text('dashboardRiskSuggestionLow');
+  String get dashboardRiskExtraForecast => _text('dashboardRiskExtraForecast');
+  String get dashboardRiskExtraHeuristic => _text('dashboardRiskExtraHeuristic');
+  String get tipsDashboardSun => _text('tipsDashboardSun');
+  String get tipsDashboardCalm => _text('tipsDashboardCalm');
+  String get tipsDashboardSleep => _text('tipsDashboardSleep');
+  String get tipsPersonalizeHint => _text('tipsPersonalizeHint');
+  String get tipsFeedbackThanks => _text('tipsFeedbackThanks');
+  String get tipsLikeTooltip => _text('tipsLikeTooltip');
+  String get tipsDislikeTooltip => _text('tipsDislikeTooltip');
 
   String get settingsTitle => _text('settingsTitle');
   String get settingsLanguage => _text('settingsLanguage');

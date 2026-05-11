@@ -84,7 +84,11 @@ class DashboardHero extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('😊', style: theme.textTheme.titleMedium),
+                      Icon(
+                        Icons.sentiment_satisfied_rounded,
+                        size: 18,
+                        color: theme.colorScheme.primary,
+                      ),
                       const SizedBox(width: 6),
                       Text(
                         '${loc.moodLabel} $lastMood',

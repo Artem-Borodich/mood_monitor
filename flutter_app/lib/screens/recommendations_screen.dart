@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../data/tips_data.dart';
+import '../design_system/aura_card.dart';
 import '../l10n/app_localizations.dart';
 import '../locale_store.dart';
 import '../models/tip.dart';
 import '../services/api_exception.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
+import '../widgets/app_error_view.dart';
+import '../widgets/loading_shimmer.dart';
 import '../widgets/serenity_section_header.dart';
 import 'breathing_timer_screen.dart';
 
@@ -87,12 +91,13 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
         builder: (context, snapshot) {
           final apiData = snapshot.data ?? {};
           final index = apiData['wellbeing_index'] as num?;
-          final message = apiData['message'] as String? ??
-              (lang == 'ru'
-                  ? 'Добавьте запись о настроении, чтобы получить совет.'
-                  : 'Add a mood entry to get a personal tip.');
+          final message =
+              apiData['message'] as String? ?? loc.tipsPersonalizeHint;
 
           return ListView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
             padding: const EdgeInsets.fromLTRB(
               AppSpacing.screenHorizontal,
               AppSpacing.screenTop,
@@ -133,17 +138,23 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
               SerenitySectionHeader(title: loc.tipsForYou),
               const SizedBox(height: AppSpacing.titleToContent),
               if (snapshot.connectionState == ConnectionState.waiting)
-                const Padding(
-                  padding: EdgeInsets.all(24),
-                  child: Center(child: CircularProgressIndicator()),
+                const LoadingShimmer(
+                  padding: EdgeInsets.only(top: 8, bottom: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ListTileSkeleton(),
+                      SizedBox(height: AppSpacing.betweenListItems),
+                      ListTileSkeleton(),
+                    ],
+                  ),
                 )
               else if (snapshot.hasError)
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    '${loc.errorPrefix}${snapshot.error}',
-                    style: theme.textTheme.bodyMedium,
-                  ),
+                AppErrorView(
+                  error: snapshot.error!,
+                  scrollable: false,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  onRetry: _refresh,
                 )
               else ...[
                 if (index != null)
@@ -152,10 +163,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
                 _buildApiMessageCard(context, message, loc),
               ],
               const SizedBox(height: AppSpacing.section),
-              ...filtered.map((tip) => Padding(
-                    padding: const EdgeInsets.only(bottom: AppSpacing.betweenListItems),
-                    child: _buildTipCard(context, tip, loc, theme),
-                  )),
+              ...filtered.map((tip) => _buildTipCard(context, tip, loc, theme)),
               if (filtered.isEmpty && _categoryFilter == 'saved')
                 Padding(
                   padding: const EdgeInsets.all(24),
@@ -182,7 +190,10 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
       child: FilterChip(
         label: Text(label),
         selected: selected,
-        onSelected: (_) => setState(() => _categoryFilter = value),
+        onSelected: (_) {
+          HapticFeedback.selectionClick();
+          setState(() => _categoryFilter = value);
+        },
       ),
     );
   }
@@ -190,59 +201,61 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
   Widget _buildIndexCard(
       BuildContext context, double index, AppLocalizations loc) {
     final theme = Theme.of(context);
+    final cs = theme.colorScheme;
     Color bg;
+    Color iconColor;
     IconData icon;
     String title;
     if (index >= 7.5) {
-      bg = Colors.greenAccent.withValues(alpha: 0.25);
+      bg = cs.tertiaryContainer.withValues(alpha: 0.95);
+      iconColor = cs.onTertiaryContainer;
       icon = Icons.sentiment_very_satisfied_rounded;
       title = loc.tipsIndexHigh;
     } else if (index >= 5) {
-      bg = Colors.amberAccent.withValues(alpha: 0.25);
+      bg = cs.primaryContainer.withValues(alpha: 0.9);
+      iconColor = cs.onPrimaryContainer;
       icon = Icons.sentiment_satisfied_rounded;
       title = loc.tipsIndexMedium;
     } else {
-      bg = Colors.redAccent.withValues(alpha: 0.25);
+      bg = cs.errorContainer.withValues(alpha: 0.88);
+      iconColor = cs.onErrorContainer;
       icon = Icons.sentiment_dissatisfied_rounded;
       title = loc.tipsIndexLow;
     }
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusCard)),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.cardPadding),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: bg,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(icon, size: 26, color: theme.colorScheme.primary),
+    return AuraCard(
+      borderRadius: AppSpacing.radiusCard,
+      padding: const EdgeInsets.all(AppSpacing.cardPadding),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.circular(16),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+            child: Icon(icon, size: 26, color: iconColor),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
                   ),
-                  Text(
-                    '${loc.tipsIndexPrefix}${index.toStringAsFixed(2)}',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
+                ),
+                Text(
+                  '${loc.tipsIndexPrefix}${index.toStringAsFixed(2)}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -250,47 +263,44 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
   Widget _buildApiMessageCard(
       BuildContext context, String message, AppLocalizations loc) {
     final theme = Theme.of(context);
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusCard)),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.cardPadding),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Icon(
-                Icons.lightbulb_rounded,
-                color: theme.colorScheme.primary,
-                size: 22,
-              ),
+    return AuraCard(
+      borderRadius: AppSpacing.radiusCard,
+      padding: const EdgeInsets.all(AppSpacing.cardPadding),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primary.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(14),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    loc.tipsPersonalTip,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    message,
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                ],
-              ),
+            child: Icon(
+              Icons.lightbulb_rounded,
+              color: theme.colorScheme.primary,
+              size: 22,
             ),
-          ],
-        ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  loc.tipsPersonalTip,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  message,
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -298,132 +308,131 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
   Widget _buildTipCard(
       BuildContext context, Tip tip, AppLocalizations loc, ThemeData theme) {
     final isSaved = _savedIds.contains(tip.id);
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusCard)),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.cardPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primaryContainer.withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Icon(
-                    _iconFor(tip.iconName),
-                    color: theme.colorScheme.primary,
-                    size: 24,
-                  ),
+    return AuraCard(
+      margin: const EdgeInsets.only(bottom: AppSpacing.betweenListItems),
+      borderRadius: AppSpacing.radiusCard,
+      padding: const EdgeInsets.all(AppSpacing.cardPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primaryContainer.withValues(alpha: 0.6),
+                  borderRadius: BorderRadius.circular(14),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        tip.title,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        tip.description,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
+                child: Icon(
+                  _iconFor(tip.iconName),
+                  color: theme.colorScheme.primary,
+                  size: 24,
                 ),
-                IconButton(
-                  tooltip: 'Like',
-                  icon: const Icon(Icons.thumb_up_outlined, size: 20),
-                  onPressed: () => _sendFeedback(context, tip.id, 'like'),
-                ),
-                IconButton(
-                  tooltip: 'Dislike',
-                  icon: const Icon(Icons.thumb_down_outlined, size: 20),
-                  onPressed: () => _sendFeedback(context, tip.id, 'dislike'),
-                ),
-                IconButton(
-                  icon: Icon(
-                    isSaved ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
-                    color: isSaved
-                        ? theme.colorScheme.primary
-                        : theme.colorScheme.onSurfaceVariant,
-                  ),
-                  onPressed: () async {
-                    await toggleSavedTipId(tip.id);
-                    await _loadSaved();
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.betweenListItems),
-            SerenitySectionHeader(title: loc.tipsWhyHelp),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              tip.whyItHelps,
-              style: theme.textTheme.bodySmall,
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            SerenitySectionHeader(title: loc.tipsHowToDo),
-            const SizedBox(height: 4),
-            ...tip.howToDo.asMap().entries.map((e) => Padding(
-                  padding: const EdgeInsets.only(bottom: 4),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${e.key + 1}. ',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          e.value,
-                          style: theme.textTheme.bodySmall,
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
-            if (tip.action != TipAction.none) ...[
-              const SizedBox(height: AppSpacing.betweenListItems),
-              if (tip.action == TipAction.breathingTimer)
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const BreathingTimerScreen(),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      tip.title,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    icon: const Icon(Icons.timer_rounded, size: 20),
-                    label: Text(loc.tipsStartBreathing),
-                  ),
-                )
-              else if (tip.action == TipAction.logWalk)
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    onPressed: () => _logWalk(context, loc),
-                    icon: const Icon(Icons.directions_walk_rounded, size: 20),
-                    label: Text(loc.tipsLogWalk),
-                  ),
+                    const SizedBox(height: 4),
+                    Text(
+                      tip.description,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+              IconButton(
+                tooltip: loc.tipsLikeTooltip,
+                icon: const Icon(Icons.thumb_up_outlined, size: 20),
+                onPressed: () => _sendFeedback(context, tip.id, 'like'),
+              ),
+              IconButton(
+                tooltip: loc.tipsDislikeTooltip,
+                icon: const Icon(Icons.thumb_down_outlined, size: 20),
+                onPressed: () => _sendFeedback(context, tip.id, 'dislike'),
+              ),
+              IconButton(
+                tooltip: loc.tipsSave,
+                icon: Icon(
+                  isSaved ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
+                  color: isSaved
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.onSurfaceVariant,
+                ),
+                onPressed: () async {
+                  await toggleSavedTipId(tip.id);
+                  await _loadSaved();
+                },
+              ),
             ],
+          ),
+          const SizedBox(height: AppSpacing.betweenListItems),
+          SerenitySectionHeader(title: loc.tipsWhyHelp),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            tip.whyItHelps,
+            style: theme.textTheme.bodySmall,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          SerenitySectionHeader(title: loc.tipsHowToDo),
+          const SizedBox(height: 4),
+          ...tip.howToDo.asMap().entries.map((e) => Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${e.key + 1}. ',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        e.value,
+                        style: theme.textTheme.bodySmall,
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+          if (tip.action != TipAction.none) ...[
+            const SizedBox(height: AppSpacing.betweenListItems),
+            if (tip.action == TipAction.breathingTimer)
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.icon(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const BreathingTimerScreen(),
+                    ),
+                  ),
+                  icon: const Icon(Icons.timer_rounded, size: 20),
+                  label: Text(loc.tipsStartBreathing),
+                ),
+              )
+            else if (tip.action == TipAction.logWalk)
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () => _logWalk(context, loc),
+                  icon: const Icon(Icons.directions_walk_rounded, size: 20),
+                  label: Text(loc.tipsLogWalk),
+                ),
+              ),
           ],
-        ),
+        ],
       ),
     );
   }
@@ -479,7 +488,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
       await _api.postAdviceFeedback(adviceId: adviceId, feedback: feedback);
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Thanks for your feedback')),
+        SnackBar(content: Text(loc.tipsFeedbackThanks)),
       );
     } catch (e) {
       if (!context.mounted) return;

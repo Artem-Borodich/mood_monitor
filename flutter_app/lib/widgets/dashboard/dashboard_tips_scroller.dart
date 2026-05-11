@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../theme/app_decoration.dart';
 
 class DashboardTipsScroller extends StatelessWidget {
@@ -8,14 +9,16 @@ class DashboardTipsScroller extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    const labels = [
-      'Morning sunlight exposure',
-      'Try 10 min meditation',
-      'Reduce evening caffeine',
+    final loc = AppLocalizations.of(context);
+    final labels = [
+      loc.tipsDashboardSun,
+      loc.tipsDashboardCalm,
+      loc.tipsDashboardSleep,
     ];
     return SizedBox(
       height: 152,
       child: ListView.separated(
+        physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         itemCount: labels.length,
         separatorBuilder: (_, __) => const SizedBox(width: 14),

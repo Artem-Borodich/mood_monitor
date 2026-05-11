@@ -83,21 +83,21 @@ class MoodListItem extends StatelessWidget {
               children: [
                 _pill(
                   context: context,
-                  icon: '😊',
+                  icon: Icons.sentiment_satisfied_rounded,
                   label: loc.moodLabel,
                   value: entry.mood,
                   color: theme.colorScheme.primary,
                 ),
                 _pill(
                   context: context,
-                  icon: '🔥',
+                  icon: Icons.local_fire_department_rounded,
                   label: loc.stressLabel,
                   value: entry.stress,
                   color: theme.colorScheme.error,
                 ),
                 _pill(
                   context: context,
-                  icon: '⚡',
+                  icon: Icons.bolt_rounded,
                   label: loc.energyLabel,
                   value: entry.energy,
                   color: theme.colorScheme.tertiary,
@@ -196,7 +196,7 @@ class MoodListItem extends StatelessWidget {
 
   Widget _pill({
     required BuildContext context,
-    required String icon,
+    required IconData icon,
     required String label,
     required int value,
     required Color color,
@@ -214,7 +214,7 @@ class MoodListItem extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Text(icon, style: const TextStyle(fontSize: 14)),
+              Icon(icon, size: 16, color: color),
               const SizedBox(width: 6),
               Text(
                 label,

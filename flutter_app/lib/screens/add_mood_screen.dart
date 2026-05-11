@@ -10,7 +10,16 @@ import '../theme/app_spacing.dart';
 import '../widgets/serenity_button.dart';
 
 class AddMoodScreen extends StatefulWidget {
-  const AddMoodScreen({super.key});
+  const AddMoodScreen({
+    super.key,
+    this.onSaved,
+    this.embeddedInShell = false,
+  });
+
+  /// When set (e.g. full-screen flow), called after a successful save instead of only a snackbar.
+  final VoidCallback? onSaved;
+  /// Less vertical padding when shown under a flow [Scaffold] (no bottom tab bar).
+  final bool embeddedInShell;
 
   @override
   State<AddMoodScreen> createState() => _AddMoodScreenState();
@@ -70,9 +79,13 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
       );
       if (!mounted) return;
       HapticFeedback.mediumImpact();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(loc.entrySaved)),
-      );
+      if (widget.onSaved != null) {
+        widget.onSaved!();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(loc.entrySaved)),
+        );
+      }
     } catch (e) {
       if (!mounted) return;
       final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
@@ -92,6 +105,9 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context);
+    final topPad =
+        widget.embeddedInShell ? AppSpacing.sm : AppSpacing.screenTop;
+    final bottomPad = widget.embeddedInShell ? 32.0 : 110.0;
 
     return Column(
       children: [
@@ -102,11 +118,11 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
             ),
             slivers: [
               SliverPadding(
-                padding: const EdgeInsets.fromLTRB(
+                padding: EdgeInsets.fromLTRB(
                   AppSpacing.screenHorizontal,
-                  AppSpacing.screenTop,
+                  topPad,
                   AppSpacing.screenHorizontal,
-                  110,
+                  bottomPad,
                 ),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([

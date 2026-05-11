@@ -12,6 +12,7 @@ import '../widgets/loading_shimmer.dart';
 import '../widgets/mood_list_item.dart';
 import '../widgets/serenity_section_header.dart';
 import 'edit_mood_screen.dart';
+import 'add_mood_flow_page.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -103,25 +104,94 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ),
               padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
               children: [
-                const SizedBox(height: 24),
-                Icon(
-                  Icons.auto_awesome_rounded,
-                  size: 48,
-                  color: theme.colorScheme.primary.withValues(alpha: 0.45),
-                ),
                 const SizedBox(height: 20),
-                Text(
-                  loc.historyEmptyTitle,
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w800,
+                AuraCard(
+                  borderRadius: DsRadii.xl,
+                  padding: const EdgeInsets.all(AppSpacing.cardPadding),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      theme.colorScheme.primary.withValues(alpha: 0.14),
+                      theme.colorScheme.surfaceContainerLowest,
+                    ],
                   ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  loc.historyEmptySubtitle,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    height: 1.45,
+                  glassBorder: true,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary
+                                  .withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: theme.colorScheme.primary
+                                    .withValues(alpha: 0.25),
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.auto_awesome_rounded,
+                              color: theme.colorScheme.primary,
+                              size: 26,
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Text(
+                              loc.historyEmptyTitle,
+                              style: theme.textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: -0.3,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        loc.historyEmptySubtitle,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                          height: 1.5,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.betweenCards),
+                      FilledButton.icon(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            PageRouteBuilder<void>(
+                              pageBuilder: (ctx, _, __) =>
+                                  const AddMoodFlowPage(),
+                              transitionsBuilder:
+                                  (ctx, animation, secondary, child) {
+                                final curved = CurvedAnimation(
+                                  parent: animation,
+                                  curve: Curves.easeOutCubic,
+                                  reverseCurve: Curves.easeInCubic,
+                                );
+                                return FadeTransition(
+                                  opacity: curved,
+                                  child: SlideTransition(
+                                    position: Tween<Offset>(
+                                      begin: const Offset(0, 0.04),
+                                      end: Offset.zero,
+                                    ).animate(curved),
+                                    child: child,
+                                  ),
+                                );
+                              },
+                              transitionDuration: DsMotion.page,
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.add_rounded),
+                        label: Text(loc.dashboardEmptyCta),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -424,10 +494,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ? 0.0
         : entries.map((e) => e.mood).reduce((a, b) => a + b) / entries.length;
     final dominant = moodAvg >= 7
-        ? 'Calm'
+        ? loc.historyDominantMoodCalm
         : moodAvg >= 5
-            ? 'Balanced'
-            : 'Anxious';
+            ? loc.historyDominantMoodBalanced
+            : loc.historyDominantMoodAnxious;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -436,15 +506,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            gradient: const LinearGradient(
-              colors: [Color(0xFF7B48FF), Color(0xFF5C2EE0)],
+            gradient: LinearGradient(
+              colors: [
+                theme.colorScheme.primaryContainer.withValues(alpha: 0.95),
+                theme.colorScheme.secondaryContainer.withValues(alpha: 0.85),
+              ],
             ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Weekly Summary',
+                loc.historyWeeklySummary,
                 style: theme.textTheme.labelLarge?.copyWith(color: Colors.white),
               ),
               const SizedBox(height: 8),
@@ -456,7 +529,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
               ),
               Text(
-                'is your dominant mood',
+                loc.historyDominantMoodSubtitle,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: Colors.white.withValues(alpha: 0.9),
                 ),

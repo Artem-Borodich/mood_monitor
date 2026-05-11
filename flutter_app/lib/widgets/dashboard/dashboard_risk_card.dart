@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../models/forecast_payload.dart';
 import '../../models/mood_entry.dart';
 import '../../theme/app_decoration.dart';
@@ -26,6 +27,7 @@ class DashboardRiskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context);
     final f = forecast;
     final hasForecast = f != null && f.status == 'ok';
     final riskPct = hasForecast
@@ -33,8 +35,8 @@ class DashboardRiskCard extends StatelessWidget {
         : dashboardFallbackRiskPercent(latest);
     final isHigh = riskPct >= 60;
     final explanation = hasForecast
-        ? (f.explanation ?? 'Based on your recent patterns')
-        : (forecastError ?? 'Based on sleep and stress patterns');
+        ? (f.explanation ?? loc.dashboardRiskExtraForecast)
+        : (forecastError ?? loc.dashboardRiskExtraHeuristic);
 
     final gradient = AppDecorations.riskCardGradient(context, high: isHigh);
     final accent = isHigh ? theme.colorScheme.error : theme.colorScheme.primary;
@@ -98,7 +100,7 @@ class DashboardRiskCard extends StatelessWidget {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              'Next Day Risk',
+                              loc.dashboardRiskTitle,
                               style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w800,
                               ),
@@ -129,7 +131,9 @@ class DashboardRiskCard extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 4),
                             child: Text(
-                              isHigh ? 'HIGH RISK' : 'MODERATE',
+                              isHigh
+                                  ? loc.dashboardRiskLevelHigh
+                                  : loc.dashboardRiskLevelModerate,
                               style: theme.textTheme.labelLarge?.copyWith(
                                 color: accent,
                                 fontWeight: FontWeight.w800,
@@ -153,8 +157,8 @@ class DashboardRiskCard extends StatelessWidget {
                       const SizedBox(height: 12),
                       Text(
                         isHigh
-                            ? '"Consider a 10-minute meditation before bed to lower this risk."'
-                            : '"Keep your current routine and finish the day gently."',
+                            ? loc.dashboardRiskSuggestionHigh
+                            : loc.dashboardRiskSuggestionLow,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           fontStyle: FontStyle.italic,
                           color: theme.colorScheme.onSurface.withValues(alpha: 0.85),

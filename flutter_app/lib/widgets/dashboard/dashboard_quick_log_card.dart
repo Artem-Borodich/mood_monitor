@@ -80,11 +80,26 @@ class DashboardQuickLogCard extends StatelessWidget {
           const SizedBox(height: 14),
           Row(
             children: [
-              _MetricPill(icon: '😊', label: loc.moodLabel, value: last.mood, color: theme.colorScheme.primary),
+              _MetricPill(
+                icon: Icons.sentiment_satisfied_rounded,
+                label: loc.moodLabel,
+                value: last.mood,
+                color: theme.colorScheme.primary,
+              ),
               const SizedBox(width: 10),
-              _MetricPill(icon: '🔥', label: loc.stressLabel, value: last.stress, color: theme.colorScheme.error),
+              _MetricPill(
+                icon: Icons.local_fire_department_rounded,
+                label: loc.stressLabel,
+                value: last.stress,
+                color: theme.colorScheme.error,
+              ),
               const SizedBox(width: 10),
-              _MetricPill(icon: '⚡', label: loc.energyLabel, value: last.energy, color: theme.colorScheme.tertiary),
+              _MetricPill(
+                icon: Icons.bolt_rounded,
+                label: loc.energyLabel,
+                value: last.energy,
+                color: theme.colorScheme.tertiary,
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -138,7 +153,7 @@ class _MetricPill extends StatelessWidget {
     required this.color,
   });
 
-  final String icon;
+  final IconData icon;
   final String label;
   final int value;
   final Color color;
@@ -164,7 +179,7 @@ class _MetricPill extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(icon, style: const TextStyle(fontSize: 18)),
+            Icon(icon, size: 20),
             const SizedBox(height: 4),
             Text(
               label,

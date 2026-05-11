@@ -5,7 +5,7 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import 'l10n/app_localizations.dart';
 import 'locale_store.dart';
-import 'screens/add_mood_screen.dart';
+import 'screens/add_mood_flow_page.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/history_screen.dart';
 import 'screens/recommendations_screen.dart';
@@ -103,13 +103,42 @@ class _MainScaffoldState extends State<MainScaffold> {
   void initState() {
     super.initState();
     _screens = [
-      DashboardScreen(
-        onAddMoodTap: () => setState(() => _currentIndex = 2),
-      ),
+      DashboardScreen(onAddMoodTap: _openAddMood),
       const HistoryScreen(),
-      const AddMoodScreen(),
       const RecommendationsScreen(),
     ];
+  }
+
+  void _openAddMood() {
+    HapticFeedback.mediumImpact();
+    Navigator.of(context).push<void>(
+      PageRouteBuilder<void>(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const AddMoodFlowPage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          final curved = CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOutCubic,
+            reverseCurve: Curves.easeInCubic,
+          );
+          return FadeTransition(
+            opacity: curved,
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, 0.04),
+                end: Offset.zero,
+              ).animate(curved),
+              child: ScaleTransition(
+                scale: Tween<double>(begin: 0.97, end: 1).animate(curved),
+                child: child,
+              ),
+            ),
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 300),
+        reverseTransitionDuration: const Duration(milliseconds: 240),
+      ),
+    );
   }
 
   @override
@@ -148,7 +177,7 @@ class _MainScaffoldState extends State<MainScaffold> {
                         ShaderMask(
                           shaderCallback: (bounds) => AppDecorations.primaryHeroGradient().createShader(bounds),
                           child: Text(
-                            'Serenity',
+                            loc.brandName,
                             style: theme.textTheme.titleMedium?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w900,
@@ -172,29 +201,37 @@ class _MainScaffoldState extends State<MainScaffold> {
               ),
               Expanded(
                 child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 280),
-                switchInCurve: Curves.easeOutCubic,
-                switchOutCurve: Curves.easeInCubic,
-                transitionBuilder: (child, animation) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: SlideTransition(
-                      position: Tween<Offset>(
-                        begin: const Offset(0.03, 0),
-                        end: Offset.zero,
-                      ).animate(animation),
-                      child: child,
-                    ),
-                  );
-                },
-                child: KeyedSubtree(
-                  key: ValueKey(_currentIndex),
-                  child: _screens[_currentIndex],
+                  duration: const Duration(milliseconds: 280),
+                  switchInCurve: Curves.easeOutCubic,
+                  switchOutCurve: Curves.easeInCubic,
+                  transitionBuilder: (child, animation) {
+                    final curved = CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutCubic,
+                    );
+                    return FadeTransition(
+                      opacity: curved,
+                      child: SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0, 0.012),
+                          end: Offset.zero,
+                        ).animate(curved),
+                        child: ScaleTransition(
+                          scale: Tween<double>(begin: 0.988, end: 1)
+                              .animate(curved),
+                          child: child,
+                        ),
+                      ),
+                    );
+                  },
+                  child: KeyedSubtree(
+                    key: ValueKey(_currentIndex),
+                    child: _screens[_currentIndex],
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: Padding(
@@ -209,10 +246,7 @@ class _MainScaffoldState extends State<MainScaffold> {
             color: Colors.transparent,
             child: InkWell(
               customBorder: const CircleBorder(),
-              onTap: () {
-                HapticFeedback.mediumImpact();
-                setState(() => _currentIndex = 2);
-              },
+              onTap: _openAddMood,
               child: SizedBox(
                 width: DsSizes.fab,
                 height: DsSizes.fab,
@@ -257,11 +291,6 @@ class _MainScaffoldState extends State<MainScaffold> {
                 icon: const Icon(Icons.history_rounded),
                 selectedIcon: const Icon(Icons.history_toggle_off_rounded),
                 label: loc.navHistory,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.add_circle_outline_rounded),
-                selectedIcon: const Icon(Icons.add_circle_rounded),
-                label: loc.navAdd,
               ),
               NavigationDestination(
                 icon: const Icon(Icons.lightbulb_outline_rounded),
