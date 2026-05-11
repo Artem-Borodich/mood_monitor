@@ -4,6 +4,8 @@ import '../l10n/app_localizations.dart';
 import '../models/mood_entry.dart';
 import '../services/api_exception.dart';
 import '../services/api_service.dart';
+import '../design_system/aura_card.dart';
+import '../design_system/design_tokens.dart';
 import '../theme/app_spacing.dart';
 import '../utils/format_date.dart';
 
@@ -27,25 +29,18 @@ class MoodListItem extends StatelessWidget {
     final dateString =
         formatMoodDate(entry.createdAt, localeCode: localeCode);
 
-    Widget card = Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
+    Widget card = AuraCard(
+      borderRadius: DsRadii.lg,
+      padding: const EdgeInsets.all(AppSpacing.cardPadding),
+      gradient: LinearGradient(
+        colors: [
+          theme.colorScheme.surface,
+          theme.colorScheme.surfaceContainerLow.withValues(alpha: 0.95),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              theme.colorScheme.surface,
-              theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(AppSpacing.radiusCard),
-        ),
-        padding: const EdgeInsets.all(AppSpacing.cardPadding),
-        child: Column(
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -126,7 +121,6 @@ class MoodListItem extends StatelessWidget {
             ],
           ],
         ),
-      ),
     );
 
     if (onEdit != null || onDelete != null) {

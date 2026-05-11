@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../design_system/aura_card.dart';
+import '../design_system/design_tokens.dart';
 import '../l10n/app_localizations.dart';
 import '../services/api_exception.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
 import '../widgets/serenity_button.dart';
-import '../widgets/serenity_card.dart';
 
 class AddMoodScreen extends StatefulWidget {
   const AddMoodScreen({super.key});
@@ -95,127 +96,154 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
     return Column(
       children: [
         Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.screenHorizontal,
-              AppSpacing.screenTop,
-              AppSpacing.screenHorizontal,
-              120,
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'How are you feeling?',
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w800,
-                  ),
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.screenHorizontal,
+                  AppSpacing.screenTop,
+                  AppSpacing.screenHorizontal,
+                  110,
                 ),
-                const SizedBox(height: AppSpacing.sm),
-                Text(
-                  'Your daily check-in helps us understand your patterns and provide better advice.',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.section),
-                _buildSliderCard(
-                  context: context,
-                  label: loc.addMoodLabel,
-                  description: loc.addMoodDesc,
-                  icon: Icons.emoji_emotions_rounded,
-                  value: _mood,
-                  colorForValue: _moodColor,
-                  onChanged: (v) => setState(() => _mood = v),
-                ),
-                const SizedBox(height: AppSpacing.betweenCards),
-                _buildSliderCard(
-                  context: context,
-                  label: loc.addStressLabel,
-                  description: loc.addStressDesc,
-                  icon: Icons.psychology_alt_rounded,
-                  value: _stress,
-                  colorForValue: _stressColor,
-                  onChanged: (v) => setState(() => _stress = v),
-                ),
-                const SizedBox(height: AppSpacing.betweenCards),
-                _buildSliderCard(
-                  context: context,
-                  label: loc.addEnergyLabel,
-                  description: loc.addEnergyDesc,
-                  icon: Icons.bolt_rounded,
-                  value: _energy,
-                  colorForValue: _energyColor,
-                  onChanged: (v) => setState(() => _energy = v),
-                ),
-                const SizedBox(height: AppSpacing.betweenCards),
-                SerenityCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        loc.addSleepActivityTitle,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    Text(
+                      loc.addTitle,
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.5,
+                        height: 1.15,
                       ),
-                      const SizedBox(height: AppSpacing.titleToContent),
-                      _buildSleepAndActivity(theme, loc),
-                      const SizedBox(height: 8),
-                      _buildCategoryChips(theme, loc),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    Text(
+                      loc.addSubtitle,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        height: 1.5,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.section + 4),
+                    _buildSliderCard(
+                      context: context,
+                      label: loc.addMoodLabel,
+                      description: loc.addMoodDesc,
+                      icon: Icons.emoji_emotions_rounded,
+                      value: _mood,
+                      colorForValue: _moodColor,
+                      onChanged: (v) => setState(() => _mood = v),
+                    ),
+                    SizedBox(height: AppSpacing.betweenCards),
+                    _buildSliderCard(
+                      context: context,
+                      label: loc.addStressLabel,
+                      description: loc.addStressDesc,
+                      icon: Icons.spa_outlined,
+                      value: _stress,
+                      colorForValue: _stressColor,
+                      onChanged: (v) => setState(() => _stress = v),
+                    ),
+                    SizedBox(height: AppSpacing.betweenCards),
+                    _buildSliderCard(
+                      context: context,
+                      label: loc.addEnergyLabel,
+                      description: loc.addEnergyDesc,
+                      icon: Icons.bolt_rounded,
+                      value: _energy,
+                      colorForValue: _energyColor,
+                      onChanged: (v) => setState(() => _energy = v),
+                    ),
+                    SizedBox(height: AppSpacing.betweenCards),
+                    AuraCard(
+                      borderRadius: DsRadii.lg,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            loc.addSleepActivityTitle,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.titleToContent),
+                          _buildSleepAndActivity(theme, loc),
+                          const SizedBox(height: AppSpacing.md),
+                          Text(
+                            loc.addCategoryTitle,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          _buildCategoryChips(theme, loc),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: AppSpacing.betweenCards),
+                    AuraCard(
+                      borderRadius: DsRadii.lg,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            loc.addJournalTitle,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          TextField(
+                            controller: _noteController,
+                            maxLines: 4,
+                            decoration: InputDecoration(
+                              hintText: loc.addOptionalNoteHint,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          TextButton.icon(
+                            onPressed: _pickDate,
+                            icon: const Icon(Icons.event_rounded),
+                            label: Text(loc.addChangeDate),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ]),
                 ),
-                const SizedBox(height: AppSpacing.betweenCards),
-                SerenityCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Journal / Notes',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextField(
-                        controller: _noteController,
-                        maxLines: 4,
-                        decoration: InputDecoration(
-                          hintText: loc.addOptionalNoteHint,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: TextButton.icon(
-                          onPressed: _pickDate,
-                          icon: const Icon(Icons.event_rounded),
-                          label: Text(loc.addChangeDate),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 16,
-                color: theme.colorScheme.primary.withValues(alpha: 0.08),
               ),
             ],
           ),
-          child: SerenityButton(
-            label: _submitting ? 'Saving...' : loc.addSave,
-            icon: _submitting ? Icons.sync_rounded : Icons.check_circle_outline_rounded,
-            onPressed: _submitting ? null : _submit,
+        ),
+        Container(
+          padding: EdgeInsets.fromLTRB(
+            AppSpacing.screenHorizontal,
+            12,
+            AppSpacing.screenHorizontal,
+            16,
+          ),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface.withValues(alpha: 0.92),
+            border: Border(
+              top: BorderSide(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.35)),
+            ),
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 24,
+                offset: const Offset(0, -6),
+                color: theme.colorScheme.primary.withValues(alpha: 0.06),
+              ),
+            ],
+          ),
+          child: SafeArea(
+            top: false,
+            child: SerenityButton(
+              label: _submitting ? loc.quickLogSheetSaving : loc.addSave,
+              icon: _submitting ? Icons.hourglass_top_rounded : Icons.check_rounded,
+              onPressed: _submitting ? null : _submit,
+            ),
           ),
         ),
       ],
@@ -233,18 +261,20 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
     return Wrap(
       spacing: AppSpacing.sm,
       runSpacing: AppSpacing.sm,
-          children: labels.entries.map((entry) {
-            final selected = _category == entry.key;
-            return ChoiceChip(
-              label: Text(entry.value),
-              selected: selected,
-              onSelected: (_) {
-                setState(() {
-                  _category = entry.key;
-                });
-              },
-            );
-          }).toList(),
+      children: labels.entries.map((entry) {
+        final selected = _category == entry.key;
+        return FilterChip(
+          label: Text(entry.value),
+          selected: selected,
+          showCheckmark: false,
+          onSelected: (_) {
+            setState(() {
+              _category = entry.key;
+            });
+            HapticFeedback.selectionClick();
+          },
+        );
+      }).toList(),
     );
   }
 
@@ -255,8 +285,11 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(loc.addSleepLabel, style: theme.textTheme.bodyMedium),
-            Text('${_sleepHours.toStringAsFixed(1)} h', style: theme.textTheme.labelLarge),
+            Text(loc.addSleepLabel, style: theme.textTheme.bodyLarge),
+            Text(
+              '${_sleepHours.toStringAsFixed(1)} h',
+              style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
+            ),
           ],
         ),
         Slider(
@@ -269,8 +302,11 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(loc.addActivityLabel, style: theme.textTheme.bodyMedium),
-            Text('${_activityMinutes.round()} min', style: theme.textTheme.labelLarge),
+            Text(loc.addActivityLabel, style: theme.textTheme.bodyLarge),
+            Text(
+              '${_activityMinutes.round()} min',
+              style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
+            ),
           ],
         ),
         Slider(
@@ -296,106 +332,97 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
     final theme = Theme.of(context);
     final color = colorForValue(value);
 
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.cardPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(AppSpacing.sm),
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Icon(
-                    icon,
-                    color: color,
-                  ),
+    return AuraCard(
+      borderRadius: DsRadii.lg,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(DsRadii.md),
                 ),
-                const SizedBox(width: 12),
-                Column(
+                child: Icon(icon, color: color, size: 26),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       label,
                       style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     Text(
                       description,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
+                        height: 1.45,
                       ),
                     ),
                   ],
                 ),
-                const Spacer(),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    value.round().toString(),
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: color,
-                    ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.16),
+                  borderRadius: BorderRadius.circular(DsRadii.pill),
+                ),
+                child: Text(
+                  value.round().toString(),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: color,
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                thumbShape:
-                    const RoundSliderThumbShape(enabledThumbRadius: 10),
-                overlayShape:
-                    const RoundSliderOverlayShape(overlayRadius: 18),
-                activeTrackColor: color,
-                inactiveTrackColor: theme.colorScheme.surfaceContainerHighest,
-                thumbColor: color,
-                overlayColor: color.withValues(alpha: 0.2),
               ),
-              child: Slider(
-                min: 1,
-                max: 10,
-                divisions: 9,
-                value: value,
-                label: value.round().toString(),
-                onChanged: onChanged,
-              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 15, elevation: 3),
+              overlayShape: const RoundSliderOverlayShape(overlayRadius: 26),
+              trackHeight: 6,
+              activeTrackColor: color,
+              inactiveTrackColor: theme.colorScheme.surfaceContainerHighest,
+              thumbColor: color,
+              overlayColor: color.withValues(alpha: 0.15),
             ),
-          ],
-        ),
+            child: Slider(
+              min: 1,
+              max: 10,
+              divisions: 9,
+              value: value,
+              label: value.round().toString(),
+              onChanged: onChanged,
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Color _moodColor(double value) {
-    // 1 (red) -> 10 (green)
     final t = (value - 1) / 9;
-    return Color.lerp(Colors.red, Colors.green, t.clamp(0.0, 1.0))!;
+    return Color.lerp(const Color(0xFF7B74D9), const Color(0xFF5FA88A), t.clamp(0.0, 1.0))!;
   }
 
   Color _stressColor(double value) {
-    // 1 (green, low) -> 10 (red, high)
     final t = (value - 1) / 9;
-    return Color.lerp(Colors.green, Colors.red, t.clamp(0.0, 1.0))!;
+    return Color.lerp(const Color(0xFF6EB89A), const Color(0xFFD67A8A), t.clamp(0.0, 1.0))!;
   }
 
   Color _energyColor(double value) {
-    // 1 (grey) -> 10 (amber)
     final t = (value - 1) / 9;
-    return Color.lerp(Colors.grey, Colors.amber, t.clamp(0.0, 1.0))!;
+    return Color.lerp(const Color(0xFF8A8CB8), const Color(0xFFE6B86A), t.clamp(0.0, 1.0))!;
   }
 }
-

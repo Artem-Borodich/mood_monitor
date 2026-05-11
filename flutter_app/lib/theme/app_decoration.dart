@@ -7,14 +7,14 @@ abstract final class AppDecorations {
   static LinearGradient scaffoldGradientLight(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
       colors: [
-        Color.lerp(cs.surface, cs.primaryContainer, 0.35)!,
-        Color.lerp(cs.surface, cs.tertiaryContainer, 0.12)!,
+        Color.lerp(cs.surface, cs.primaryContainer, 0.22)!,
+        Color.lerp(cs.surface, cs.secondaryContainer, 0.1)!,
         cs.surface,
       ],
-      stops: const [0.0, 0.38, 1.0],
+      stops: const [0.0, 0.42, 1.0],
     );
   }
 
@@ -44,7 +44,7 @@ abstract final class AppDecorations {
     final ambient = dark
         ? Colors.black.withValues(alpha: 0.45)
         : const Color(0xFF2D1B69).withValues(alpha: 0.07);
-    final tint = AppColors.primary.withValues(alpha: dark ? 0.22 : 0.14);
+    final tint = AppColors.seed.withValues(alpha: dark ? 0.2 : 0.1);
     return [
       BoxShadow(
         color: ambient,

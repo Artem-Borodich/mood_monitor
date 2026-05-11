@@ -10,6 +10,7 @@ import 'screens/dashboard_screen.dart';
 import 'screens/history_screen.dart';
 import 'screens/recommendations_screen.dart';
 import 'screens/settings_screen.dart';
+import 'design_system/design_tokens.dart';
 import 'theme/app_decoration.dart';
 import 'theme/app_theme.dart';
 
@@ -196,6 +197,36 @@ class _MainScaffoldState extends State<MainScaffold> {
         ),
         ),
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 72),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: AppDecorations.primaryHeroGradient(),
+            boxShadow: AppDecorations.cardSubtle(context),
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              customBorder: const CircleBorder(),
+              onTap: () {
+                HapticFeedback.mediumImpact();
+                setState(() => _currentIndex = 2);
+              },
+              child: SizedBox(
+                width: DsSizes.fab,
+                height: DsSizes.fab,
+                child: Icon(
+                  Icons.add_rounded,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.fromLTRB(14, 0, 14, 12),
         child: Material(

@@ -6,11 +6,13 @@ import '../../theme/app_decoration.dart';
 class DashboardWellbeingCard extends StatelessWidget {
   const DashboardWellbeingCard({
     super.key,
+    required this.title,
     required this.score,
     required this.subtitle,
   });
 
   /// 0–100 ring fill.
+  final String title;
   final double score;
   final String subtitle;
 
@@ -60,7 +62,7 @@ class DashboardWellbeingCard extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    'Well-being Index',
+                    title,
                     style: theme.textTheme.titleMedium?.copyWith(
                       color: Colors.white.withValues(alpha: 0.95),
                       fontWeight: FontWeight.w800,

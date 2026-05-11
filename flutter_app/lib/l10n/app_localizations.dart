@@ -112,6 +112,18 @@ class AppLocalizations {
       'quickLogSheetAdvanced': 'Sleep, activity & category',
       'quickLogSheetSaving': 'Saving…',
       'tipsChipWeek': 'Last 7 days',
+      'dashboardGreetingMorning': 'Good morning',
+      'dashboardGreetingAfternoon': 'Good afternoon',
+      'dashboardGreetingEvening': 'Good evening',
+      'dashboardHeroSub':
+          'Take a breath — this is your calm space to notice how you feel.',
+      'historyInsightsTitle': 'Insights',
+      'historyInsightsSubtitle':
+          'Patterns from your check-ins, without the noise.',
+      'historyTabList': 'Entries',
+      'historyTabAnalytics': 'Trends',
+      'historyDailyEntries': 'Your entries',
+      'addJournalTitle': 'Journal',
       'settingsTitle': 'Settings',
       'settingsLanguage': 'Language',
       'settingsAppearance': 'Appearance',
@@ -257,6 +269,18 @@ class AppLocalizations {
       'quickLogSheetAdvanced': 'Сон, активность и категория',
       'quickLogSheetSaving': 'Сохранение…',
       'tipsChipWeek': '7 дней',
+      'dashboardGreetingMorning': 'Доброе утро',
+      'dashboardGreetingAfternoon': 'Добрый день',
+      'dashboardGreetingEvening': 'Добрый вечер',
+      'dashboardHeroSub':
+          'Выдохните — здесь можно спокойно заметить, как вы себя чувствуете.',
+      'historyInsightsTitle': 'Инсайты',
+      'historyInsightsSubtitle':
+          'Закономерности из ваших записей — без лишнего шума.',
+      'historyTabList': 'Записи',
+      'historyTabAnalytics': 'Тренды',
+      'historyDailyEntries': 'Ваши записи',
+      'addJournalTitle': 'Дневник',
       'settingsTitle': 'Настройки',
       'settingsLanguage': 'Язык',
       'settingsAppearance': 'Оформление',
@@ -408,6 +432,16 @@ class AppLocalizations {
   String get quickLogSheetAdvanced => _text('quickLogSheetAdvanced');
   String get quickLogSheetSaving => _text('quickLogSheetSaving');
   String get tipsChipWeek => _text('tipsChipWeek');
+  String get dashboardGreetingMorning => _text('dashboardGreetingMorning');
+  String get dashboardGreetingAfternoon => _text('dashboardGreetingAfternoon');
+  String get dashboardGreetingEvening => _text('dashboardGreetingEvening');
+  String get dashboardHeroSub => _text('dashboardHeroSub');
+  String get historyInsightsTitle => _text('historyInsightsTitle');
+  String get historyInsightsSubtitle => _text('historyInsightsSubtitle');
+  String get historyTabList => _text('historyTabList');
+  String get historyTabAnalytics => _text('historyTabAnalytics');
+  String get historyDailyEntries => _text('historyDailyEntries');
+  String get addJournalTitle => _text('addJournalTitle');
 
   String get settingsTitle => _text('settingsTitle');
   String get settingsLanguage => _text('settingsLanguage');

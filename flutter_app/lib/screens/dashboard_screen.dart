@@ -8,19 +8,19 @@ import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
 import '../widgets/app_error_view.dart';
 import '../widgets/dashboard/dashboard_empty_state.dart';
+import '../widgets/dashboard/dashboard_hero.dart';
 import '../widgets/dashboard/dashboard_quick_log_card.dart';
-import '../widgets/dashboard/quick_log_bottom_sheet.dart';
 import '../widgets/dashboard/dashboard_risk_card.dart';
 import '../widgets/dashboard/dashboard_tips_scroller.dart';
 import '../widgets/dashboard/dashboard_trend_chart.dart';
 import '../widgets/dashboard/dashboard_wellbeing_card.dart';
+import '../widgets/dashboard/quick_log_bottom_sheet.dart';
 import '../widgets/loading_shimmer.dart';
 import '../widgets/serenity_section_header.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key, this.onAddMoodTap});
 
-  /// Opens the Add tab from [MainScaffold] when the dashboard is empty.
   final VoidCallback? onAddMoodTap;
 
   @override
@@ -77,11 +77,63 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+  List<Widget> _bodyChildren(AppLocalizations loc, MoodEntry? latest) {
+    final wellbeing = _wellbeingIndex ?? latest?.wellbeingIndex;
+    final wellbeingScore = wellbeing != null
+        ? ((wellbeing / 10) * 100).clamp(0, 100).toDouble()
+        : 0.0;
+    final wellbeingSubtitle = latest == null
+        ? loc.dashboardWellbeingSubtitleEmpty
+        : loc.dashboardWellbeingSubtitle;
+
+    return [
+      DashboardHero(
+        loc: loc,
+        lastMood: latest?.mood,
+        hasEntries: _entries.isNotEmpty,
+      ),
+      SizedBox(height: AppSpacing.betweenSections),
+      if (latest != null) ...[
+        DashboardQuickLogCard(
+          last: latest,
+          loc: loc,
+          onOpenSheet: () => _openQuickLogSheet(latest, loc),
+        ),
+        SizedBox(height: AppSpacing.betweenSections),
+      ],
+      if (_entries.isEmpty) ...[
+        DashboardEmptyState(onAddMood: widget.onAddMoodTap),
+        SizedBox(height: AppSpacing.betweenSections),
+      ],
+      DashboardWellbeingCard(
+        title: loc.dashboardWellbeingTitle,
+        score: wellbeingScore,
+        subtitle: wellbeingSubtitle,
+      ),
+      SizedBox(height: AppSpacing.betweenSections),
+      DashboardRiskCard(
+        forecast: _forecast,
+        forecastError: _forecastError,
+        latest: latest,
+      ),
+      SizedBox(height: AppSpacing.betweenSections),
+      DashboardTrendChart(entries: _entries, loc: loc),
+      SizedBox(height: AppSpacing.betweenSections),
+      SerenitySectionHeader(title: loc.tipsTodayTitle),
+      SizedBox(height: AppSpacing.md),
+      const DashboardTipsScroller(),
+      SizedBox(height: AppSpacing.section),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context);
     if (_loading) {
       return ListView(
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
+        ),
         padding: const EdgeInsets.fromLTRB(
           AppSpacing.screenHorizontal,
           AppSpacing.screenTop,
@@ -104,84 +156,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     final latest = _entries.isNotEmpty ? _entries.first : null;
-    final wellbeing = _wellbeingIndex ?? latest?.wellbeingIndex;
-    final wellbeingScore = wellbeing != null
-        ? ((wellbeing / 10) * 100).clamp(0, 100).toDouble()
-        : 0.0;
-    final wellbeingSubtitle = latest == null
-        ? loc.dashboardWellbeingSubtitleEmpty
-        : loc.dashboardWellbeingSubtitle;
-
-    if (_entries.isEmpty) {
-      return RefreshIndicator(
-        onRefresh: _loadData,
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.screenHorizontal,
-            AppSpacing.screenTop,
-            AppSpacing.screenHorizontal,
-            AppSpacing.screenBottom,
-          ),
-          children: [
-            DashboardEmptyState(
-              onAddMood: widget.onAddMoodTap,
-            ),
-            const SizedBox(height: AppSpacing.betweenSections),
-            DashboardWellbeingCard(
-              score: wellbeingScore,
-              subtitle: wellbeingSubtitle,
-            ),
-            const SizedBox(height: AppSpacing.betweenSections),
-            DashboardRiskCard(
-              forecast: _forecast,
-              forecastError: _forecastError,
-              latest: null,
-            ),
-            const SizedBox(height: AppSpacing.betweenSections),
-            DashboardTrendChart(entries: _entries, loc: loc),
-            const SizedBox(height: AppSpacing.betweenSections),
-            const SerenitySectionHeader(title: 'Daily Tips', actionLabel: 'VIEW ALL'),
-            const SizedBox(height: 10),
-            const DashboardTipsScroller(),
-          ],
-        ),
-      );
-    }
+    final children = _bodyChildren(loc, latest);
 
     return RefreshIndicator(
+      edgeOffset: 8,
       onRefresh: _loadData,
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.screenHorizontal,
-          AppSpacing.screenTop,
-          AppSpacing.screenHorizontal,
-          AppSpacing.screenBottom,
+      child: CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
         ),
-        children: [
-          if (latest != null) ...[
-            DashboardQuickLogCard(
-              last: latest,
-              loc: loc,
-              onOpenSheet: () => _openQuickLogSheet(latest, loc),
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.screenHorizontal,
+              AppSpacing.screenTop,
+              AppSpacing.screenHorizontal,
+              AppSpacing.screenBottom,
             ),
-            const SizedBox(height: AppSpacing.betweenSections),
-          ],
-          DashboardWellbeingCard(
-            score: wellbeingScore,
-            subtitle: wellbeingSubtitle,
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(children),
+            ),
           ),
-          const SizedBox(height: AppSpacing.betweenSections),
-          DashboardRiskCard(
-            forecast: _forecast,
-            forecastError: _forecastError,
-            latest: latest,
-          ),
-          const SizedBox(height: AppSpacing.betweenSections),
-          DashboardTrendChart(entries: _entries, loc: loc),
-          const SizedBox(height: AppSpacing.betweenSections),
-          const SerenitySectionHeader(title: 'Daily Tips', actionLabel: 'VIEW ALL'),
-          const SizedBox(height: 10),
-          const DashboardTipsScroller(),
         ],
       ),
     );

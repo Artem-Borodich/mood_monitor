@@ -39,11 +39,13 @@ class DashboardSkeleton extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _bar(height: 88, radius: 22),
+        _bar(height: 96, radius: 28),
         const SizedBox(height: AppSpacing.betweenSections),
-        _bar(height: 180, radius: 20),
+        _bar(height: 120, radius: 22),
         const SizedBox(height: AppSpacing.betweenSections),
-        _bar(height: 120, radius: 20),
+        _bar(height: 200, radius: 28),
+        const SizedBox(height: AppSpacing.betweenSections),
+        _bar(height: 140, radius: 22),
       ],
     );
   }
