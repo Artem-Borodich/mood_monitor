@@ -9,10 +9,13 @@ import '../models/tip.dart';
 import '../services/api_exception.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
+import '../utils/wellbeing_math.dart';
 import '../widgets/app_error_view.dart';
 import '../widgets/loading_shimmer.dart';
+import '../widgets/serenity_messenger.dart';
 import '../widgets/serenity_section_header.dart';
 import 'breathing_timer_screen.dart';
+import 'recommendation_details_screen.dart';
 
 class RecommendationsScreen extends StatefulWidget {
   const RecommendationsScreen({super.key});
@@ -27,12 +30,20 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
   String? _lastLang;
   String _categoryFilter = 'all';
   Set<String> _savedIds = {};
+  Set<String> _dismissedIds = {};
+  Set<String> _completedTipIdsToday = {};
+  Set<String> _helpfulTipIds = {};
+  Set<String> _notHelpfulTipIds = {};
+  bool _quickBreathingDone = false;
+  bool _quickWalkDone = false;
 
   @override
   void initState() {
     super.initState();
     _future = Future.value(<String, dynamic>{});
     _loadSaved();
+    _loadDismissedAndCompleted();
+    _loadTipFeedback();
   }
 
   Future<void> _loadSaved() async {
@@ -40,10 +51,63 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
     if (mounted) setState(() => _savedIds = ids);
   }
 
+  Future<void> _loadDismissedAndCompleted() async {
+    final dismissed = await getDismissedTipIds();
+    final todayKeys = await getCompletedActionKeysForDate(DateTime.now());
+    final completedTips = todayKeys
+        .where((k) => k.startsWith('rec:'))
+        .map((k) => k.substring('rec:'.length))
+        .toSet();
+
+    final quickBreathingDone = todayKeys.contains('quick:breathing');
+    final quickWalkDone = todayKeys.contains('quick:walk');
+
+    if (!mounted) return;
+    setState(() {
+      _dismissedIds = dismissed;
+      _completedTipIdsToday = completedTips;
+      _quickBreathingDone = quickBreathingDone;
+      _quickWalkDone = quickWalkDone;
+    });
+  }
+
+  Future<void> _loadTipFeedback() async {
+    final helpful = await getHelpfulTipIds();
+    final notHelpful = await getNotHelpfulTipIds();
+    if (!mounted) return;
+    setState(() {
+      _helpfulTipIds = helpful;
+      _notHelpfulTipIds = notHelpful;
+    });
+  }
+
   Future<void> _refresh() async {
     final lang = _lastLang ?? 'en';
     setState(() => _future = _api.fetchRecommendations(lang: lang));
     await _loadSaved();
+    await _loadDismissedAndCompleted();
+  }
+
+  Tip _tipById(String lang, String id) {
+    final tips = getTips(lang);
+    for (final t in tips) {
+      if (t.id == id) return t;
+    }
+    return tips.first;
+  }
+
+  Future<void> _openRecommendationDetail(
+    BuildContext context,
+    String lang,
+    String tipId,
+  ) async {
+    HapticFeedback.lightImpact();
+    final tip = _tipById(lang, tipId);
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) => RecommendationDetailsScreen(tip: tip),
+      ),
+    );
   }
 
   Future<Map<String, dynamic>> _fetch(String lang) =>
@@ -83,6 +147,23 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
         : _categoryFilter == 'all'
             ? allTips
             : allTips.where((t) => t.category == _categoryFilter).toList();
+
+    final visibleFiltered = _categoryFilter == 'saved'
+        ? filtered
+        : filtered.where((t) => !_dismissedIds.contains(t.id)).toList();
+
+    final dismissedByCategory = <String, int>{};
+    for (final tip in allTips) {
+      if (!_dismissedIds.contains(tip.id)) continue;
+      dismissedByCategory[tip.category] = (dismissedByCategory[tip.category] ?? 0) + 1;
+    }
+
+    final ordered = [...visibleFiltered]
+      ..sort((a, b) {
+        final sb = _tipScore(b, dismissedByCategory);
+        final sa = _tipScore(a, dismissedByCategory);
+        return sb.compareTo(sa);
+      });
 
     return RefreshIndicator(
       onRefresh: _refresh,
@@ -157,22 +238,84 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
                   onRetry: _refresh,
                 )
               else ...[
-                if (index != null)
-                  _buildIndexCard(context, index.toDouble(), loc),
+                if (index != null) ...[
+                  Builder(
+                    builder: (ctx) {
+                      final ix = index.toDouble();
+                      final tier = wellbeingTierFromIndex(ix);
+                      final tipId = switch (tier) {
+                        WellbeingTier.low => 'sleep_wind_down',
+                        WellbeingTier.medium => 'quick_break_water',
+                        WellbeingTier.high => 'breath_478',
+                      };
+                      return _buildIndexCard(
+                        ctx,
+                        ix,
+                        loc,
+                        onOpenDetail: () =>
+                            _openRecommendationDetail(ctx, lang, tipId),
+                      );
+                    },
+                  ),
+                ],
                 const SizedBox(height: AppSpacing.betweenListItems),
-                _buildApiMessageCard(context, message, loc),
+                Builder(
+                  builder: (ctx) => _buildApiMessageCard(
+                    ctx,
+                    message,
+                    loc,
+                    onOpenDetails: () =>
+                        _openRecommendationDetail(ctx, lang, 'mindset_pause'),
+                  ),
+                ),
               ],
               const SizedBox(height: AppSpacing.section),
-              ...filtered.map((tip) => _buildTipCard(context, tip, loc, theme)),
-              if (filtered.isEmpty && _categoryFilter == 'saved')
+              ...ordered.map((tip) => _buildTipCard(context, tip, loc, theme)),
+              if (ordered.isEmpty)
                 Padding(
                   padding: const EdgeInsets.all(24),
-                  child: Center(
-                    child: Text(
-                      loc.tipsSaved,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
+                  child: AuraCard(
+                    borderRadius: 28,
+                    glassBorder: true,
+                    padding: const EdgeInsets.all(AppSpacing.cardPadding),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          loc.tipsEmptyTitle,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          loc.tipsEmptySubtitle,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                            height: 1.45,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        FilledButton.icon(
+                          onPressed: () async {
+                            final done = await Navigator.push<bool>(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const BreathingTimerScreen(),
+                              ),
+                            );
+                            if (done == true) {
+                              await markActionCompletedForDate(
+                                'quick:breathing',
+                                DateTime.now(),
+                              );
+                              await _loadDismissedAndCompleted();
+                            }
+                          },
+                          icon: const Icon(Icons.play_arrow_rounded),
+                          label: Text(loc.tipsBreathStart),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -199,30 +342,38 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
   }
 
   Widget _buildIndexCard(
-      BuildContext context, double index, AppLocalizations loc) {
+    BuildContext context,
+    double index,
+    AppLocalizations loc, {
+    VoidCallback? onOpenDetail,
+  }) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    Color bg;
-    Color iconColor;
-    IconData icon;
-    String title;
-    if (index >= 7.5) {
-      bg = cs.tertiaryContainer.withValues(alpha: 0.95);
-      iconColor = cs.onTertiaryContainer;
-      icon = Icons.sentiment_very_satisfied_rounded;
-      title = loc.tipsIndexHigh;
-    } else if (index >= 5) {
-      bg = cs.primaryContainer.withValues(alpha: 0.9);
-      iconColor = cs.onPrimaryContainer;
-      icon = Icons.sentiment_satisfied_rounded;
-      title = loc.tipsIndexMedium;
-    } else {
-      bg = cs.errorContainer.withValues(alpha: 0.88);
-      iconColor = cs.onErrorContainer;
-      icon = Icons.sentiment_dissatisfied_rounded;
-      title = loc.tipsIndexLow;
+    final tier = wellbeingTierFromIndex(index);
+    final Color bg;
+    final Color iconColor;
+    final IconData icon;
+    final String title;
+    switch (tier) {
+      case WellbeingTier.high:
+        bg = cs.tertiaryContainer.withValues(alpha: 0.95);
+        iconColor = cs.onTertiaryContainer;
+        icon = Icons.sentiment_very_satisfied_rounded;
+        title = loc.tipsIndexHigh;
+      case WellbeingTier.medium:
+        bg = cs.primaryContainer.withValues(alpha: 0.9);
+        iconColor = cs.onPrimaryContainer;
+        icon = Icons.sentiment_satisfied_rounded;
+        title = loc.tipsIndexMedium;
+      case WellbeingTier.low:
+        bg = cs.errorContainer.withValues(alpha: 0.88);
+        iconColor = cs.onErrorContainer;
+        icon = Icons.sentiment_dissatisfied_rounded;
+        title = loc.tipsIndexLow;
     }
+    final pct = wellbeingIndexToDisplayPercent(index).round();
     return AuraCard(
+      onTap: onOpenDetail,
       borderRadius: AppSpacing.radiusCard,
       padding: const EdgeInsets.all(AppSpacing.cardPadding),
       child: Row(
@@ -247,7 +398,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
                   ),
                 ),
                 Text(
-                  '${loc.tipsIndexPrefix}${index.toStringAsFixed(2)}',
+                  '${loc.tipsIndexPrefix}${index.toStringAsFixed(2)} · $pct%',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -261,9 +412,14 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
   }
 
   Widget _buildApiMessageCard(
-      BuildContext context, String message, AppLocalizations loc) {
+    BuildContext context,
+    String message,
+    AppLocalizations loc, {
+    required VoidCallback onOpenDetails,
+  }) {
     final theme = Theme.of(context);
     return AuraCard(
+      onTap: onOpenDetails,
       borderRadius: AppSpacing.radiusCard,
       padding: const EdgeInsets.all(AppSpacing.cardPadding),
       child: Row(
@@ -308,7 +464,9 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
   Widget _buildTipCard(
       BuildContext context, Tip tip, AppLocalizations loc, ThemeData theme) {
     final isSaved = _savedIds.contains(tip.id);
+    final completedToday = _completedTipIdsToday.contains(tip.id);
     return AuraCard(
+      onTap: () => _openDetails(tip),
       margin: const EdgeInsets.only(bottom: AppSpacing.betweenListItems),
       borderRadius: AppSpacing.radiusCard,
       padding: const EdgeInsets.all(AppSpacing.cardPadding),
@@ -351,6 +509,15 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
                   ],
                 ),
               ),
+              if (completedToday)
+                Padding(
+                  padding: const EdgeInsets.only(right: 4, top: 2),
+                  child: Icon(
+                    Icons.check_circle_rounded,
+                    size: 18,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
               IconButton(
                 tooltip: loc.tipsLikeTooltip,
                 icon: const Icon(Icons.thumb_up_outlined, size: 20),
@@ -372,6 +539,14 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
                 onPressed: () async {
                   await toggleSavedTipId(tip.id);
                   await _loadSaved();
+                },
+              ),
+              IconButton(
+                tooltip: loc.recDetailsDismiss,
+                icon: const Icon(Icons.remove_circle_outline_rounded, size: 20),
+                onPressed: () async {
+                  await dismissTipId(tip.id);
+                  await _loadDismissedAndCompleted();
                 },
               ),
             ],
@@ -412,12 +587,21 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
               SizedBox(
                 width: double.infinity,
                 child: FilledButton.icon(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const BreathingTimerScreen(),
-                    ),
-                  ),
+                  onPressed: () async {
+                    final done = await Navigator.push<bool>(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const BreathingTimerScreen(),
+                      ),
+                    );
+                    if (done == true) {
+                      await markActionCompletedForDate(
+                        'rec:${tip.id}',
+                        DateTime.now(),
+                      );
+                      await _loadDismissedAndCompleted();
+                    }
+                  },
                   icon: const Icon(Icons.timer_rounded, size: 20),
                   label: Text(loc.tipsStartBreathing),
                 ),
@@ -426,7 +610,14 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  onPressed: () => _logWalk(context, loc),
+                  onPressed: () async {
+                    await _logWalk(context, loc);
+                    await markActionCompletedForDate(
+                      'rec:${tip.id}',
+                      DateTime.now(),
+                    );
+                    await _loadDismissedAndCompleted();
+                  },
                   icon: const Icon(Icons.directions_walk_rounded, size: 20),
                   label: Text(loc.tipsLogWalk),
                 ),
@@ -435,6 +626,57 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
         ],
       ),
     );
+  }
+
+  int _tipScore(Tip tip, Map<String, int> dismissedByCategory) {
+    var score = 0;
+
+    if (_savedIds.contains(tip.id)) score += 50;
+    if (_completedTipIdsToday.contains(tip.id)) score += 30;
+
+    if (_helpfulTipIds.contains(tip.id)) score += 18;
+    if (_notHelpfulTipIds.contains(tip.id)) score -= 18;
+
+    if (_quickBreathingDone && tip.action == TipAction.breathingTimer) {
+      score += 10;
+    }
+    if (_quickWalkDone && tip.action == TipAction.logWalk) {
+      score += 10;
+    }
+
+    final dismissedCount = dismissedByCategory[tip.category] ?? 0;
+    if (dismissedCount >= 2) {
+      if (tip.category == 'breathing') score -= 12;
+      if (tip.category == 'movement') score -= 6;
+      if (tip.category == 'sleep') score -= 4;
+    }
+
+    // Soft penalty for cards without actionable value.
+    if (tip.action == TipAction.none) score -= 4;
+
+    return score;
+  }
+
+  Future<void> _openDetails(Tip tip) async {
+    await Navigator.push(
+      context,
+      PageRouteBuilder<void>(
+        pageBuilder: (ctx, animation, secondaryAnimation) => RecommendationDetailsScreen(tip: tip),
+        transitionsBuilder: (ctx, animation, secondaryAnimation, child) {
+          final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
+          return FadeTransition(
+            opacity: curved,
+            child: SlideTransition(
+              position: Tween<Offset>(begin: const Offset(0, 0.02), end: Offset.zero).animate(curved),
+              child: child,
+            ),
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 300),
+        reverseTransitionDuration: const Duration(milliseconds: 240),
+      ),
+    );
+    await _loadDismissedAndCompleted();
   }
 
   Future<void> _logWalk(BuildContext context, AppLocalizations loc) async {
@@ -466,15 +708,11 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
         activityMinutes: 15,
       );
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(loc.tipsLogWalkDone)),
-      );
+      SerenityMessenger.show(context, loc.tipsLogWalkDone);
     } catch (e) {
       if (!mounted) return;
       final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(msg)),
-      );
+      SerenityMessenger.show(context, msg, kind: SerenitySnackKind.error);
     }
   }
 
@@ -487,15 +725,28 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
     try {
       await _api.postAdviceFeedback(adviceId: adviceId, feedback: feedback);
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(loc.tipsFeedbackThanks)),
+
+      final helpful = feedback == 'like';
+      await setTipHelpful(adviceId, helpful: helpful);
+      setState(() {
+        if (helpful) {
+          _helpfulTipIds.add(adviceId);
+          _notHelpfulTipIds.remove(adviceId);
+        } else {
+          _notHelpfulTipIds.add(adviceId);
+          _helpfulTipIds.remove(adviceId);
+        }
+      });
+
+      SerenityMessenger.show(
+        context,
+        helpful ? loc.recDetailsHelpful : loc.recDetailsNotHelpful,
+        kind: helpful ? SerenitySnackKind.success : SerenitySnackKind.info,
       );
     } catch (e) {
       if (!context.mounted) return;
       final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(msg)),
-      );
+      SerenityMessenger.show(context, msg, kind: SerenitySnackKind.error);
     }
   }
 }

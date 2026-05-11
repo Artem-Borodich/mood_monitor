@@ -149,6 +149,34 @@ final List<Tip> _tipsEn = [
     iconName: 'coffee',
     action: TipAction.none,
   ),
+  Tip(
+    id: 'quick_screen_break',
+    category: 'quick_breaks',
+    title: 'Screen-distance break',
+    description: 'Look far away for 20 seconds to relax eye muscles.',
+    whyItHelps: 'Near work locks the eyes on one distance; looking far reduces strain.',
+    howToDo: [
+      'Pick a distant point (window, building, horizon).',
+      'Every 20 minutes, gaze at it for 20 seconds.',
+      'Blink slowly a few times, then return to work.',
+    ],
+    iconName: 'psychology',
+    action: TipAction.none,
+  ),
+  Tip(
+    id: 'sleep_body_scan',
+    category: 'sleep',
+    title: '3-minute body scan',
+    description: 'A short scan from feet to head to switch off before rest.',
+    whyItHelps: 'Directed attention lowers mental chatter and prepares the body for sleep.',
+    howToDo: [
+      'Lie or sit comfortably, eyes soft or closed.',
+      'Notice feet, calves, belly, shoulders, jaw — soften each area.',
+      'Finish with three slow exhales longer than inhales.',
+    ],
+    iconName: 'bedtime',
+    action: TipAction.none,
+  ),
 ];
 
 final List<Tip> _tipsRu = [
@@ -292,6 +320,34 @@ final List<Tip> _tipsRu = [
       'Затем вернитесь к задаче.',
     ],
     iconName: 'coffee',
+    action: TipAction.none,
+  ),
+  Tip(
+    id: 'quick_screen_break',
+    category: 'quick_breaks',
+    title: 'Перерыв для глаз',
+    description: 'Смотрите вдаль 20 секунд — разгрузка для глазных мышц.',
+    whyItHelps: 'При близкой работе глаза «зажимаются» на одной дистанции; взгляд вдаль снимает напряжение.',
+    howToDo: [
+      'Выберите далёкую точку (окно, горизонт).',
+      'Каждые ~20 минут смотрите на неё 20 секунд.',
+      'Медленно поморгайте и вернитесь к задаче.',
+    ],
+    iconName: 'psychology',
+    action: TipAction.none,
+  ),
+  Tip(
+    id: 'sleep_body_scan',
+    category: 'sleep',
+    title: 'Сканирование тела 3 минуты',
+    description: 'Короткий проход вниманием от стоп к голове перед отдыхом.',
+    whyItHelps: 'Направленное внимание снижает «шум» в голове и помогает телу перейти в режим отдыха.',
+    howToDo: [
+      'Устройтесь удобно, глаза мягко закрыты или расфокусированы.',
+      'Заметьте стопы, голени, живот, плечи, челюсть — смягчайте каждую зону.',
+      'Завершите тремя медленными выдохами длиннее вдоха.',
+    ],
+    iconName: 'bedtime',
     action: TipAction.none,
   ),
 ];

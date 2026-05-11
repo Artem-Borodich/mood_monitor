@@ -5,6 +5,7 @@ import '../models/mood_entry.dart';
 import '../services/api_exception.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
+import '../widgets/serenity_messenger.dart';
 import '../utils/format_date.dart';
 
 class EditMoodScreen extends StatefulWidget {
@@ -68,13 +69,13 @@ class _EditMoodScreenState extends State<EditMoodScreen> {
       );
       if (!mounted) return;
       final loc = AppLocalizations.of(context);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(loc.entryUpdated)));
+      SerenityMessenger.show(context, loc.entryUpdated);
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
       final loc = AppLocalizations.of(context);
       final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+      SerenityMessenger.show(context, msg, kind: SerenitySnackKind.error);
     } finally {
       if (mounted) setState(() => _submitting = false);
     }

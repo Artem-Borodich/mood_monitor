@@ -7,6 +7,7 @@ import '../../services/api_exception.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_decoration.dart';
 import '../../theme/app_spacing.dart';
+import '../serenity_messenger.dart';
 
 /// Opens a bottom sheet to adjust mood / stress / energy (and optional fields)
 /// before saving — replaces one-tap instant submit from the dashboard.
@@ -107,7 +108,7 @@ class _QuickLogSheetState extends State<_QuickLogSheet> {
     } catch (e) {
       if (!mounted) return;
       final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+      SerenityMessenger.show(context, msg, kind: SerenitySnackKind.error);
     } finally {
       if (mounted) setState(() => _saving = false);
     }

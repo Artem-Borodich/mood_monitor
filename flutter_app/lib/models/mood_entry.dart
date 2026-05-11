@@ -1,3 +1,5 @@
+import '../utils/wellbeing_math.dart';
+
 class MoodEntry {
   final int id;
   final int userId;
@@ -38,10 +40,7 @@ class MoodEntry {
     );
   }
 
-  double get wellbeingIndex {
-    return double.parse(
-      (0.4 * mood + 0.3 * energy - 0.3 * stress).toStringAsFixed(2),
-    );
-  }
+  double get wellbeingIndex =>
+      calculateWellbeingIndex(mood: mood, stress: stress, energy: energy);
 }
 

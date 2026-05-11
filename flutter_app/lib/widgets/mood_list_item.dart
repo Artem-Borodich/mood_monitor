@@ -8,6 +8,7 @@ import '../design_system/aura_card.dart';
 import '../design_system/design_tokens.dart';
 import '../theme/app_spacing.dart';
 import '../utils/format_date.dart';
+import 'serenity_messenger.dart';
 
 class MoodListItem extends StatelessWidget {
   const MoodListItem({
@@ -185,12 +186,12 @@ class MoodListItem extends StatelessWidget {
     try {
       await ApiService().deleteMoodEntry(entry.id);
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(loc.entryDeleted)));
+      SerenityMessenger.show(context, loc.entryDeleted);
       onDelete!(entry);
     } catch (e) {
       if (!context.mounted) return;
       final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+      SerenityMessenger.show(context, msg, kind: SerenitySnackKind.error);
     }
   }
 

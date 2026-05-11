@@ -8,6 +8,7 @@ import '../services/api_exception.dart';
 import '../services/api_service.dart';
 import '../theme/app_spacing.dart';
 import '../widgets/serenity_button.dart';
+import '../widgets/serenity_messenger.dart';
 
 class AddMoodScreen extends StatefulWidget {
   const AddMoodScreen({
@@ -82,16 +83,12 @@ class _AddMoodScreenState extends State<AddMoodScreen> {
       if (widget.onSaved != null) {
         widget.onSaved!();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(loc.entrySaved)),
-        );
+        SerenityMessenger.show(context, loc.entrySaved);
       }
     } catch (e) {
       if (!mounted) return;
       final msg = e is ApiException ? e.userMessage : '${loc.errorPrefix}$e';
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(msg)),
-      );
+      SerenityMessenger.show(context, msg, kind: SerenitySnackKind.error);
     } finally {
       if (mounted) {
         setState(() {

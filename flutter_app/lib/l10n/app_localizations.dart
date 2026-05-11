@@ -30,6 +30,7 @@ class AppLocalizations {
           'No data yet. Add your first mood entry.',
       'dashboardWellbeingSubtitle':
           'Based on your latest mood, stress and energy.',
+      'dashboardWellbeingRawFormat': 'Linear score: {n} (same formula as the server)',
       'dashboardMoodOverTime': 'Mood Over Time',
       'dashboardMoodNotEnough': 'Not enough data',
       'dashboardMoodNotEnoughSubtitle':
@@ -118,6 +119,53 @@ class AppLocalizations {
       'dashboardGreetingEvening': 'Good evening',
       'dashboardHeroSub':
           'Take a breath — this is your calm space to notice how you feel.',
+      'moodJourneyTitle': 'Mood Journey',
+      'moodJourneySubtitle':
+          'A calm view of your last 7 check-ins — and what patterns show up.',
+      'moodJourneyTrendUp': 'Your mood is gently lifting.',
+      'moodJourneyTrendDown': 'Your mood feels a bit softer lately.',
+      'moodJourneyTrendSteady': 'Your mood looks steady.',
+      'moodJourneyStressHint':
+          'You often feel calmer when stress stays low.',
+      'moodJourneyActivityHint':
+          'Days with more activity often feel brighter.',
+      'moodJourneyReflectionPrompt':
+          'What helped you feel better today? (A quick note is enough.)',
+      'dashboardInsightStressDown':
+          'Your stress tends to ease after consistent check-ins.',
+      'dashboardInsightMoodUp':
+          'Your mood often lifts when you keep showing up.',
+      'dashboardInsightSteady':
+          'Small check-ins help you stay steady through the day.',
+      'dashboardInsightConsistency':
+          'Consistency creates gentle momentum.',
+      'dashboardQuickActionsTitle': 'Quick wellness',
+      'quickActionBreathing': 'Breathing',
+      'quickActionJournal': 'Journal',
+      'quickActionStretch': 'Stretch',
+      'quickActionWater': 'Water break',
+      'quickActionWalk': 'Walk',
+      'dashboardCheckInTitle': 'How are you feeling right now?',
+      'checkInOptionCalm': 'Calm',
+      'checkInOptionTired': 'Tired',
+      'checkInOptionStressed': 'Stressed',
+      'checkInOptionMotivated': 'Motivated',
+      'checkInSave': 'Save check-in',
+      'checkInSaved': 'Check-in saved',
+      'todayCompletedActions': 'You completed ',
+      'todayCompletedActionsSuffix': ' wellness actions today',
+      'todayStreakSuffix': ' day streak',
+      'recDetailsExpectedBenefit': 'Expected benefit',
+      'recDetailsEstimatedDuration': 'Estimated duration',
+      'recDetailsActionSteps': 'Action steps',
+      'recDetailsDoneForToday': 'Done for today',
+      'recDetailsDismiss': 'Dismiss',
+      'recDetailsHelpful': 'Helpful',
+      'recDetailsNotHelpful': 'Not for me',
+      'recDoneBadge': 'Done',
+      'tipsEmptyTitle': 'No recommendations right now',
+      'tipsEmptySubtitle':
+          'Try a quick breathing session or do a fast check-in.',
       'historyInsightsTitle': 'Insights',
       'historyInsightsSubtitle':
           'Patterns from your check-ins, without the noise.',
@@ -134,6 +182,18 @@ class AppLocalizations {
       'dashboardRiskTitle': 'Tomorrow readiness',
       'dashboardRiskLevelHigh': 'Higher load',
       'dashboardRiskLevelModerate': 'Balanced',
+      'dashboardRiskLevelLow': 'Gentle pace',
+      'dashboardRiskForDate': 'Outlook window: {date}',
+      'dashboardRiskSignalsTitle': 'What shaped this score',
+      'dashboardRiskMethodNote':
+          'This uses recent averages for stress, mood and sleep, plus whether mood has been trending down. It is a simple guide — not a clinical forecast.',
+      'dashboardRiskSuggestionInsufficient':
+          'Log mood for a few more days to unlock a fuller outlook.',
+      'dashboardRiskFactorPattern': '{name} · {impact}',
+      'dashboardRiskImpactNegative': 'adds load',
+      'dashboardRiskImpactNeutral': 'neutral',
+      'dashboardRiskImpactPositive': 'eases load',
+      'tipsDashboardTapHint': 'Tap a card for steps and actions',
       'dashboardRiskSuggestionHigh':
           'A short wind‑down tonight can deepen sleep and soften tomorrow.',
       'dashboardRiskSuggestionLow':
@@ -210,6 +270,7 @@ class AppLocalizations {
           'Пока нет данных. Добавьте первую запись о настроении.',
       'dashboardWellbeingSubtitle':
           'Основано на вашем последнем настроении, стрессе и энергии.',
+      'dashboardWellbeingRawFormat': 'Индекс (как на сервере): {n}',
       'dashboardMoodOverTime': 'Настроение во времени',
       'dashboardMoodNotEnough': 'Недостаточно данных',
       'dashboardMoodNotEnoughSubtitle':
@@ -299,6 +360,51 @@ class AppLocalizations {
       'dashboardGreetingEvening': 'Добрый вечер',
       'dashboardHeroSub':
           'Выдохните — здесь можно спокойно заметить, как вы себя чувствуете.',
+      'moodJourneyTitle': 'Путешествие настроения',
+      'moodJourneySubtitle':
+          'Спокойный взгляд на ваши последние 7 чек‑инов — и заметные паттерны.',
+      'moodJourneyTrendUp': 'Настроение мягко поднимается.',
+      'moodJourneyTrendDown': 'Настроение стало немного мягче в последнее время.',
+      'moodJourneyTrendSteady': 'Настроение выглядит ровным.',
+      'moodJourneyStressHint':
+          'Часто вы чувствуете себя спокойнее, когда стресс ниже.',
+      'moodJourneyActivityHint':
+          'В дни с большей активностью настроение обычно светлее.',
+      'moodJourneyReflectionPrompt':
+          'Что помогло вам почувствовать себя лучше сегодня? (Достаточно пары строк.)',
+      'dashboardInsightStressDown':
+          'Стресс обычно легче уходит после регулярных чек‑инов.',
+      'dashboardInsightMoodUp':
+          'Настроение часто поднимается, когда вы не пропускаете.',
+      'dashboardInsightSteady':
+          'Небольшие чек‑ины помогают оставаться устойчивым в течение дня.',
+      'dashboardInsightConsistency': 'Регулярность создаёт мягкий ритм.',
+      'dashboardQuickActionsTitle': 'Быстрые практики',
+      'quickActionBreathing': 'Дыхание',
+      'quickActionJournal': 'Дневник',
+      'quickActionStretch': 'Растяжка',
+      'quickActionWater': 'Вода',
+      'quickActionWalk': 'Прогулка',
+      'dashboardCheckInTitle': 'Как вы себя чувствуете прямо сейчас?',
+      'checkInOptionCalm': 'Спокойствие',
+      'checkInOptionTired': 'Усталость',
+      'checkInOptionStressed': 'Стресс',
+      'checkInOptionMotivated': 'Вдохновение',
+      'checkInSave': 'Сохранить чек‑ин',
+      'checkInSaved': 'Чек‑ин сохранён',
+      'todayCompletedActions': 'Вы завершили ',
+      'todayCompletedActionsSuffix': ' практики сегодня',
+      'todayStreakSuffix': ' дневную цепочку',
+      'recDetailsExpectedBenefit': 'Ожидаемая польза',
+      'recDetailsEstimatedDuration': 'Примерная длительность',
+      'recDetailsActionSteps': 'Шаги',
+      'recDetailsDoneForToday': 'Готово на сегодня',
+      'recDetailsDismiss': 'Скрыть',
+      'recDetailsHelpful': 'Полезно',
+      'recDetailsNotHelpful': 'Не подходит',
+      'recDoneBadge': 'Готово',
+      'tipsEmptyTitle': 'Пока нет рекомендаций',
+      'tipsEmptySubtitle': 'Попробуйте быстрое дыхание или сделайте короткий чек‑ин.',
       'historyInsightsTitle': 'Инсайты',
       'historyInsightsSubtitle':
           'Закономерности из ваших записей — без лишнего шума.',
@@ -315,6 +421,18 @@ class AppLocalizations {
       'dashboardRiskTitle': 'Готовность к завтра',
       'dashboardRiskLevelHigh': 'Выше нагрузка',
       'dashboardRiskLevelModerate': 'В балансе',
+      'dashboardRiskLevelLow': 'Мягкий режим',
+      'dashboardRiskForDate': 'Окно прогноза: {date}',
+      'dashboardRiskSignalsTitle': 'Что повлияло на оценку',
+      'dashboardRiskMethodNote':
+          'Учитываются недавние средние значения стресса, настроения и сна, а также снижение настроения во времени. Это простая подсказка, а не медицинский прогноз.',
+      'dashboardRiskSuggestionInsufficient':
+          'Добавьте ещё несколько дней записей — тогда прогноз станет информативнее.',
+      'dashboardRiskFactorPattern': '{name} · {impact}',
+      'dashboardRiskImpactNegative': 'повышает нагрузку',
+      'dashboardRiskImpactNeutral': 'нейтрально',
+      'dashboardRiskImpactPositive': 'смягчает нагрузку',
+      'tipsDashboardTapHint': 'Нажмите карточку — шаги и действия',
       'dashboardRiskSuggestionHigh':
           'Короткий вечерний отдых поможет глубже выспаться и смягчить завтрашний день.',
       'dashboardRiskSuggestionLow':
@@ -400,6 +518,10 @@ class AppLocalizations {
       _text('dashboardWellbeingSubtitleEmpty');
   String get dashboardWellbeingSubtitle =>
       _text('dashboardWellbeingSubtitle');
+
+  String dashboardWellbeingRawFormat(String n) =>
+      _text('dashboardWellbeingRawFormat').replaceAll('{n}', n);
+
   String get dashboardMoodOverTime => _text('dashboardMoodOverTime');
   String get dashboardMoodNotEnough => _text('dashboardMoodNotEnough');
   String get dashboardMoodNotEnoughSubtitle =>
@@ -491,6 +613,48 @@ class AppLocalizations {
   String get dashboardGreetingAfternoon => _text('dashboardGreetingAfternoon');
   String get dashboardGreetingEvening => _text('dashboardGreetingEvening');
   String get dashboardHeroSub => _text('dashboardHeroSub');
+  String get moodJourneyTitle => _text('moodJourneyTitle');
+  String get moodJourneySubtitle => _text('moodJourneySubtitle');
+  String get moodJourneyTrendUp => _text('moodJourneyTrendUp');
+  String get moodJourneyTrendDown => _text('moodJourneyTrendDown');
+  String get moodJourneyTrendSteady => _text('moodJourneyTrendSteady');
+  String get moodJourneyStressHint => _text('moodJourneyStressHint');
+  String get moodJourneyActivityHint => _text('moodJourneyActivityHint');
+  String get moodJourneyReflectionPrompt =>
+      _text('moodJourneyReflectionPrompt');
+  String get dashboardInsightStressDown => _text('dashboardInsightStressDown');
+  String get dashboardInsightMoodUp => _text('dashboardInsightMoodUp');
+  String get dashboardInsightSteady => _text('dashboardInsightSteady');
+  String get dashboardInsightConsistency => _text('dashboardInsightConsistency');
+  String get dashboardQuickActionsTitle => _text('dashboardQuickActionsTitle');
+  String get quickActionBreathing => _text('quickActionBreathing');
+  String get quickActionJournal => _text('quickActionJournal');
+  String get quickActionStretch => _text('quickActionStretch');
+  String get quickActionWater => _text('quickActionWater');
+  String get quickActionWalk => _text('quickActionWalk');
+  String get dashboardCheckInTitle => _text('dashboardCheckInTitle');
+  String get checkInOptionCalm => _text('checkInOptionCalm');
+  String get checkInOptionTired => _text('checkInOptionTired');
+  String get checkInOptionStressed => _text('checkInOptionStressed');
+  String get checkInOptionMotivated => _text('checkInOptionMotivated');
+  String get checkInSave => _text('checkInSave');
+  String get checkInSaved => _text('checkInSaved');
+  String get todayCompletedActions => _text('todayCompletedActions');
+  String get todayCompletedActionsSuffix =>
+      _text('todayCompletedActionsSuffix');
+  String get todayStreakSuffix => _text('todayStreakSuffix');
+  String get recDetailsExpectedBenefit =>
+      _text('recDetailsExpectedBenefit');
+  String get recDetailsEstimatedDuration =>
+      _text('recDetailsEstimatedDuration');
+  String get recDetailsActionSteps => _text('recDetailsActionSteps');
+  String get recDetailsDoneForToday => _text('recDetailsDoneForToday');
+  String get recDetailsDismiss => _text('recDetailsDismiss');
+  String get recDetailsHelpful => _text('recDetailsHelpful');
+  String get recDetailsNotHelpful => _text('recDetailsNotHelpful');
+  String get recDoneBadge => _text('recDoneBadge');
+  String get tipsEmptyTitle => _text('tipsEmptyTitle');
+  String get tipsEmptySubtitle => _text('tipsEmptySubtitle');
   String get historyInsightsTitle => _text('historyInsightsTitle');
   String get historyInsightsSubtitle => _text('historyInsightsSubtitle');
   String get historyTabList => _text('historyTabList');
@@ -500,13 +664,34 @@ class AppLocalizations {
   String get dashboardRiskTitle => _text('dashboardRiskTitle');
   String get dashboardRiskLevelHigh => _text('dashboardRiskLevelHigh');
   String get dashboardRiskLevelModerate => _text('dashboardRiskLevelModerate');
+  String get dashboardRiskLevelLow => _text('dashboardRiskLevelLow');
+  String get dashboardRiskSignalsTitle => _text('dashboardRiskSignalsTitle');
+  String get dashboardRiskMethodNote => _text('dashboardRiskMethodNote');
+  String get dashboardRiskSuggestionInsufficient =>
+      _text('dashboardRiskSuggestionInsufficient');
   String get dashboardRiskSuggestionHigh => _text('dashboardRiskSuggestionHigh');
   String get dashboardRiskSuggestionLow => _text('dashboardRiskSuggestionLow');
   String get dashboardRiskExtraForecast => _text('dashboardRiskExtraForecast');
   String get dashboardRiskExtraHeuristic => _text('dashboardRiskExtraHeuristic');
+
+  String dashboardRiskForDate(String date) =>
+      _text('dashboardRiskForDate').replaceAll('{date}', date);
+
+  String dashboardRiskFactorLine(String name, String impact) {
+    final impactLabel = switch (impact) {
+      'negative' => _text('dashboardRiskImpactNegative'),
+      'neutral' => _text('dashboardRiskImpactNeutral'),
+      'positive' => _text('dashboardRiskImpactPositive'),
+      _ => impact,
+    };
+    return _text('dashboardRiskFactorPattern')
+        .replaceAll('{name}', name)
+        .replaceAll('{impact}', impactLabel);
+  }
   String get tipsDashboardSun => _text('tipsDashboardSun');
   String get tipsDashboardCalm => _text('tipsDashboardCalm');
   String get tipsDashboardSleep => _text('tipsDashboardSleep');
+  String get tipsDashboardTapHint => _text('tipsDashboardTapHint');
   String get tipsPersonalizeHint => _text('tipsPersonalizeHint');
   String get tipsFeedbackThanks => _text('tipsFeedbackThanks');
   String get tipsLikeTooltip => _text('tipsLikeTooltip');

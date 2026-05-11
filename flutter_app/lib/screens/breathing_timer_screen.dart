@@ -48,6 +48,7 @@ class _BreathingTimerScreenState extends State<BreathingTimerScreen> {
           _cycle++;
           if (_cycle >= _cycles) {
             _stop();
+            if (mounted) Navigator.of(context).pop(true);
             return;
           }
           _phase = 'inhale';
@@ -98,7 +99,10 @@ class _BreathingTimerScreenState extends State<BreathingTimerScreen> {
         actions: [
           if (_running)
             TextButton(
-              onPressed: _stop,
+              onPressed: () {
+                _stop();
+                if (mounted) Navigator.of(context).pop(false);
+              },
               child: Text(loc.cancel),
             ),
         ],
