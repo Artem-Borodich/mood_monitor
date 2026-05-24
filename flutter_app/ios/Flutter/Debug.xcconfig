@@ -1,1 +1,3 @@
 #include "Generated.xcconfig"
+// Physical iPhone: API on Mac over Wi‑Fi. Update IP if it changes (ipconfig getifaddr en0).
+DART_DEFINES=$(DART_DEFINES),QVBJX0JBU0VfVVJMPWh0dHA6Ly8xOTIuMTY4LjEuNjc6ODAwMA==
