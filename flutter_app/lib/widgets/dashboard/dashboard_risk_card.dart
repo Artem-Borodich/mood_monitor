@@ -19,11 +19,14 @@ class DashboardRiskCard extends StatelessWidget {
     required this.forecast,
     this.forecastError,
     required this.latest,
+    required this.moodEntryCountForForecastHint,
   });
 
   final ForecastPayload? forecast;
   final String? forecastError;
   final MoodEntry? latest;
+  /// Max 14: used for subtitles when API omits `entries_used` or forecast failed.
+  final int moodEntryCountForForecastHint;
 
   String? _formatTargetDate(BuildContext context, String? iso) {
     if (iso == null || iso.isEmpty) return null;
@@ -75,6 +78,20 @@ class DashboardRiskCard extends StatelessWidget {
           )
         : null;
 
+    final entriesUsedApi = fp?.entriesUsed;
+    final nForFoot = entriesUsedApi ??
+        (moodEntryCountForForecastHint > 14
+            ? 14
+            : moodEntryCountForForecastHint);
+    final showForecastFoot = (fp != null && nForFoot > 0) ||
+        (forecastError != null && moodEntryCountForForecastHint > 0);
+    final nForTooltip = nForFoot > 0
+        ? nForFoot
+        : (entriesUsedApi ??
+            (moodEntryCountForForecastHint > 14
+                ? 14
+                : moodEntryCountForForecastHint));
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
@@ -118,6 +135,7 @@ class DashboardRiskCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
                             padding: const EdgeInsets.all(8),
@@ -133,11 +151,53 @@ class DashboardRiskCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: Text(
-                              loc.dashboardRiskTitle,
-                              style: theme.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w800,
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        loc.dashboardRiskTitle,
+                                        style: theme.textTheme.titleMedium?.copyWith(
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                    Tooltip(
+                                      message:
+                                          loc.dashboardRiskTooltipForecast(nForTooltip),
+                                      triggerMode: TooltipTriggerMode.tap,
+                                      showDuration: const Duration(seconds: 5),
+                                      child: IconButton(
+                                        onPressed: () {},
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(
+                                          minWidth: 36,
+                                          minHeight: 36,
+                                        ),
+                                        icon: Icon(
+                                          Icons.help_outline_rounded,
+                                          size: 20,
+                                          color: theme.colorScheme.onSurfaceVariant,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (showForecastFoot) ...[
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    loc.dashboardRiskFootlineForecastEntries(nForFoot),
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                      fontSize: 11.5,
+                                      height: 1.25,
+                                    ),
+                                  ),
+                                ],
+                              ],
                             ),
                           ),
                         ],
@@ -150,6 +210,19 @@ class DashboardRiskCard extends StatelessWidget {
                           height: 1.45,
                         ),
                       ),
+                      if (insufficient &&
+                          entriesUsedApi != null &&
+                          entriesUsedApi > 0 &&
+                          entriesUsedApi < 3) ...[
+                        const SizedBox(height: 6),
+                        Text(
+                          loc.dashboardRiskForecastNeedMore(3 - entriesUsedApi),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                            fontSize: 11.5,
+                          ),
+                        ),
+                      ],
                       if (targetLine != null) ...[
                         const SizedBox(height: 8),
                         Text(

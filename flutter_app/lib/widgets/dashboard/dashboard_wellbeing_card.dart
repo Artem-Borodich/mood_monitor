@@ -86,18 +86,55 @@ class DashboardWellbeingCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _scaledFittedText(
-                title,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  color: Colors.white.withValues(alpha: 0.95),
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.15,
-                  fontSize: titleFs,
-                  height: 1.2,
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(width: (36 * tScale).clamp(32.0, 44.0)),
+                  Expanded(
+                    child: _scaledFittedText(
+                      title,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: Colors.white.withValues(alpha: 0.95),
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.15,
+                        fontSize: titleFs,
+                        height: 1.2,
+                      ),
+                    ),
+                  ),
+                  Tooltip(
+                    message: loc.dashboardWellbeingTooltipBody,
+                    triggerMode: TooltipTriggerMode.tap,
+                    child: IconButton(
+                      onPressed: () {},
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(
+                        minWidth: (36 * tScale).clamp(32.0, 44.0),
+                        minHeight: (36 * tScale).clamp(32.0, 44.0),
+                      ),
+                      icon: Icon(
+                        Icons.help_outline_rounded,
+                        size: (20 * tScale).clamp(18.0, 24.0),
+                        color: Colors.white.withValues(alpha: 0.72),
+                      ),
+                    ),
+                  ),
+                ],
               ),
+              if (hasWellbeingData) ...[
+                SizedBox(height: (4 * tScale).clamp(3.0, 8.0)),
+                Text(
+                  loc.dashboardWellbeingFootlineLastEntry,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.62),
+                    fontSize: (11.5 * tScale).clamp(10.5, 13.0),
+                    height: 1.25,
+                  ),
+                ),
+              ],
               SizedBox(height: (8 * tScale).clamp(6.0, 12.0)),
               _scaledFittedText(
                 headline,

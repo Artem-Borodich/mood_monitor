@@ -57,6 +57,8 @@ class ForecastRead(BaseModel):
     factors: Optional[List[ForecastFactorRead]] = None
     explanation: Optional[str] = None
     target_date: Optional[str] = None
+    # How many mood entries were considered (0–14; capped by the API query limit).
+    entries_used: int = 0
 
     model_config = ConfigDict(populate_by_name=True)
 

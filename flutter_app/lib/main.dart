@@ -31,6 +31,7 @@ class MoodApp extends StatefulWidget {
 class _MoodAppState extends State<MoodApp> {
   Locale? _locale;
   ThemeMode _themeMode = ThemeMode.system;
+  final ValueNotifier<int> _dashboardReloadTick = ValueNotifier<int>(0);
 
   @override
   void initState() {
@@ -70,6 +71,7 @@ class _MoodAppState extends State<MoodApp> {
       supportedLocales: AppLocalizations.supportedLocales,
       locale: _locale,
       home: MainScaffold(
+        dashboardReloadTick: _dashboardReloadTick,
         onOpenSettings: (ctx) => Navigator.push(
           ctx,
           MaterialPageRoute(
@@ -87,8 +89,13 @@ class _MoodAppState extends State<MoodApp> {
 }
 
 class MainScaffold extends StatefulWidget {
-  const MainScaffold({super.key, this.onOpenSettings});
+  const MainScaffold({
+    super.key,
+    required this.dashboardReloadTick,
+    this.onOpenSettings,
+  });
 
+  final ValueNotifier<int> dashboardReloadTick;
   final void Function(BuildContext context)? onOpenSettings;
 
   @override
@@ -103,7 +110,10 @@ class _MainScaffoldState extends State<MainScaffold> {
   void initState() {
     super.initState();
     _screens = [
-      DashboardScreen(onAddMoodTap: _openAddMood),
+      DashboardScreen(
+        dashboardReloadTick: widget.dashboardReloadTick,
+        onAddMoodTap: _openAddMood,
+      ),
       const HistoryScreen(),
       const RecommendationsScreen(),
     ];
@@ -138,7 +148,9 @@ class _MainScaffoldState extends State<MainScaffold> {
         transitionDuration: const Duration(milliseconds: 300),
         reverseTransitionDuration: const Duration(milliseconds: 240),
       ),
-    );
+    ).then((_) {
+      widget.dashboardReloadTick.value++;
+    });
   }
 
   @override

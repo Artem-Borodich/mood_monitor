@@ -21,6 +21,7 @@ class ForecastPayload {
     this.factors,
     this.explanation,
     this.targetDate,
+    this.entriesUsed,
   });
 
   final String status;
@@ -30,9 +31,12 @@ class ForecastPayload {
   final List<ForecastFactor>? factors;
   final String? explanation;
   final String? targetDate;
+  /// How many mood entries the server used (0–14). Null if absent in JSON (older API).
+  final int? entriesUsed;
 
   factory ForecastPayload.fromJson(Map<String, dynamic> json) {
     final rawFactors = json['factors'] as List<dynamic>?;
+    final rawUsed = json['entries_used'];
     return ForecastPayload(
       status: json['status'] as String? ?? 'ok',
       risk: (json['risk'] as num?)?.toDouble(),
@@ -43,6 +47,9 @@ class ForecastPayload {
           .toList(),
       explanation: json['explanation'] as String?,
       targetDate: json['target_date'] as String?,
+      entriesUsed: rawUsed is int
+          ? rawUsed
+          : (rawUsed is num ? rawUsed.toInt() : null),
     );
   }
 }

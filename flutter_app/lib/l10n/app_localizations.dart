@@ -226,7 +226,11 @@ class AppLocalizations {
       'historyInsightsSubtitle':
           'Patterns from your check-ins, without the noise.',
       'historyTabList': 'Entries',
+      'historyTabCalendar': 'Calendar',
       'historyTabAnalytics': 'Trends',
+      'historyCalendarNoData': 'No data for this day.',
+      'historyCalendarLegend':
+          'Mood: 1–2 dark red · 3–4 orange · 5–6 yellow · 7–8 light green · 9–10 green · no entry gray',
       'historyDailyEntries': 'Your entries',
       'historyWeeklySummary': 'Weekly summary',
       'historyDominantMoodCalm': 'Calm',
@@ -235,6 +239,18 @@ class AppLocalizations {
       'historyDominantMoodSubtitle':
           'is your dominant mood across the week',
       'addJournalTitle': 'Journal',
+      'dashboardWellbeingFootlineLastEntry': 'Based on your latest mood entry.',
+      'dashboardWellbeingTooltipBody':
+          'The index is calculated from your latest mood entry (mood, stress and energy).',
+      'dashboardRiskFootlineForecastEntries':
+          'Based on your entries from the last up to 14 days — {n} entries used.',
+      'dashboardRiskTooltipForecast':
+          'The outlook uses your mood entries from the last up to 14 days. Currently {n} entries are included.',
+      'dashboardRiskEntriesUsedShort': '({n} entries counted)',
+      'dashboardRiskForecastNeedMore': 'Add {n} more entries for a reliable outlook.',
+      'dashboardWeeklyGoalTitle': 'Log mood every day',
+      'dashboardWeeklyGoalProgress': 'This week: {done} of 7 days',
+      'dashboardWeeklyGoalComplete': 'Great! You completed the week goal.',
       'dashboardRiskTitle': 'Tomorrow readiness',
       'dashboardRiskLevelHigh': 'Higher load',
       'dashboardRiskLevelModerate': 'Balanced',
@@ -524,7 +540,11 @@ class AppLocalizations {
       'historyInsightsSubtitle':
           'Закономерности из ваших записей — без лишнего шума.',
       'historyTabList': 'Записи',
+      'historyTabCalendar': 'Календарь',
       'historyTabAnalytics': 'Тренды',
+      'historyCalendarNoData': 'Нет данных за этот день.',
+      'historyCalendarLegend':
+          'Настроение: 1–2 тёмно‑красный · 3–4 оранжевый · 5–6 жёлтый · 7–8 салатовый · 9–10 зелёный · нет записи серый',
       'historyDailyEntries': 'Ваши записи',
       'historyWeeklySummary': 'Еженедельный обзор',
       'historyDominantMoodCalm': 'Спокойствие',
@@ -533,6 +553,18 @@ class AppLocalizations {
       'historyDominantMoodSubtitle':
           'это ваше доминирующее настроение за неделю',
       'addJournalTitle': 'Дневник',
+      'dashboardWellbeingFootlineLastEntry': 'По последней записи настроения.',
+      'dashboardWellbeingTooltipBody':
+          'Индекс рассчитан по вашей последней записи настроения (настроение, стресс и энергия).',
+      'dashboardRiskFootlineForecastEntries':
+          'По последним записям (до 14 дней): учтено {n}.',
+      'dashboardRiskTooltipForecast':
+          'Прогноз рассчитан по вашим записям за последние до 14 дней. Сейчас учтено записей: {n}.',
+      'dashboardRiskEntriesUsedShort': '(учтено {n} записей)',
+      'dashboardRiskForecastNeedMore': 'Добавьте ещё {n} записей для более точного прогноза.',
+      'dashboardWeeklyGoalTitle': 'Заполнять настроение каждый день',
+      'dashboardWeeklyGoalProgress': 'На этой неделе: {done} из 7 дней',
+      'dashboardWeeklyGoalComplete': 'Отлично! Вы выполнили цель недели.',
       'dashboardRiskTitle': 'Готовность к завтра',
       'dashboardRiskLevelHigh': 'Выше нагрузка',
       'dashboardRiskLevelModerate': 'В балансе',
@@ -635,6 +667,31 @@ class AppLocalizations {
       _text('dashboardWellbeingSubtitleEmpty');
   String get dashboardWellbeingSubtitle =>
       _text('dashboardWellbeingSubtitle');
+
+  String get dashboardWellbeingFootlineLastEntry =>
+      _text('dashboardWellbeingFootlineLastEntry');
+
+  String get dashboardWellbeingTooltipBody =>
+      _text('dashboardWellbeingTooltipBody');
+
+  String dashboardRiskFootlineForecastEntries(int n) =>
+      _text('dashboardRiskFootlineForecastEntries').replaceAll('{n}', '$n');
+
+  String dashboardRiskTooltipForecast(int n) =>
+      _text('dashboardRiskTooltipForecast').replaceAll('{n}', '$n');
+
+  String dashboardRiskEntriesUsedShort(int n) =>
+      _text('dashboardRiskEntriesUsedShort').replaceAll('{n}', '$n');
+
+  String dashboardRiskForecastNeedMore(int n) =>
+      _text('dashboardRiskForecastNeedMore').replaceAll('{n}', '$n');
+
+  String dashboardWeeklyGoalProgress(int done) =>
+      _text('dashboardWeeklyGoalProgress').replaceAll('{done}', '$done');
+
+  String get dashboardWeeklyGoalTitle => _text('dashboardWeeklyGoalTitle');
+
+  String get dashboardWeeklyGoalComplete => _text('dashboardWeeklyGoalComplete');
 
   String dashboardWellbeingRawFormat(String n) =>
       _text('dashboardWellbeingRawFormat').replaceAll('{n}', n);
@@ -834,7 +891,10 @@ class AppLocalizations {
   String get historyInsightsTitle => _text('historyInsightsTitle');
   String get historyInsightsSubtitle => _text('historyInsightsSubtitle');
   String get historyTabList => _text('historyTabList');
+  String get historyTabCalendar => _text('historyTabCalendar');
   String get historyTabAnalytics => _text('historyTabAnalytics');
+  String get historyCalendarNoData => _text('historyCalendarNoData');
+  String get historyCalendarLegend => _text('historyCalendarLegend');
   String get historyDailyEntries => _text('historyDailyEntries');
   String get addJournalTitle => _text('addJournalTitle');
   String get dashboardRiskTitle => _text('dashboardRiskTitle');

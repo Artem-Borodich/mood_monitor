@@ -10,7 +10,9 @@ import '../theme/app_spacing.dart';
 import '../widgets/app_error_view.dart';
 import '../widgets/loading_shimmer.dart';
 import '../widgets/mood_list_item.dart';
+import '../widgets/serenity_messenger.dart';
 import '../widgets/serenity_section_header.dart';
+import '../widgets/history/mood_calendar_heatmap.dart';
 import 'edit_mood_screen.dart';
 import 'add_mood_flow_page.dart';
 
@@ -30,7 +32,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
   RangeValues _moodRange = const RangeValues(1, 10);
   RangeValues _stressRange = const RangeValues(1, 10);
   RangeValues _energyRange = const RangeValues(1, 10);
-  bool _analyticsMode = false;
+  /// 0 = list, 1 = calendar heatmap, 2 = analytics.
+  int _viewMode = 0;
 
   @override
   void initState() {
@@ -52,6 +55,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
       ),
     ).then((updated) {
       if (updated == true) _refresh();
+    });
+  }
+
+  void _onCalendarDaySelected(DateTime day) {
+    setState(() {
+      _fromDate = DateTime(day.year, day.month, day.day);
+      _toDate = DateTime(day.year, day.month, day.day);
+      _viewMode = 0;
     });
   }
 
@@ -245,26 +256,50 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
               ),
               const SizedBox(height: AppSpacing.betweenCards),
-              SegmentedButton<bool>(
+              SegmentedButton<int>(
                 segments: [
-                  ButtonSegment<bool>(
-                    value: false,
+                  ButtonSegment<int>(
+                    value: 0,
                     label: Text(loc.historyTabList),
                   ),
-                  ButtonSegment<bool>(
-                    value: true,
+                  ButtonSegment<int>(
+                    value: 1,
+                    label: Text(loc.historyTabCalendar),
+                  ),
+                  ButtonSegment<int>(
+                    value: 2,
                     label: Text(loc.historyTabAnalytics),
                   ),
                 ],
-                selected: {_analyticsMode},
+                selected: {_viewMode},
                 onSelectionChanged: (s) {
-                  setState(() => _analyticsMode = s.first);
+                  setState(() => _viewMode = s.first);
                 },
               ),
               const SizedBox(height: AppSpacing.betweenCards),
-              _buildFiltersCard(theme, loc),
-              const SizedBox(height: AppSpacing.betweenSections),
-              if (_analyticsMode) ...[
+              if (_viewMode != 1) ...[
+                _buildFiltersCard(theme, loc),
+                const SizedBox(height: AppSpacing.betweenSections),
+              ],
+              if (_viewMode == 1) ...[
+                AuraCard(
+                  borderRadius: DsRadii.xl,
+                  padding: const EdgeInsets.all(AppSpacing.cardPadding),
+                  glassBorder: true,
+                  child: MoodCalendarHeatmap(
+                    entries: entries,
+                    loc: loc,
+                    onOpenDayWithEntries: _onCalendarDaySelected,
+                    onShowNoData: () {
+                      SerenityMessenger.show(
+                        context,
+                        loc.historyCalendarNoData,
+                        kind: SerenitySnackKind.info,
+                      );
+                    },
+                  ),
+                ),
+              ] else if (_viewMode == 2) ...[
                 _buildAnalyticsSection(theme, loc, filtered),
               ] else ...[
                 SerenitySectionHeader(

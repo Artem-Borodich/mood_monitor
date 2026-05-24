@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -15,6 +16,7 @@ import '../widgets/dashboard/dashboard_tips_scroller.dart';
 import '../widgets/dashboard/dashboard_trend_chart.dart';
 import '../widgets/dashboard/dashboard_practices_summary.dart';
 import '../widgets/dashboard/dashboard_wellbeing_card.dart';
+import '../widgets/dashboard/dashboard_weekly_logging_goal.dart';
 import '../widgets/dashboard/quick_log_bottom_sheet.dart';
 import '../widgets/loading_shimmer.dart';
 import '../widgets/serenity_section_header.dart';
@@ -27,9 +29,14 @@ import '../utils/api_message_localizer.dart';
 import '../utils/wellbeing_math.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key, this.onAddMoodTap});
+  const DashboardScreen({
+    super.key,
+    this.onAddMoodTap,
+    this.dashboardReloadTick,
+  });
 
   final VoidCallback? onAddMoodTap;
+  final ValueListenable<int>? dashboardReloadTick;
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -54,9 +61,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
+    widget.dashboardReloadTick?.addListener(_onDashboardReloadTick);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _loadData();
     });
+  }
+
+  void _onDashboardReloadTick() {
+    if (mounted) _loadData();
+  }
+
+  @override
+  void dispose() {
+    widget.dashboardReloadTick?.removeListener(_onDashboardReloadTick);
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant DashboardScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.dashboardReloadTick != widget.dashboardReloadTick) {
+      oldWidget.dashboardReloadTick?.removeListener(_onDashboardReloadTick);
+      widget.dashboardReloadTick?.addListener(_onDashboardReloadTick);
+    }
   }
 
   Future<void> _loadData() async {
@@ -127,6 +154,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         lastMood: latest?.mood,
         hasEntries: _entries.isNotEmpty,
       ),
+      if (_entries.isNotEmpty) ...[
+        const SizedBox(height: 10),
+        DashboardWeeklyLoggingGoal(entries: _entries, loc: loc),
+      ],
       if (insight != null) ...[
         const SizedBox(height: 12),
         Text(
@@ -179,6 +210,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         forecast: _forecast,
         forecastError: _forecastError,
         latest: latest,
+        moodEntryCountForForecastHint: _entries.length > 14 ? 14 : _entries.length,
       ),
       SizedBox(height: AppSpacing.betweenSections),
       DashboardTrendChart(entries: _entries, loc: loc),

@@ -23,18 +23,42 @@ STRESS_FACTOR_THRESHOLD = 6.5
 MOOD_FACTOR_THRESHOLD = 5.0
 LABEL_ELEVATED = 0.55
 LABEL_MODERATE = 0.35
+# Minimum entries required to show a numeric forecast (still uses all available up to 14).
+MIN_ENTRIES_FOR_FORECAST = 3
 
 
 def forecast_from_entries(
     entries: List["models.MoodEntry"],
     lang: str,
 ) -> schemas.ForecastRead:
-    if not entries:
+    n_all = len(entries)
+    if n_all == 0:
         if lang == "ru":
             msg = "Недостаточно записей для прогноза. Добавьте несколько дней настроения."
         else:
             msg = "Not enough entries for a forecast. Log a few more days of mood."
-        return schemas.ForecastRead(status="insufficient_data", explanation=msg)
+        return schemas.ForecastRead(
+            status="insufficient_data",
+            explanation=msg,
+            entries_used=0,
+        )
+
+    if n_all < MIN_ENTRIES_FOR_FORECAST:
+        if lang == "ru":
+            msg = (
+                "Недостаточно записей для прогноза. Нужно минимум три записи; "
+                "добавьте ещё несколько дней настроения."
+            )
+        else:
+            msg = (
+                "Not enough entries for a forecast. At least three entries are needed; "
+                "keep logging your mood for a few more days."
+            )
+        return schemas.ForecastRead(
+            status="insufficient_data",
+            explanation=msg,
+            entries_used=n_all,
+        )
 
     chrono = list(reversed(entries))
     n = len(chrono)
@@ -149,4 +173,5 @@ def forecast_from_entries(
         factors=factors,
         explanation=expl,
         target_date=tomorrow,
+        entries_used=n,
     )
