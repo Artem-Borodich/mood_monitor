@@ -1,0 +1,24 @@
+@startuml sequence_create_mood
+skinparam shadowing false
+skinparam defaultFontName Arial
+
+actor "Пользователь" as user
+participant "AddMoodScreen" as ui
+participant "ApiService" as api
+participant "routes/mood.py" as route
+participant "SQLAlchemy\nSession" as orm
+database "PostgreSQL" as db
+
+user -> ui : ввод mood, stress, energy
+user -> ui : Сохранить
+ui -> api : createMoodEntry()
+api -> route : POST /mood (JSON)
+route -> route : MoodEntryCreate\n(Pydantic)
+route -> orm : add(MoodEntry)
+orm -> db : INSERT mood_entries
+db --> orm : OK
+orm --> route : commit, refresh
+route --> api : 201 MoodEntryRead
+api --> ui : MoodEntry
+ui --> user : успех, закрытие экрана
+@enduml

@@ -1,0 +1,83 @@
+FILE c:\mood_project\Диплома.docx
+
+
+--- heading 1 (1) ---
+<w:name w:val="heading 1"/>
+<w:basedOn w:val="a"/>
+<w:next w:val="a"/>
+<w:link w:val="10"/>
+<w:uiPriority w:val="9"/>
+<w:qFormat/>
+<w:rsid w:val="00633CF7"/>
+<w:pPr>
+<w:keepNext/>
+<w:keepLines/>
+<w:spacing w:before="240" w:after="0" w:line="360" w:lineRule="auto"/>
+<w:jc w:val="center"/>
+<w:outlineLvl w:val="0"/>
+</w:pPr>
+<w:rPr>
+<w:rFonts w:ascii="Times New Roman" w:eastAsiaTheme="majorEastAsia" w:hAnsi="Times New Roman" w:cstheme="majorBidi"/>
+<w:b/>
+<w:sz w:val="32"/>
+<w:szCs w:val="32"/>
+</w:rPr>
+
+--- heading 2 (2) ---
+<w:name w:val="heading 2"/>
+<w:basedOn w:val="a"/>
+<w:next w:val="a"/>
+<w:link w:val="20"/>
+<w:uiPriority w:val="9"/>
+<w:unhideWhenUsed/>
+<w:qFormat/>
+<w:rsid w:val="00E31C0B"/>
+<w:pPr>
+<w:keepNext/>
+<w:keepLines/>
+<w:spacing w:before="40" w:after="0" w:line="360" w:lineRule="auto"/>
+<w:outlineLvl w:val="1"/>
+</w:pPr>
+<w:rPr>
+<w:rFonts w:ascii="Times New Roman" w:eastAsiaTheme="majorEastAsia" w:hAnsi="Times New Roman" w:cstheme="majorBidi"/>
+<w:b/>
+<w:sz w:val="32"/>
+<w:szCs w:val="26"/>
+</w:rPr>
+
+--- heading 3 (3) ---
+<w:name w:val="heading 3"/>
+<w:basedOn w:val="a"/>
+<w:next w:val="a"/>
+<w:link w:val="30"/>
+<w:uiPriority w:val="9"/>
+<w:unhideWhenUsed/>
+<w:qFormat/>
+<w:rsid w:val="00E56559"/>
+<w:pPr>
+<w:keepNext/>
+<w:keepLines/>
+<w:spacing w:before="40" w:after="0"/>
+<w:outlineLvl w:val="2"/>
+</w:pPr>
+<w:rPr>
+<w:rFonts w:asciiTheme="majorHAnsi" w:eastAsiaTheme="majorEastAsia" w:hAnsiTheme="majorHAnsi" w:cstheme="majorBidi"/>
+<w:color w:val="1F4D78" w:themeColor="accent1" w:themeShade="7F"/>
+<w:sz w:val="24"/>
+<w:szCs w:val="24"/>
+</w:rPr>
+
+--- TOC Heading (ab) ---
+<w:name w:val="TOC Heading"/>
+<w:basedOn w:val="1"/>
+<w:next w:val="a"/>
+<w:uiPriority w:val="39"/>
+<w:unhideWhenUsed/>
+<w:qFormat/>
+<w:rsid w:val="00E56559"/>
+<w:pPr>
+<w:outlineLvl w:val="9"/>
+</w:pPr>
+<w:rPr>
+<w:lang w:eastAsia="ru-RU"/>
+</w:rPr>

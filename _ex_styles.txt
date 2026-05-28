@@ -1,0 +1,59 @@
+BODY: Несмотря на стремительное развитие сетевых и облачных сервис...
+  font=None size=None
+  indent=None line_rule=None line=None
+  align=None space_before=None space_after=None
+
+BODY: На первый взгляд альтернативой локальным носителям могли бы ...
+  font=None size=None
+  indent=None line_rule=None line=None
+  align=None space_before=None space_after=None
+
+BODY: В таких условиях актуальной становится разработка устройств ...
+  font=None size=None
+  indent=None line_rule=None line=None
+  align=None space_before=None space_after=None
+
+BODY: На текущий момент на рынке уже существуют различные устройст...
+  font=None size=None
+  indent=None line_rule=None line=None
+  align=None space_before=None space_after=None
+
+BODY: Чтобы создавать такие устройства на практике обычно использу...
+  font=None size=None
+  indent=None line_rule=None line=None
+  align=None space_before=None space_after=None
+
+BODY: Объект исследования – автономные системы хранения данных с п...
+  font=None size=None
+  indent=None line_rule=None line=None
+  align=None space_before=None space_after=None
+
+CAP: Рисунок 1.3.1 – Внешний вид устройства «SanDisk Co
+  style=Документация align=CENTER (1) italic=None size=None
+
+LISTING TITLE: Листинг 2.5.1 – Инициализация проводного режима style=Документация
+  code para style=Normal font=Courier New size=None
+  code para style=Normal font=Courier New size=None
+  code para style=Normal font=Courier New size=None
+H1: font=None size=None bold=None align=None
+     space_b=None space_a=None
+H2: font=None size=None bold=None align=None
+     space_b=None space_a=None
+H3: font=None size=177800 bold=None align=None
+     space_b=101600 space_a=50800
+CODE: 	Утверждаю
+  font=Times New Roman size=133350
+CODE: 	Заведующий кафедрой
+  font=Times New Roman size=133350
+
+BIB samples:
+Axelson, J. USB Mass Storage: Designing and Programming Devices and Embedded Hosts : monogr. / J. Axelson. – Madison : L
+Buyya, R. Cloud Computing: Principles and Paradigms : monogr. / R. Buyya, J. Broberg, A. Goscinski. – Hoboken : John Wil
+Mell, P. The NIST Definition of Cloud Computing : monogr. / P. Mell, T. Grance. – Gaithersburg : NIST Special Publicatio
+Ganssle, J. The Art of Designing Embedded Systems : monogr. / J.G. Ganssle . – Burlington : Elsevier, 2008. – 2–5 p.
+ESP32 Wi-Fi & Bluetooth SoC : [site]. – URL: https://www.espressif.com /en/products/socs/esp32 (date of access: 11.11.20
+Mass Storage Class Specification Overview 1.4 : [site]. – URL: https://www.usb.org/document-library/mass-storage-class-s
+Axelson, J. USB Complete: The Developer’s Guide : monogr. / J. Axelson. – Madison : Lakewiew Research, 2015. – 1–5 p.
+Silberschatz, A. Operating System Concepts : monogr. / A. Silberschatz, P.B. Galvin, G. Gagne. – 9th ed. – Hoboken : Joh
+Coulouris, G. Distributed Systems: Concepts and Design : monogr. / G. Coulouris, J. Dollimore, T. Kindberg, G. Blair. – 
+Barr, M. Programming Embedded Systems : monogr. / M. Barr, A. Massa. – 2th ed. – O’Reilly, 2006. – 9–10 p.

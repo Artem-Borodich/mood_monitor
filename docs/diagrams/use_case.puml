@@ -1,0 +1,30 @@
+@startuml use_case
+skinparam shadowing false
+skinparam defaultFontName Arial
+left to right direction
+
+actor "Пользователь" as user
+
+rectangle "Mood Monitor (Serenity)" {
+  usecase "Создать запись\n(UC-01)" as uc1
+  usecase "Просмотреть историю\n(UC-02)" as uc2
+  usecase "Изменить запись\n(UC-03)" as uc3
+  usecase "Удалить запись\n(UC-04)" as uc4
+  usecase "Индекс благополучия\n(UC-05)" as uc5
+  usecase "Рекомендация\n(UC-06)" as uc6
+  usecase "Прогноз\n(UC-07)" as uc7
+  usecase "Настройки UI\n(UC-08)" as uc8
+  usecase "Отзыв о совете\n(UC-09)" as uc9
+}
+
+user --> uc1
+user --> uc2
+user --> uc3
+user --> uc4
+user --> uc8
+user --> uc9
+user --> uc2
+uc1 ..> uc5 : <<include>>
+uc2 ..> uc6 : <<include>>
+uc2 ..> uc7 : <<include>>
+@enduml

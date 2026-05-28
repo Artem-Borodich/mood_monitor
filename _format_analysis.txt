@@ -1,0 +1,18 @@
+FILE: c:\\mood_project\╨Э╨╡╤Б╤В╨╡╤А╨╛╨▓╨╕╤З ╨Ф╨╕╨┐╨╗╨╛╨╝.docx
+BIB @576 style=Heading 1
+  577 [Документация] Axelson, J. USB Mass Storage: Designing and Programming Devices and Embedded Hosts : monogr. / J. Ax
+  578 [Документация] Buyya, R. Cloud Computing: Principles and Paradigms : monogr. / R. Buyya, J. Broberg, A. Goscinski. 
+  579 [Документация] Mell, P. The NIST Definition of Cloud Computing : monogr. / P. Mell, T. Grance. – Gaithersburg : NIS
+  580 [Документация] Ganssle, J. The Art of Designing Embedded Systems : monogr. / J.G. Ganssle . – Burlington : Elsevier
+  581 [Документация] ESP32 Wi-Fi & Bluetooth SoC : [site]. – URL: https://www.espressif.com /en/products/socs/esp32 (date
+  582 [Документация] Mass Storage Class Specification Overview 1.4 : [site]. – URL: https://www.usb.org/document-library/
+  583 [Документация] Axelson, J. USB Complete: The Developer’s Guide : monogr. / J. Axelson. – Madison : Lakewiew Researc
+  584 [Документация] Silberschatz, A. Operating System Concepts : monogr. / A. Silberschatz, P.B. Galvin, G. Gagne. – 9th
+  585 [Документация] Coulouris, G. Distributed Systems: Concepts and Design : monogr. / G. Coulouris, J. Dollimore, T. Ki
+  586 [Документация] Barr, M. Programming Embedded Systems : monogr. / M. Barr, A. Massa. – 2th ed. – O’Reilly, 2006. – 9
+  587 [Документация] Kurose, J. Computer Networking: A Top-Down Approach : monogr. / J. Kurose, K. Ross. – 7th ed. – Hobo
+  588 [Документация] Zhang, Q. Cloud computing: state-of-the-art and research challenges : monogr. / Q. Zhang, L. Cheng, 
+  589 [Документация] What is FTP and why is it needed : [site]. – URL: https://realhost.pro/en/blog/what-is-ftp (date of 
+  590 [Документация] Fielding, R.T. Architectural Styles and the Design of Network-based Software Architectures : diss. /
+ref numbers: 45 max=128
+

@@ -1,0 +1,38 @@
+@startuml components
+skinparam shadowing false
+skinparam defaultFontName Arial
+
+package "Мобильное устройство (Flutter)" {
+  [UI Screens] as screens
+  [Widgets] as widgets
+  [ApiService] as apisvc
+  [Models] as models
+  [locale_store\nSharedPreferences] as prefs
+  [tips_data] as tips
+  [AppConfig] as cfg
+}
+
+package "Сервер (Python)" {
+  [main.py\nFastAPI] as app
+  [routes/mood.py\nroutes/diploma.py] as routes
+  [services/\nwellbeing, recommendation,\nforecast] as services
+  [schemas.py] as schemas
+  [models.py] as ormmodels
+  [database.py] as dbmod
+}
+
+database "PostgreSQL\nmood_entries" as pg
+
+screens --> apisvc
+screens --> prefs
+screens --> widgets
+apisvc --> cfg
+apisvc --> models
+routes --> services
+routes --> schemas
+routes --> ormmodels
+ormmodels --> dbmod
+dbmod --> pg
+app --> routes
+tips ..> screens : локально
+@enduml

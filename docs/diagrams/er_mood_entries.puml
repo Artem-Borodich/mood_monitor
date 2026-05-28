@@ -1,0 +1,18 @@
+@startuml er_mood_entries
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam defaultFontName Arial
+
+entity "Запись настроения\n(mood_entries)" as mood_entry {
+  * **id** : INTEGER <<PK>>
+  --
+  mood : INTEGER [1..10]
+  stress : INTEGER [1..10]
+  energy : INTEGER [1..10]
+  note : TEXT
+  category : VARCHAR(50)
+  sleep_hours : FLOAT
+  activity_minutes : INTEGER
+  created_at : TIMESTAMP WITH TZ
+}
+@enduml

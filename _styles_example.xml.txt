@@ -1,0 +1,61 @@
+FILE c:\mood_project\╨Э╨╡╤Б╤В╨╡╤А╨╛╨▓╨╕╤З ╨Ф╨╕╨┐╨╗╨╛╨╝.docx
+
+
+--- heading 1 (1) ---
+<w:name w:val="heading 1"/>
+<w:basedOn w:val="a0"/>
+<w:next w:val="a"/>
+<w:link w:val="10"/>
+<w:uiPriority w:val="9"/>
+<w:qFormat/>
+<w:rsid w:val="00804378"/>
+<w:pPr>
+<w:outlineLvl w:val="0"/>
+</w:pPr>
+<w:rPr>
+<w:rFonts w:eastAsiaTheme="majorEastAsia" w:cstheme="majorBidi"/>
+<w:szCs w:val="40"/>
+</w:rPr>
+
+--- heading 2 (2) ---
+<w:name w:val="heading 2"/>
+<w:basedOn w:val="a0"/>
+<w:next w:val="a"/>
+<w:link w:val="20"/>
+<w:uiPriority w:val="9"/>
+<w:unhideWhenUsed/>
+<w:qFormat/>
+<w:rsid w:val="00804378"/>
+<w:pPr>
+<w:outlineLvl w:val="1"/>
+</w:pPr>
+<w:rPr>
+<w:rFonts w:eastAsiaTheme="majorEastAsia" w:cstheme="majorBidi"/>
+<w:szCs w:val="32"/>
+</w:rPr>
+
+--- heading 3 (3) ---
+<w:name w:val="heading 3"/>
+<w:basedOn w:val="a"/>
+<w:next w:val="a"/>
+<w:link w:val="30"/>
+<w:uiPriority w:val="9"/>
+<w:semiHidden/>
+<w:unhideWhenUsed/>
+<w:qFormat/>
+<w:rsid w:val="00E96F82"/>
+<w:pPr>
+<w:keepNext/>
+<w:keepLines/>
+<w:spacing w:before="160" w:after="80" w:line="278" w:lineRule="auto"/>
+<w:outlineLvl w:val="2"/>
+</w:pPr>
+<w:rPr>
+<w:rFonts w:asciiTheme="minorHAnsi" w:eastAsiaTheme="majorEastAsia" w:hAnsiTheme="minorHAnsi" w:cstheme="majorBidi"/>
+<w:color w:val="0F4761" w:themeColor="accent1" w:themeShade="BF"/>
+<w:kern w:val="2"/>
+<w:sz w:val="28"/>
+<w:szCs w:val="28"/>
+<w:lang w:eastAsia="en-US"/>
+<w14:ligatures w14:val="standardContextual"/>
+</w:rPr>
