@@ -10,7 +10,12 @@ String localizedApiErrorMessage(Object error, AppLocalizations loc) {
   }
   if (e.kind == ApiErrorKind.network) {
     final m = e.message;
-    if (m.contains('No internet') || m.contains('SocketException')) {
+    if (m.contains('Cannot reach API') ||
+        m.contains('Connection refused') ||
+        m.contains('SocketException')) {
+      return loc.apiErrorServerUnreachable;
+    }
+    if (m.contains('No internet')) {
       return loc.apiErrorNoInternet;
     }
     if (m.contains('too long')) {

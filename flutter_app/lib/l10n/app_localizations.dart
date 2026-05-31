@@ -95,6 +95,8 @@ class AppLocalizations {
       'historyEntrySubtitle': 'Mood history entry',
       'errorPrefix': 'Error: ',
       'apiErrorNoInternet': 'No internet connection. Check Wi‑Fi or mobile data.',
+      'apiErrorServerUnreachable':
+          'Cannot reach the API server. Start the backend (uvicorn on port 8000) and check the URL in Settings.',
       'apiErrorTimeout': 'The server took too long to respond. Try again shortly.',
       'apiErrorNetwork': 'Could not reach the server. Check the address in Settings.',
       'apiErrorServer': 'The server returned an error. Try again in a moment.',
@@ -410,6 +412,8 @@ class AppLocalizations {
       'historyEntrySubtitle': 'Запись истории настроения',
       'errorPrefix': 'Ошибка: ',
       'apiErrorNoInternet': 'Нет подключения к интернету. Проверьте Wi‑Fi или мобильные данные.',
+      'apiErrorServerUnreachable':
+          'Не удаётся подключиться к серверу API. Запустите backend (uvicorn, порт 8000) и проверьте адрес в настройках.',
       'apiErrorTimeout': 'Сервер слишком долго не отвечает. Попробуйте чуть позже.',
       'apiErrorNetwork': 'Не удалось связаться с сервером. Проверьте адрес в настройках.',
       'apiErrorServer': 'Сервер вернул ошибку. Попробуйте ещё раз через минуту.',
@@ -855,6 +859,7 @@ class AppLocalizations {
   String get breathUiRunningFooter => _text('breathUiRunningFooter');
   String get settingsAboutSerenity => _text('settingsAboutSerenity');
   String get apiErrorNoInternet => _text('apiErrorNoInternet');
+  String get apiErrorServerUnreachable => _text('apiErrorServerUnreachable');
   String get apiErrorTimeout => _text('apiErrorTimeout');
   String get apiErrorNetwork => _text('apiErrorNetwork');
   String get apiErrorServer => _text('apiErrorServer');

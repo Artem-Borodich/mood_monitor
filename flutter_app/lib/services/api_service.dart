@@ -34,7 +34,7 @@ class ApiService {
       return await run().timeout(_timeout);
     } on SocketException catch (e) {
       throw ApiException.network(
-        'No internet connection (${e.message}).',
+        'Cannot reach API server (${e.message}).',
       );
     } on TimeoutException {
       throw ApiException.network('The server took too long to respond.');
