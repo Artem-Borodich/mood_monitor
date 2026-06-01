@@ -4,12 +4,11 @@ import os
 import re
 import zipfile
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ex = [
-    p
-    for p in glob.glob(os.path.join(ROOT, "*.docx"))
-    if "Диплома" not in os.path.basename(p) and ".bak" not in p
-][0]
+from diploma_paths import example_docx_path
+
+ex = example_docx_path()
+if not ex:
+    raise SystemExit("Пример .docx не найден в diploma/references/")
 with zipfile.ZipFile(ex) as z:
     xml = z.read("word/styles.xml").decode("utf-8")
 for m in re.finditer(

@@ -29,19 +29,12 @@ STYLE_CODE = "ConsPlusNonformat"
 INTRO_MARKER = "Введение"
 
 
-from diploma_paths import diploma_path, DIPLOMA_FILENAME
+from diploma_paths import diploma_path, example_docx_path
 
 
 def paths() -> tuple[str, str | None]:
     mine = diploma_path()
-    ex = [
-        p
-        for p in glob.glob(os.path.join(ROOT, "*.docx"))
-        if os.path.basename(p) != DIPLOMA_FILENAME
-        and ".bak" not in p
-        and "updated" not in p.lower()
-    ]
-    return mine, ex[0] if ex else None
+    return mine, example_docx_path()
 
 
 def has_image(paragraph: Paragraph) -> bool:

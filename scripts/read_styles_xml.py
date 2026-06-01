@@ -10,7 +10,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def dump_styles(path: str, label: str) -> None:
     with zipfile.ZipFile(path) as z:
         xml = z.read("word/styles.xml").decode("utf-8")
-    out = os.path.join(ROOT, f"_styles_{label}.xml.txt")
+    from diploma_paths import workspace_file
+
+    out = workspace_file("styles", f"_styles_{label}.xml.txt")
     # find all custom style names
     names = re.findall(r'w:styleId="([^"]+)"[^>]*>.*?<w:name w:val="([^"]+)"', xml, re.DOTALL)
     with open(out, "w", encoding="utf-8") as f:
@@ -40,7 +42,11 @@ def dump_styles(path: str, label: str) -> None:
 
 from diploma_paths import diploma_path
 
+from diploma_paths import example_docx_path
+
 mine = diploma_path()
-ex = [p for p in glob.glob(os.path.join(ROOT, "*.docx")) if "Диплома" not in os.path.basename(p) and ".bak" not in p][0]
+ex = example_docx_path()
+if not ex:
+    raise SystemExit("Пример .docx не найден в diploma/references/")
 dump_styles(ex, "example")
 dump_styles(mine, "mine")

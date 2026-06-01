@@ -38,20 +38,15 @@ def has_drawing(p) -> bool:
 
 
 def find_paths() -> tuple[str, str]:
-    from diploma_paths import diploma_path, DIPLOMA_FILENAME
+    from diploma_paths import diploma_path, example_docx_path
 
     mine = diploma_path()
-    ex = [
-        p
-        for p in glob.glob(os.path.join(ROOT, "*.docx"))
-        if os.path.basename(p) != DIPLOMA_FILENAME
-        and ".bak" not in p
-        and "updated" not in p.lower()
-        and not os.path.basename(p).startswith("~$")
-    ]
-    if not ex:
-        raise FileNotFoundError("Пример не найден (положите Нестерович Диплом.docx в корень)")
-    return mine, ex[0]
+    ex_path = example_docx_path()
+    if not ex_path:
+        raise FileNotFoundError(
+            "Пример не найден (положите .docx-пример в diploma/references/)"
+        )
+    return mine, ex_path
 
 
 def section_margins(path: str) -> dict:
@@ -310,7 +305,9 @@ def main() -> None:
     w("Мой: " + str(my_caps))
     w("Пример: " + str(ex_caps))
 
-    out = os.path.join(ROOT, "_compare_report.txt")
+    from diploma_paths import workspace_file
+
+    out = workspace_file("reports", "_compare_report.txt")
     with open(out, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
     print(out)

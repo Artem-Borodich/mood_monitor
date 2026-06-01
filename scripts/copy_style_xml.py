@@ -49,9 +49,11 @@ def merge_styles(example: str, target: str, style_ids: list[str]) -> None:
 
 
 if __name__ == "__main__":
-    ex = [p for p in glob.glob(os.path.join(ROOT, "*.docx")) if "Диплома" not in os.path.basename(p)][0]
-    from diploma_paths import diploma_path
+    from diploma_paths import diploma_path, example_docx_path
 
+    ex = example_docx_path()
+    if not ex:
+        raise SystemExit("Пример .docx не найден в diploma/references/")
     mine = diploma_path()
     merge_styles(ex, mine, ["a0", "ConsPlusNonformat"])
     print("ok")

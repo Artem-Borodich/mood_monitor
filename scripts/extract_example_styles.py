@@ -5,14 +5,13 @@ import re
 
 from docx import Document
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ex = [
-    p
-    for p in glob.glob(os.path.join(ROOT, "*.docx"))
-    if "Диплома" not in os.path.basename(p) and ".bak" not in p
-][0]
+from diploma_paths import example_docx_path, workspace_file
+
+ex = example_docx_path()
+if not ex:
+    raise SystemExit("Пример .docx не найден в diploma/references/")
 doc = Document(ex)
-out_path = os.path.join(ROOT, "_ex_styles.txt")
+out_path = workspace_file("styles", "_ex_styles.txt")
 
 with open(out_path, "w", encoding="utf-8") as out:
     found = False

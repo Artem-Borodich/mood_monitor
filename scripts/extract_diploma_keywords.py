@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
-import glob
 import re
+
 from docx import Document
 
-paths = [
-    p
-    for p in glob.glob(r"c:\mood_project\*.docx")
-    if "bak" not in p and "updated" not in p and not p.split("\\")[-1].startswith("~")
-]
-doc = Document(paths[0])
+from diploma_paths import diploma_path, workspace_file
+
+doc = Document(diploma_path())
 full = "\n".join(p.text for p in doc.paragraphs if p.text.strip())
-open(r"c:\mood_project\_diploma_current.txt", "w", encoding="utf-8").write(full)
-# headings
+out = workspace_file("exports", "_diploma_current.txt")
+with open(out, "w", encoding="utf-8") as f:
+    f.write(full)
+print("wrote", out)
 for p in doc.paragraphs:
     t = p.text.strip()
     if not t:

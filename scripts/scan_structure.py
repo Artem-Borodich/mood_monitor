@@ -6,7 +6,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 from diploma_paths import diploma_path
 
 doc = Document(diploma_path())
-with open(os.path.join(ROOT, "_structure.txt"), "w", encoding="utf-8") as f:
+from diploma_paths import workspace_file
+
+with open(workspace_file("reports", "_structure.txt"), "w", encoding="utf-8") as f:
     for i, p in enumerate(doc.paragraphs[:80]):
         t = p.text.strip()
         if t:

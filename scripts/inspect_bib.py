@@ -42,19 +42,11 @@ def inspect(path: str, label: str) -> None:
             break
 
 
-from diploma_paths import diploma_path, DIPLOMA_FILENAME
+from diploma_paths import diploma_path, example_docx_path
 
-ex = [
-    p
-    for p in glob.glob(os.path.join(ROOT, "*.docx"))
-    if os.path.basename(p) != DIPLOMA_FILENAME
-    and ".bak" not in p
-    and "updated" not in p.lower()
-    and not os.path.basename(p).startswith("~$")
-]
+ex = example_docx_path()
 if not ex:
-    raise SystemExit("Пример не найден")
-ex = ex[0]
+    raise SystemExit("Пример не найден (diploma/references/)")
 
 mine = diploma_path()
 inspect(ex, "ПРИМЕР")

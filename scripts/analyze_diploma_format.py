@@ -24,20 +24,13 @@ def pt(val) -> str:
 
 
 def find_diploma_paths() -> tuple[str, str]:
-    from diploma_paths import diploma_path, DIPLOMA_FILENAME
+    from diploma_paths import diploma_path, example_docx_path
 
     mine = diploma_path()
-    examples = [
-        p
-        for p in glob.glob(os.path.join(ROOT, "*.docx"))
-        if os.path.basename(p) != DIPLOMA_FILENAME
-        and "updated" not in p.lower()
-        and ".bak_" not in p
-        and not os.path.basename(p).startswith("~$")
-    ]
-    if not examples:
-        raise FileNotFoundError("Пример DOCX не найден")
-    return mine, examples[0]
+    ex_path = example_docx_path()
+    if not ex_path:
+        raise FileNotFoundError("Пример DOCX не найден (diploma/references/)")
+    return mine, ex_path
 
 
 def style_summary(doc: Document) -> dict:

@@ -148,19 +148,11 @@ def replace_bibliography_section(doc: Document, bib_start: int, entries: list[st
 def ensure_dokumentatsiya_style(path: str) -> None:
     from copy_style_xml import merge_styles
 
-    from diploma_paths import DIPLOMA_FILENAME
+    from diploma_paths import example_docx_path
 
-    ex = [
-        p
-        for p in glob.glob(os.path.join(ROOT, "*.docx"))
-        if os.path.basename(p) != DIPLOMA_FILENAME
-        and ".bak" not in p
-        and "updated" not in p.lower()
-        and not os.path.basename(p).startswith("~$")
-    ]
+    ex = example_docx_path()
     if not ex:
-        raise FileNotFoundError("Пример не найден (Нестерович Диплом.docx)")
-    ex = ex[0]
+        raise FileNotFoundError("Пример не найден (diploma/references/)")
     merge_styles(ex, path, ["a0"])
 
 

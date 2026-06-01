@@ -9,6 +9,10 @@ Technologies:
 Project structure:
 - **backend/**: FastAPI application
 - **flutter_app/**: Flutter mobile client
+- **diploma/**: thesis document (`Дипломначалоконец.docx`) and reference PDFs
+- **workspace/diploma/**: script exports and reports (not the main thesis)
+- **scripts/**: diploma formatting and content tools
+- **docs/**: diagrams and screenshots for the thesis
 
 ---
 

@@ -5,14 +5,13 @@ import os
 from docx import Document
 from docx.shared import Pt
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ex = [
-    p
-    for p in glob.glob(os.path.join(ROOT, "*.docx"))
-    if "Диплома" not in os.path.basename(p) and ".bak" not in p
-][0]
+from diploma_paths import example_docx_path, workspace_file
+
+ex = example_docx_path()
+if not ex:
+    raise SystemExit("Пример .docx не найден в diploma/references/")
 doc = Document(ex)
-out = os.path.join(ROOT, "_run_format.txt")
+out = workspace_file("logs", "_run_format.txt")
 needles = ["Несмотря на стремительное", "Рисунок 1.3.1", "Листинг 2.5.1"]
 with open(out, "w", encoding="utf-8") as f:
     for p in doc.paragraphs:
